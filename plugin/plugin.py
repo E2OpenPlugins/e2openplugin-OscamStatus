@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #===============================================================================
-# OscamStatus Plugin by puhvogel 2011-2012
+# OscamStatus Plugin by puhvogel 2011-2018
+# modified by Pr2 
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -39,10 +40,10 @@ from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigS
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, picons, piconLoader, USEPICONS, PICONPATH
 
-VERSION = "0.62"
+VERSION = "1.0"
 TIMERTICK = 10000
 
-# Rechnet vergangene Sekunden in Tage, Stunden, Minuten und Sekunden um...
+# Converts past seconds into days, hours, minutes and seconds ...
 def elapsedTime(s, fmt, hasDays = False):
 	try:
 		secs = long(s)
@@ -79,7 +80,7 @@ THREAD_WORKING = 1
 THREAD_FINISHED = 2
 THREAD_ERROR = 3
 
-# twisted kann KEIN digest auth, warum auch immer...
+# twisted can not digest auth, whatever ...
 class GetPage2(Thread):
 	def __init__(self):
 		Thread.__init__(self)
@@ -350,7 +351,7 @@ class ClientDataScreen(Screen):
 		self.oServer = oServer
 		Screen.__init__(self, session)
 
-		# dict fuer Status AU
+		# dict for Status AU
 		auEntrys = {"1":"ACTIVE", "0":"OFF", "-1":"ON"}
 
 		self["title"] = StaticText("")
@@ -365,7 +366,7 @@ class ClientDataScreen(Screen):
 				self["KeyYellow"].show()
 
 		self.ecmhistory = data.ecmhistory.split(',')
-		# echt toll wenn in den OSCAM Sourcen die ecmhistory sinnlos geaendert wird...
+		# really great if in the OSCAM sources the ecmhistory is changed meaningless ...
 		if self.ecmhistory[0] == '':
 			self.ecmhistory[0] = '0'
 		if len(self.ecmhistory) < 20:
@@ -451,7 +452,7 @@ class ClientDataScreen(Screen):
 	def Close(self):
 		self.close(0)
 
-# "Mutter" aller Downloadfenster...
+# "Mother" of all download windows ...
 class DownloadXMLScreen(Screen):
 	def __init__(self, session, part, oServer, timerOn=True):
 		self.oServer = oServer
@@ -475,9 +476,9 @@ class DownloadXMLScreen(Screen):
 		self.download = True
 		print "[OscamStatus] loading", self.url
 		self.getIndex()		
-		# Message Queue initialisieren...
+		# Message Queue initialisation...
 		getPage2.MessagePump.recv_msg.get().append(self.gotThreadMsg)	
-		# Download Thread starten...
+		# Download Thread started...
 		try:
 			getPage2.Start(self.url, self.oServer.username, self.oServer.password)
 		except RuntimeError:
@@ -521,7 +522,7 @@ class DownloadXMLScreen(Screen):
 
 			self.data = msg[1]
 			self.download = False
-			# wenn keine xml zurueckkommt stimmt etwas nicht..
+			# if no xml comes back something is not right ..
 			if not "<?xml version=\"1.0\"" in self.data:
 				print "[OscamStatus] Oscam Download Error: no xml"
 				info = self.session.open(MessageBox, _("no xml"), MessageBox.TYPE_ERROR)
@@ -833,7 +834,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 										p.caid = str(snode3.getAttribute("caid"))
 										p.provid = str(snode3.getAttribute("provid"))
 										if snode3.firstChild and snode3.firstChild.nodeType == snode3.firstChild.TEXT_NODE:
-											# HACK! auf unterschiedlichen Plattformen wird 'ü' unterschiedlich encodiert?
+											# HACK! on different platforms 'ü' is encoded differently?
 											p.service = str(snode3.firstChild.nodeValue.strip()).replace("&#195;&#188;", "ü").replace("&#451;&#444;", "ü").replace("&amp;", "&")
 											#p.service = unescape(str(snode3.firstChild.nodeValue.strip())).replace("&#451;&#444;", "ü")
 										c.providers.append(p)
@@ -890,7 +891,13 @@ class LogDataList(MenuList):
 # LogDataScreen...
 class LogDataScreen(DownloadXMLScreen):
 	w = getDesktop(0).size().width()
-	if w == 1280:
+	if w == 1920:
+		skin = """
+		<screen flags="wfNoBorder" position="0,0" size="1920,1080" name="LogDataScreen" >
+			<widget render="Label" source="title"  position="10,10" size="1910,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;24"/>
+			<widget name="data" position="10,40" size="1900,1030" scrollbarMode="showOnDemand" />
+		</screen>"""
+	elif w == 1280:
 		skin = """
 			<screen flags="wfNoBorder" position="0,0" size="1280,720" name="LogDataScreen" >
 				<widget render="Label" source="title"  position="40,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -917,7 +924,11 @@ class LogDataScreen(DownloadXMLScreen):
 
 		DownloadXMLScreen.__init__(self, session, part, oServer)
 
-		if LogDataScreen.w == 1280:
+		if LogDataScreen.w == 1920:
+			self.entryW = 1878
+			self.entryH = 16
+			self["data"] = LogDataList([], 16)
+		elif LogDataScreen.w == 1280:
 			self.entryW = 1198
 			self.entryH = 18
 			self["data"] = LogDataList([], 18)
@@ -939,8 +950,8 @@ class LogDataScreen(DownloadXMLScreen):
 		d = "n/a"
 		for node in dom.getElementsByTagName("log"):
 			d = str(node.firstChild.nodeValue.strip())
-		# in der OScam ist noch ein kleiner Bug, im Log befindet sich ein "´",
-		# hier steigt der XML Parser aus, wird daher durch ein "'" ersetzt...
+			# in the OScam is still a small bug, in the log is a "'",
+			# Here the XML parser exits and is replaced by a "'" ...
 		d = d.replace("\xb4","\x27")
 		return d
 
@@ -951,17 +962,17 @@ class LogDataScreen(DownloadXMLScreen):
 		self.setTitle("Logfile@"+self.oServer.serverName)
 		list = []
 		for line in log.splitlines():
-			if "rejected" in line or "invalid" in line: c = "0xff2222" # rot
+			if "rejected" in line or "invalid" in line: c = "0xff2222" # red
 			elif "written" in line: c = "0xff8c00" # orange
-			elif " r " in line: c = "0xffd700" # gelb
-			elif " p " in line: c = "0xadff2f" # gruen
-			else: c = "0xffffff" # weiss
+			elif " r " in line: c = "0xffd700" # yellow
+			elif " p " in line: c = "0xadff2f" # green
+			else: c = "0xffffff" # blanc
 			item = [line]
 			item.append((eListboxPythonMultiContent.TYPE_TEXT, 1, 1, self.entryW, self.entryH, 0, RT_HALIGN_LEFT, line, int(c, 16)))
 			list.append(item)
 		self["data"].setList(list)
 		self["data"].selectionEnabled(0)
-		# immer an das Listenende...
+		# always at the end of the list ...
 		x = len(list)
 		if x:
 			self["data"].moveToIndex(x-1)
@@ -1039,7 +1050,7 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def parseXML(self, dom):
 		readers = []
-		# Abfragen ob WebIf readonly...
+		# Querying if WebIf readonly...
 		for node in dom.getElementsByTagName("oscam"):
 			readonly = str(node.getAttribute("readonly"))
 		if not int(readonly):
@@ -1172,7 +1183,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 			</widget>
 		</screen>""" % (dlg_xh(720))
 
-	# ohne picons...
+	# without picons...
 	skin2 = """
 		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
 			<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -1390,7 +1401,7 @@ class UserstatsScreen(DownloadXMLScreen):
 
 	def parseXML(self, dom):
 		d = []
-		# Abfragen Oscam Version und Berechtigung WebIf...
+		# Querying Oscam version and permission WebIf ...
 		for node in dom.getElementsByTagName("oscam"):
 			revision = str(node.getAttribute("revision"))
 			readonly = str(node.getAttribute("readonly"))
@@ -1526,7 +1537,7 @@ class StatusDataScreen(DownloadXMLScreen):
 			<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 			<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 		</screen>""" % (dlg_xh(720))
-	# ohne picons...
+	# without picons...
 	skin2 = """
 		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="StatusDataScreen" >
 			<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -1612,7 +1623,7 @@ class StatusDataScreen(DownloadXMLScreen):
 		                      "Extensions/OscamStatus/icons/au_green.png"))
 		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
 		                      "Extensions/OscamStatus/icons/au_yellow.png"))
-		# dict fuer Status AU
+		# dict for Status AU
 		self.auEntrys = {"1":auGreen, "0":auRed, "-1":auYellow}
 
 		self.hideIdle = False
