@@ -111,7 +111,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 class oscamServer:
 	serverName = "localhost"
 	serverIP   = "127.0.0.1"
-	serverPort = "16001"
+	serverPort = "8081"
 	username   = "username"
 	password   = "password"
 	useSSL     = False
@@ -312,7 +312,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 			entry = oscamServer()
 		self.index = index
 
-		# Server Adresse IP-Format oder TextFormat?
+		# Server address IP format or TextFormat?
 		serverIP = self.isIPaddress(entry.serverIP)
 		if serverIP and config.plugins.OscamStatus.useIP.value:
 			self.isIP = True
@@ -404,7 +404,7 @@ class piconLoader:
 			self.picons = {}
 			for fname in listdir(self.Path):
 				items = fname.split('_')
-				# Nur Datei mit sref Namen, also picon png...
+				# Only file with sref name, also picon png...
 				if len(items) > 8:
 					#t  = self.picons.get(items[3], 'n/a')
 					#if t != 'n/a':
@@ -422,7 +422,7 @@ class piconLoader:
 			return
 
 	def getPicon(self, srvid):
-		# FTA Sender oder nicht gefunden...
+		# FTA transmitter or not found...
 		if srvid == '0000':
 			return None
 
@@ -430,7 +430,7 @@ class piconLoader:
 		while srvid[0] == '0':
 			srvid = srvid[1:]
 
-		# Dateinamen aus dict holen...
+		# Get file name from dict...
 		fname = self.picons.get(srvid, 'n/a')
 		if fname != 'n/a':
 			piconpath = self.Path+'/'+fname

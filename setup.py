@@ -3,7 +3,7 @@ import setup_translate
 
 pkg = 'Extensions.OscamStatus'
 setup (name = 'enigma2-plugin-extensions-oscamstatus',
-       version = '0.62-r1',
+       version = '1.0',
        description = 'shows status of your oscam server',
        packages = [pkg],
        package_dir = {pkg: 'plugin'},
