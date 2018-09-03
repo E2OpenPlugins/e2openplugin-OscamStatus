@@ -1,0 +1,315 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-31 21:15+0200\n"
+"PO-Revision-Date: 2018-09-03 10:13+0100\n"
+"Last-Translator: Frenske <voorzitter@openpli.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: ../plugin.py:632 ../plugin.py:716
+#, python-format
+msgid "%d days %d hours %d minutes %d seconds"
+msgstr "%d dagen %d uren %d minuten %d seconden"
+
+#: ../plugin.py:1575 ../plugin.py:1588
+msgid "AU"
+msgstr "AU"
+
+#: ../plugin.py:1070
+msgid "All Readers @"
+msgstr "Alle readers @"
+
+#: ../plugin.py:1580
+msgid "Channel"
+msgstr "Zender"
+
+#: ../plugin.py:1594
+msgid "Channel  Protocol"
+msgstr "Zenderprotocol"
+
+#: ../plugin.py:1356
+msgid "Client"
+msgstr "Cliënt"
+
+#: ../OscamStatusSetup.py:264
+msgid "Do you really want to delete this entry?"
+msgstr "Wilt u dit item echt verwijderen?"
+
+#: ../plugin.py:1577 ../plugin.py:1590
+msgid "ECM Time"
+msgstr "ECM tijd"
+
+#: ../OscamStatusSetup.py:80
+msgid "ECM Time in \"connected\" Dialog"
+msgstr "ECM Tijd in \"connected\" Dialog"
+
+#: ../plugin.py:1357
+msgid "IP"
+msgstr "IP"
+
+#: ../plugin.py:1579 ../plugin.py:1592
+msgid "Idle Time"
+msgstr "Tijd inactief"
+
+#: ../plugin.py:534
+msgid "Maybe set 'chaninfo = 0' at oscam.conf"
+msgstr "Maybe set 'chaninfo = 0' in de oscam.conf"
+
+#: ../plugin.py:1573 ../plugin.py:1586
+msgid "Name"
+msgstr "Naam"
+
+#: ../plugin.py:528
+msgid "Oscam Download Error"
+msgstr "Oscam fout met downloaden"
+
+#: ../OscamStatusSetup.py:357
+msgid "Oscam Server Address"
+msgstr "Serveradres Oscam"
+
+#: ../OscamStatusSetup.py:356
+msgid "Oscam Server Name"
+msgstr "Servernaam Oscam"
+
+#: ../OscamStatusSetup.py:338
+msgid "Oscam Server Setup"
+msgstr "Setup Oscamserver"
+
+#: ../OscamStatusSetup.py:221
+msgid "Oscam Servers"
+msgstr "Oscamservers"
+
+#: ../plugin.py:514 ../plugin.py:722 ../plugin.py:739 ../plugin.py:1841
+#: ../plugin.py:1843
+msgid "Oscam Status"
+msgstr "Oscamstatus"
+
+#: ../plugin.py:1824
+msgid "Oscam Status "
+msgstr "Oscamstatus"
+
+#: ../OscamStatusSetup.py:86
+msgid "Oscam Status globals Setup"
+msgstr "Algemene instellingen voor Oscamstatus"
+
+#: ../plugin.py:535 ../plugin.py:545
+msgid "Oscam XML Error"
+msgstr "XML fout Oscamstatus"
+
+#: ../OscamStatusSetup.py:360
+msgid "Password (httppwd)"
+msgstr "Wachtwoord (http ww)"
+
+#: ../OscamStatusSetup.py:83
+msgid "Picons Path"
+msgstr "Picons path"
+
+#: ../OscamStatusSetup.py:358
+msgid "Port"
+msgstr "Poort"
+
+#: ../plugin.py:1006 ../plugin.py:1359 ../plugin.py:1596
+msgid "Protocol"
+msgstr "Protocol"
+
+#: ../plugin.py:1005 ../plugin.py:1574
+msgid "Reader"
+msgstr "Reader"
+
+#: ../plugin.py:1691
+msgid "Readers@"
+msgstr "Readers@"
+
+#: ../OscamStatusSetup.py:81
+msgid "Server address always in IP Format"
+msgstr "Serveradres altijd in IP formaat"
+
+#: ../OscamStatusSetup.py:78
+msgid "Show Plugin in Extensions Menu"
+msgstr "Toon de plugin in het applicatiemenu"
+
+#: ../plugin.py:1358 ../plugin.py:1587
+msgid "Status"
+msgstr "Status"
+
+#: ../OscamStatusSetup.py:82
+msgid "Use Picons"
+msgstr "Gebruik Picons"
+
+#: ../OscamStatusSetup.py:359
+msgid "Username (httpuser)"
+msgstr "Gebruikersnaam (http gebruiker)"
+
+#: ../OscamStatusSetup.py:79
+msgid "X-Offset (move left)"
+msgstr "X-Offset (ga naar links)"
+
+#: ../plugin.py:1227
+msgid "avgtime"
+msgstr "gemiddelde tijd"
+
+#: ../plugin.py:1224
+msgid "caid:srvid"
+msgstr "caid:srvid"
+
+#: ../plugin.py:1223
+msgid "channelname"
+msgstr "zendernaam"
+
+#: ../OscamStatusSetup.py:224
+msgid "delete"
+msgstr "verwijder"
+
+#: ../plugin.py:1362
+msgid "disable client"
+msgstr "déactiveer cliënt"
+
+#: ../plugin.py:1011
+msgid "disable reader"
+msgstr "déactiveer reader"
+
+#: ../OscamStatusSetup.py:223
+msgid "edit"
+msgstr "wijzig"
+
+#: ../plugin.py:1364
+msgid "enable client"
+msgstr "activeer cliënt"
+
+#: ../plugin.py:1013
+msgid "enable reader"
+msgstr "activeer reader"
+
+#: ../plugin.py:1584 ../plugin.py:1725
+msgid "hide idle clients"
+msgstr "verberg de inactieve cliënts"
+
+#: ../plugin.py:1226
+#, fuzzy
+msgid "lasttime"
+msgstr "laatste tijd"
+
+#: ../plugin.py:474
+msgid "loading..."
+msgstr "laden...."
+
+#: ../OscamStatusSetup.py:222
+msgid "new"
+msgstr "nieuw"
+
+#: ../plugin.py:527
+msgid "no xml"
+msgstr "geen xml"
+
+#: ../plugin.py:735
+#, python-format
+msgid "really really shutdown oscam@%s?"
+msgstr "wilt u Oscam@%s werkelijk afsluiten?"
+
+#: ../plugin.py:729
+#, python-format
+msgid "really restart oscam@%s?"
+msgstr "wilt u Oscam@%s werkelijk herstarten?"
+
+#: ../plugin.py:1222
+msgid "req."
+msgstr "req."
+
+#: ../plugin.py:677
+msgid "restart oscam"
+msgstr "herstart Oscam"
+
+#: ../OscamStatusSetup.py:87 ../OscamStatusSetup.py:339
+#, fuzzy
+msgid "return"
+msgstr "return"
+
+#: ../OscamStatusSetup.py:88 ../OscamStatusSetup.py:340
+msgid "save"
+msgstr "opslaan"
+
+#: ../plugin.py:1768
+msgid "server info"
+msgstr "Serverinfo"
+
+#: ../plugin.py:1769
+msgid "server restart/shutdown"
+msgstr "Herstarten/afsluiten van de server"
+
+#: ../plugin.py:1770
+msgid "server setup"
+msgstr "Serverinstellingen"
+
+#: ../plugin.py:1764
+msgid "show all clients"
+msgstr "Toon alle cliënts"
+
+#: ../plugin.py:1766
+msgid "show all readers"
+msgstr "Toon alle readers"
+
+#: ../plugin.py:1582
+msgid "show client info"
+msgstr "Toon de cliëntinformatie"
+
+#: ../plugin.py:1763
+msgid "show connected clients"
+msgstr "Toon de verbonden cliënts"
+
+#: ../plugin.py:1765
+msgid "show connected readers"
+msgstr "Toon de verbonden readers"
+
+#: ../plugin.py:1727
+msgid "show idle clients"
+msgstr "Toon de inactieve cliënts"
+
+#: ../plugin.py:1767
+msgid "show logfile"
+msgstr "Toon het logfile"
+
+#: ../plugin.py:1598
+msgid "show reader info"
+msgstr "Toon de readerinformatie"
+
+#: ../plugin.py:1600
+msgid "show readerstats"
+msgstr "Toon de readerstatistieken"
+
+#: ../plugin.py:679
+msgid "shutdown oscam"
+msgstr "sluit Oscam af"
+
+#: ../plugin.py:1225
+msgid "status"
+msgstr "status"
+
+#: ../plugin.py:1430
+msgid "time on channel"
+msgstr "tijd op kanaal"
+
+#: ../plugin.py:1007
+msgid "type"
+msgstr "type"
+
+#: ../OscamStatusSetup.py:361
+msgid "use SSL"
+msgstr "gebruik SSL"
+
+#: ../plugin.py:1841 ../plugin.py:1843
+msgid "whats going on?"
+msgstr "wat gebeurt er?"
+
+#: ../plugin.py:720
+msgid "you can't shutdown/restart this oscam.\n"
+msgstr "U kunt deze Oscam niet herstarten/afsluiten.\n"
