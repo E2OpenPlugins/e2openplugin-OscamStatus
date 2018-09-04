@@ -32,6 +32,8 @@ from enigma import eListboxPythonMultiContent, eListbox, getDesktop, gFont, RT_H
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 
+import re, os.path
+
 config.plugins.OscamStatus  = ConfigSubsection()
 config.plugins.OscamStatus.lastServer = ConfigInteger(default = 0)
 config.plugins.OscamStatus.extMenu = ConfigYesNo(default = True)
@@ -41,7 +43,7 @@ config.plugins.OscamStatus.useIP = ConfigYesNo(default = True)
 config.plugins.OscamStatus.usePicons = ConfigYesNo(default = False)
 config.plugins.OscamStatus.PiconPath = ConfigText(default = resolveFilename(SCOPE_SKIN,"picon_50x30"), fixed_size = False, visible_width=40)
 
-# export Variablen...
+# export Variables...
 LASTSERVER = config.plugins.OscamStatus.lastServer
 EXTMENU = config.plugins.OscamStatus.extMenu
 XOFFSET = config.plugins.OscamStatus.xOffset
@@ -49,6 +51,60 @@ USEECM = config.plugins.OscamStatus.useECM
 USEPICONS = config.plugins.OscamStatus.usePicons
 PICONPATH = config.plugins.OscamStatus.PiconPath
 picons = None
+
+oscam_regex = {
+	'ConfigDir': re.compile(r'ConfigDir:\s*(?P<ConfigDir>.*)\n'),
+	'httpport': re.compile(r'httpport\s*=\s*(?P<httpport>[\+]?\d+)\n'),
+	'httpuser': re.compile(r'httpuser\s*=\s*(?P<httpuser>.*)\n'),
+	'httppwd': re.compile(r'httppwd\s*=\s*(?P<httppwd>.*)\n'),
+}
+
+def _parse_line(line):
+	for key, rx in oscam_regex.items():
+		match = rx.search(line)
+		if match:
+			return key, match
+	# if no matches
+	return None, None
+
+def parse_oscam_version_file(filepath,data):
+	# open the file and read through it line by line
+	if os.path.isfile(filepath):
+		with open(filepath, 'r') as file_object:
+			line = file_object.readline()
+			while line:
+				# at each line check for a match with a regex
+				key, match = _parse_line(line)
+
+				if key == 'ConfigDir':
+					data.ConfigDir = match.group('ConfigDir')
+
+				line = file_object.readline()
+
+def parse_oscam_conf_file(filepath,data):
+	# open the file and read through it line by line
+	if os.path.isfile(filepath):
+		with open(filepath, 'r') as file_object:
+			line = file_object.readline()
+			while line:
+				# at each line check for a match with a regex
+				key, match = _parse_line(line)
+
+				if key == 'httpport':
+					port = match.group('httpport')
+					if port[0] == '+':
+						data.useSSL = True
+						data.serverPort = port[1:]
+					else:
+						data.serverPort = port
+
+				if key == 'httpuser':
+					data.username = match.group('httpuser')
+
+				if key == 'httppwd':
+					data.password = match.group('httppwd')
+
+				line = file_object.readline()
 
 
 def dlg_xh(w):
@@ -109,14 +165,14 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		self.close()
 
 class oscamServer:
-	serverName = "localhost"
+	serverName = "Autodetected"
 	serverIP   = "127.0.0.1"
 	serverPort = "8081"
 	username   = "username"
 	password   = "password"
 	useSSL     = False
 
-CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/OscamStatus.cfg")
+CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "/etc/enigma2/oscamstatus.cfg")
 
 def readCFG():
 	cfg = None
@@ -141,8 +197,10 @@ def readCFG():
 				tmp.useSSL = bool(int(v[5]))
 				oscamServers.append(tmp)
 	if len(oscamServers) == 0:
-		print "[OscamStatus] no config file found, using defaults..."
+		print "[OscamStatus] no config file found, using autoconfig..."
 		tmp = oscamServer()
+		parse_oscam_version_file('/tmp/.oscam/oscam.version',tmp)
+		parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf",tmp)
 		oscamServers.append(tmp)
 	return oscamServers
 
