@@ -12,5 +12,9 @@ Version 1.0
 * Support for Full HD skin (full screen log)
 
 Version 1.1
-* Autconfiguration: it will retrieve the running OScam setup automatically when no config file found
+* Autoconfiguration: it will retrieve the running OScam setup automatically when no config file found
 * configuration file moved and renamed to /etc/enigma2/oscamstatus.cfg
+
+Version 1.2
+* Improve Autodetect
+* Autodetected server name is not saved nor readed from configuration file
