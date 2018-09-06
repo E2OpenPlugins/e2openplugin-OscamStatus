@@ -80,6 +80,8 @@ def parse_oscam_version_file(filepath,data):
 					data.ConfigDir = match.group('ConfigDir')
 
 				line = file_object.readline()
+		return 1
+	return 0
 
 def parse_oscam_conf_file(filepath,data):
 	# open the file and read through it line by line
@@ -92,6 +94,7 @@ def parse_oscam_conf_file(filepath,data):
 
 				if key == 'httpport':
 					port = match.group('httpport')
+					data.serverName="Autodetected"
 					if port[0] == '+':
 						data.useSSL = True
 						data.serverPort = port[1:]
@@ -165,7 +168,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		self.close()
 
 class oscamServer:
-	serverName = "Autodetected"
+	serverName = "NewServer"
 	serverIP   = "127.0.0.1"
 	serverPort = "8081"
 	username   = "username"
@@ -195,26 +198,32 @@ def readCFG():
 				tmp.serverPort = v[3]
 				tmp.serverName = v[4]
 				tmp.useSSL = bool(int(v[5]))
-				oscamServers.append(tmp)
+				if tmp.serverName != 'Autodetected':
+					oscamServers.append(tmp)
 	if len(oscamServers) == 0:
-		print "[OscamStatus] no config file found, using autoconfig..."
-		tmp = oscamServer()
-		parse_oscam_version_file('/tmp/.oscam/oscam.version',tmp)
+		print "[OscamStatus] no config file found"
+	tmp = oscamServer()
+	if parse_oscam_version_file('/tmp/.oscam/oscam.version',tmp):
 		parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf",tmp)
-		oscamServers.append(tmp)
+	oscamServers.append(tmp)
 	return oscamServers
 
 def writeCFG(oscamServers):
 	cfg = file(CFG, "w")
+	savedconfig = 0
 	print "[OscamStatus] writing datfile..."
 	for line in oscamServers:
-		cfg.write(line.username+' ')
-		cfg.write(line.password+' ')
-		cfg.write(line.serverIP+' ')
-		cfg.write(line.serverPort+' ')
-		cfg.write(line.serverName+' ')
-		cfg.write(str(int(line.useSSL))+'\n')
+		if line.serverName != 'Autodetected':
+			cfg.write(line.username+' ')
+			cfg.write(line.password+' ')
+			cfg.write(line.serverIP+' ')
+			cfg.write(line.serverPort+' ')
+			cfg.write(line.serverName+' ')
+			cfg.write(str(int(line.useSSL))+'\n')
+			savedconfig = 1
 	cfg.close()
+	if not savedconfig:
+		os.remove(CFG)
 
 class OscamServerEntryList(MenuList):
 	def __init__(self, list, enableWrapAround = True):

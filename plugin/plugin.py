@@ -40,7 +40,7 @@ from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigS
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, picons, piconLoader, USEPICONS, PICONPATH
 
-VERSION = "1.0"
+VERSION = "1.2"
 TIMERTICK = 10000
 
 # Converts past seconds into days, hours, minutes and seconds ...
