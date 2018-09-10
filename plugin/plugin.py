@@ -24,24 +24,53 @@ from Components.MenuList import MenuList
 from Components.ConfigList import ConfigListScreen
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend, MultiContentEntryPixmapAlphaTest
 
-from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists, resolveFilename, SCOPE_CURRENT_PLUGIN
 
-from enigma import eTimer, getDesktop, eListboxPythonMultiContent, eListbox, gFont, \
-                   RT_HALIGN_LEFT, RT_VALIGN_CENTER, ePoint, ePythonMessagePump
+from enigma import ePicLoad, eTimer, getDesktop, eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, BT_SCALE, BT_KEEP_ASPECT_RATIO, ePythonMessagePump, ePoint
+from Tools.LoadPixmap import LoadPixmap
+
+try:
+	from Components.Renderer.Picon import getPiconName
+	getPiconsName = True
+except:
+	getPiconsName = False
 
 from threading import Thread, Lock
 import xml.dom.minidom
 import urllib2
 import ssl
+from os import path, listdir
+import re
+
 
 from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigScreen, \
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
-                             dlg_xh, picons, piconLoader, USEPICONS, PICONPATH
+                             dlg_xh, USEPICONS
 
-VERSION = "1.2"
+VERSION = "1.3"
 TIMERTICK = 10000
+
+FULLHD = False
+if getDesktop(0).size().width() >= 1920:
+	FULLHD = True
+
+def getPicon(channelname):
+	searchPiconPaths = ['/usr/share/enigma2/picon/', '/media/usb/picon/', '/media/cf/picon/', '/picon/', '/media/hdd/picon/']
+	channelname = re.sub(r'\[.*?\]', '', channelname)
+	channelname = re.sub('[^a-z0-9]', '', channelname.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
+	for path in searchPiconPaths:
+		pngname = path + channelname + ".png"
+		if fileExists(pngname):
+			return pngname
+		elif len(channelname) > 2 and channelname.endswith('hd'):
+			pngname = path + channelname[:-2] + ".png"
+			if fileExists(pngname):
+				return pngname		
+	pngname=resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
+	return pngname
+
 
 # Converts past seconds into days, hours, minutes and seconds ...
 def elapsedTime(s, fmt, hasDays = False):
@@ -167,6 +196,7 @@ class client:
 		self.protocolext = "n/a"
 		self.au = "n/a"
 		self.caid = "n/a"
+		self.provid = "n/a"
 		self.srvid = "n/a"
 		self.ecmtime = "n/a"
 		self.ecmhistory = "n/a"
@@ -199,6 +229,7 @@ class card:
 	def __init__(self):
 		self.number = "n/a"
 		self.caid = "n/a"
+		self.provid = "n/a"
 		self.system = "n/a"
 		self.reshare = "n/a"
 		self.hop = "n/a"
@@ -250,25 +281,45 @@ class readerlist:
 
 # ReaderServiceDataScreen...
 class ReaderServiceDataScreen(Screen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
-			<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget source="data" render="Listbox" position="10,130" size="700,396" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  1, 0), size = ( 55, 22), font=0, flags = RT_HALIGN_LEFT, text = 0),
-						MultiContentEntryText(pos = ( 60, 0), size = ( 80, 22), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (145, 0), size = (340, 22), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (500, 0), size = (130, 22), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (635, 0), size = ( 50, 22), font=0, flags = RT_HALIGN_LEFT, text = 4),
-					],
-					"fonts": [gFont("Regular", 19)],
-					"itemHeight": 22
-					}
-				</convert>
-			</widget>
-		</screen>""" % (dlg_xh(720))
-	
+	if FULLHD:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="1080,%d" name="ReaderDataScreen" >
+				<widget render="Label" source="title" position="15,50" size="1050,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget source="data" render="Listbox" position="15,100" size="1050,898" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  1, 0), size = ( 82, 33), font=0, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = ( 90, 0), size = (120, 33), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (218, 0), size = (510, 33), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (750, 0), size = (195, 33), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (953, 0), size = ( 75, 33), font=0, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 28)],
+						"itemHeight": 33
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(1080))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
+				<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget source="data" render="Listbox" position="10,130" size="700,396" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  1, 0), size = ( 55, 22), font=0, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = ( 60, 0), size = ( 80, 22), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (145, 0), size = (340, 22), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (500, 0), size = (130, 22), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (635, 0), size = ( 50, 22), font=0, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 19)],
+						"itemHeight": 22
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(720))
+
 	def __init__(self, session, r):
 		def compare(a, b):
 			return cmp(a[0], b[0]) or cmp(a[1], b[1])
@@ -298,50 +349,101 @@ class ReaderServiceDataScreen(Screen):
 
 # ClientDataScreen...
 class ClientDataScreen(Screen):
-	part1 = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="ClientDataScreen" >
-			<widget render="Label" source="title"  position=" 20, 70" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="lprotocol" position="  20,100" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "protocol" position="140,100" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lprotocolext" position=" 20,120" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "protocolext" position="140,120" size="235,60" font="Regular;18"/>
-			<widget render="Label" source="lau" position=" 20,180" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "au" position="140,180" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lcaid" position=" 20,200" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "caid" position="140,200" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lsrvid" position=" 20,220" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "srvid" position="140,220" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lecmtime" position=" 20,240" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "ecmtime" position="140,240" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lecmhistory" position=" 20,260" size="120,80" font="Regular;18"/>
-			<widget render="Label" source="historymax" position=" 345,260" size="40,16" font="Regular;14"/>
-			<widget render="Label" source="historymin" position=" 345,326" size="40,16" font="Regular;14"/>""" % (dlg_xh(440))
+	if FULLHD:
+		# HD skin
+		part1 = """
+				<screen flags="wfNoBorder" position="%d,0" size="660,%d" name="ClientDataScreen" >
+					<widget render="Label" source="title"  position=" 30,90" size="630,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+					<widget render="Label" source="lprotocol" position="  30,150" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "protocol" position="210,150" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lprotocolext" position=" 30,180" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "protocolext" position="210,180" size="352,90" font="Regular;27"/>
+					<widget render="Label" source="lau" position=" 30,270" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "au" position="210,270" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lcaid" position=" 30,300" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "caid" position="210,300" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lprovid" position="330,300" size="120,30" font="Regular;27"/>
+					<widget render="Label" source= "provid" position="450,300" size="200,30" font="Regular;27"/>
+					<widget render="Label" source="lsrvid" position=" 30,330" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "srvid" position="210,330" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lecmtime" position=" 30,360" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "ecmtime" position="210,360" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lecmhistory" position=" 30,390" size="180,120" font="Regular;27"/>
+					<widget render="Label" source="historymax" position=" 517,390" size="60,24" font="Regular;21"/>
+					<widget render="Label" source="historymin" position=" 517,489" size="60,24" font="Regular;21"/>""" % (dlg_xh(660))
 
-	ecmhistory = ""
-	x = 140
-	for i in range(20):
-		ecmhistory += "<widget name=\"progress%d\" zPosition=\"4\" position=\"%d,262\" size=\"10,78\" transparent=\"1\" borderColor=\"#404040\" borderWidth=\"1\" orientation=\"orBottomToTop\" />\n" % (i, x)
-		x += 10
+		ecmhistory = ""
+		x = 210
+		for i in range(20):
+			ecmhistory += "<widget name=\"progress%d\" zPosition=\"4\" position=\"%d,393\" size=\"15,117\" transparent=\"1\" borderColor=\"#404040\" borderWidth=\"1\" orientation=\"orBottomToTop\" />\n" % (i, x)
+			x += 15
 
-	part2 = """
-			<widget render="Label" source="lanswered" position=" 20,340" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "answered" position="140,340" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lservice" position=" 20,360" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "service" position="140,360" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="llogin" position=" 20,380" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "login" position="140,380" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lonline" position=" 20,400" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "online" position="140,400" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lidle" position=" 20,420" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "idle" position="140,420" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lip" position=" 20,440" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "ip" position="140,440" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lport" position=" 20,460" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "port" position="140,460" size="235,20" font="Regular;18"/>
-			<widget render="Label" source="lconnection" position=" 20,480" size="120,20" font="Regular;18"/>
-			<widget render="Label" source= "connection" position="140,480" size="235,20" font="Regular;18"/>
-			<widget name="KeyYellow" pixmap="%s" position="345,475" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
-		</screen>""" % resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png")
+		part2 = """
+					<widget render="Label" source="lanswered" position=" 30,510" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "answered" position="210,510" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lservice" position=" 30,540" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "service" position="210,540" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="llogin" position=" 30,570" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "login" position="210,570" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lonline" position=" 30,600" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "online" position="210,600" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lidle" position=" 30,630" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "idle" position="210,630" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lip" position=" 30,660" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "ip" position="210,660" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lport" position=" 30,690" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "port" position="210,690" size="352,30" font="Regular;27"/>
+					<widget render="Label" source="lconnection" position=" 30,720" size="180,30" font="Regular;27"/>
+					<widget render="Label" source= "connection" position="210,720" size="352,30" font="Regular;27"/>
+					<widget name="KeyYellow" pixmap="%s" position="555,720" size="52,37" zPosition="4" transparent="1" alphatest="on"/>
+				</screen>""" % resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png")
+	else:
+		part1 = """
+				<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="ClientDataScreen" >
+					<widget render="Label" source="title"  position=" 20, 70" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+					<widget render="Label" source="lprotocol" position="  20,100" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "protocol" position="140,100" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lprotocolext" position=" 20,120" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "protocolext" position="140,120" size="235,60" font="Regular;18"/>
+					<widget render="Label" source="lau" position=" 20,180" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "au" position="140,180" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lcaid" position=" 20,200" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "caid" position="140,200" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lprovid" position="220,200" size="130,30" font="Regular;27"/>
+					<widget render="Label" source= "provid" position="350,200" size="90,30" font="Regular;27"/>
+					<widget render="Label" source="lsrvid" position=" 20,220" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "srvid" position="140,220" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lecmtime" position=" 20,240" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "ecmtime" position="140,240" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lecmhistory" position=" 20,260" size="120,80" font="Regular;18"/>
+					<widget render="Label" source="historymax" position=" 345,260" size="40,16" font="Regular;14"/>
+					<widget render="Label" source="historymin" position=" 345,326" size="40,16" font="Regular;14"/>""" % (dlg_xh(440))
+
+		ecmhistory = ""
+		x = 140
+		for i in range(20):
+			ecmhistory += "<widget name=\"progress%d\" zPosition=\"4\" position=\"%d,262\" size=\"10,78\" transparent=\"1\" borderColor=\"#404040\" borderWidth=\"1\" orientation=\"orBottomToTop\" />\n" % (i, x)
+			x += 10
+
+		part2 = """
+					<widget render="Label" source="lanswered" position=" 20,340" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "answered" position="140,340" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lservice" position=" 20,360" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "service" position="140,360" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="llogin" position=" 20,380" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "login" position="140,380" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lonline" position=" 20,400" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "online" position="140,400" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lidle" position=" 20,420" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "idle" position="140,420" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lip" position=" 20,440" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "ip" position="140,440" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lport" position=" 20,460" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "port" position="140,460" size="235,20" font="Regular;18"/>
+					<widget render="Label" source="lconnection" position=" 20,480" size="120,20" font="Regular;18"/>
+					<widget render="Label" source= "connection" position="140,480" size="235,20" font="Regular;18"/>
+					<widget name="KeyYellow" pixmap="%s" position="345,475" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
+				</screen>""" % resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png")
 
 	def __init__(self, session, type, oServer, data):
 		self.skin = ClientDataScreen.part1+ClientDataScreen.ecmhistory+ClientDataScreen.part2
@@ -359,9 +461,9 @@ class ClientDataScreen(Screen):
 		self["KeyYellow"].hide()
 
 		if type == "clients":
-			self["title"].setText("Client "+data.name+"@"+oServer.serverName)
+			self["title"].setText(_("Client")+" "+data.name+"@"+oServer.serverName)
 		else:
-			self["title"].setText("Reader "+data.name+"@"+oServer.serverName)
+			self["title"].setText(_("Reader")+" "+data.name+"@"+oServer.serverName)
 			if data.protocol.startswith("cccam"):
 				self["KeyYellow"].show()
 
@@ -397,20 +499,31 @@ class ClientDataScreen(Screen):
 		self["lprotocol"] = StaticText("protocol:")
 		self[ "protocol"] = StaticText(data.protocol)
 		self["lprotocolext"] = StaticText("protocolext:")
-		self[ "protocolext"] = StaticText(data.protocolext)
+		if data.protocolext != "":
+			self[ "protocolext"] = StaticText(data.protocolext)
+		else:
+			self[ "protocolext"] = StaticText(_("not available"))
 		self["lau"] = StaticText("au:")
 		self[ "au"] = StaticText(auEntrys[data.au])
 		self["lcaid"] = StaticText("caid:")
 		self[ "caid"] = StaticText(data.caid)
+		self["lprovid"] = StaticText("provid:")
+		self[ "provid"] = StaticText(data.provid)
 		self["lsrvid"] = StaticText("srvid:")
 		self[ "srvid"] = StaticText(data.srvid)
 		self["lecmtime"] = StaticText("ecmtime:")
-		self[ "ecmtime"] = StaticText(data.ecmtime)
+		if data.ecmtime != "":
+			self[ "ecmtime"] = StaticText(data.ecmtime)
+		else:
+			self[ "ecmtime"] = StaticText(_("not available"))
 		self["lecmhistory"] = StaticText("ecmhistory:")
 		self[ "historymax"] = StaticText(str(int(self.base)))
 		self[ "historymin"] = StaticText("0")
 		self["lanswered"] = StaticText("answered:")
-		self[ "answered"] = StaticText(data.answered)
+		if data.answered != "":
+			self[ "answered"] = StaticText(data.answered)
+		else:
+			self[ "answered"] = StaticText(_("not available"))
 		self["lservice"] = StaticText("service:")
 		self[ "service"] = StaticText(data.service)
 		self["llogin"] = StaticText("login:")
@@ -475,15 +588,15 @@ class DownloadXMLScreen(Screen):
 		self.setTitle(_("loading..."))
 		self.download = True
 		print "[OscamStatus] loading", self.url
-		self.getIndex()		
+		self.getIndex()
 		# Message Queue initialisation...
-		getPage2.MessagePump.recv_msg.get().append(self.gotThreadMsg)	
+		getPage2.MessagePump.recv_msg.get().append(self.gotThreadMsg)
 		# Download Thread started...
 		try:
 			getPage2.Start(self.url, self.oServer.username, self.oServer.password)
 		except RuntimeError:
 			self.download = False
-			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)	
+			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
 			print "[OscamStatus] Thread already running..."
 
 	def sendNewPart(self, part):
@@ -501,11 +614,11 @@ class DownloadXMLScreen(Screen):
 #		try:
 		msg = getPage2.Message.pop()
 #		except IndexError:
-#			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)	
+#			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
 #			return
 
 		if msg[0] == THREAD_ERROR:
-			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)	
+			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
 			self.download = False
 			errStr = str(msg[1])
 			if self.timerOn:
@@ -516,7 +629,7 @@ class DownloadXMLScreen(Screen):
 			self.close(1)
 
 		elif msg[0] == THREAD_FINISHED:
-			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)	
+			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
 			self.download = False
 			print "[OscamStatus] Download finished"
 
@@ -558,7 +671,8 @@ class DownloadXMLScreen(Screen):
 		if self.timerOn:
 			self.timer.stop()
 		if self.download:
-			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)	
+			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
+
 		self.close(0)
 
 	def setTitle(self, txt):
@@ -566,21 +680,38 @@ class DownloadXMLScreen(Screen):
 
 # OscamDataScreen...
 class OscamDataScreen(DownloadXMLScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamDataScreen" >
-			<widget render="Label" source="title"    position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="lversion" position=" 20,130" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "version" position="115,130" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lrevision" position=" 20,150" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "revision" position="115,150" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lstarttime" position=" 20,170" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "starttime" position="115,170" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="luptime" position=" 20,190" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "uptime" position="115,190" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lreadonly" position=" 20,210" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "readonly" position="115,210" size="360,20" font="Regular;18"/>
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-		</screen>""" % (dlg_xh(440))
+	if FULLHD:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="OscamDataScreen" >
+				<widget render="Label" source="title"    position=" 30, 120" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="lversion" position=" 30,195" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "version" position="170,195" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="lrevision" position=" 30,225" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "revision" position="170,225" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="lstarttime" position=" 30,255" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "starttime" position="170,255" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="luptime" position=" 30,285" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "uptime" position="170,285" size="550,30" font="Regular;27"/>
+				<widget render="Label" source="lreadonly" position=" 30,315" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "readonly" position="170,315" size="535,30" font="Regular;27"/>
+				<eLabel text="" position="30,675" size="600,3" transparent="0" backgroundColor="#ffffff" />
+			</screen>""" % (dlg_xh(720))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamDataScreen" >
+				<widget render="Label" source="title"    position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="lversion" position=" 20,130" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "version" position="115,130" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lrevision" position=" 20,150" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "revision" position="115,150" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lstarttime" position=" 20,170" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "starttime" position="115,170" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="luptime" position=" 20,190" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "uptime" position="115,190" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lreadonly" position=" 20,210" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "readonly" position="115,210" size="360,20" font="Regular;18"/>
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+			</screen>""" % (dlg_xh(440))
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -635,25 +766,46 @@ class OscamDataScreen(DownloadXMLScreen):
 
 # OscamRestartScreen...
 class OscamRestartScreen(DownloadXMLScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamRestartScreen" >
-			<widget render="Label" source="title"    position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="lversion" position=" 20,130" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "version" position="115,130" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lrevision" position=" 20,150" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "revision" position="115,150" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lstarttime" position=" 20,170" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "starttime" position="115,170" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="luptime" position=" 20,190" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "uptime" position="115,190" size="360,20" font="Regular;18"/>
-			<widget render="Label" source="lreadonly" position=" 20,210" size="90,20" font="Regular;18"/>
-			<widget render="Label" source= "readonly" position="115,210" size="360,20" font="Regular;18"/>
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-			<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-			<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-		</screen>""" % (dlg_xh(440))
+	if FULLHD:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="OscamRestartScreen" >
+				<widget render="Label" source="title"    position=" 30, 120" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="lversion" position=" 30,195" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "version" position="170,195" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="lrevision" position=" 30,225" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "revision" position="170,225" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="lstarttime" position=" 30,255" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "starttime" position="170,255" size="535,30" font="Regular;27"/>
+				<widget render="Label" source="luptime" position=" 30,285" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "uptime" position="170,285" size="550,30" font="Regular;27"/>
+				<widget render="Label" source="lreadonly" position=" 30,315" size="130,30" font="Regular;27"/>
+				<widget render="Label" source= "readonly" position="170,315" size="535,30" font="Regular;27"/>
+				<eLabel text="" position="30,675" size="660,3" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="30,690" size="210,60" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="30,690" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;26"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,690" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="240,690" size="209,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
+			</screen>""" % (dlg_xh(720))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamRestartScreen" >
+				<widget render="Label" source="title"    position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="lversion" position=" 20,130" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "version" position="115,130" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lrevision" position=" 20,150" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "revision" position="115,150" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lstarttime" position=" 20,170" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "starttime" position="115,170" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="luptime" position=" 20,190" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "uptime" position="115,190" size="360,20" font="Regular;18"/>
+				<widget render="Label" source="lreadonly" position=" 20,210" size="90,20" font="Regular;18"/>
+				<widget render="Label" source= "readonly" position="115,210" size="360,20" font="Regular;18"/>
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+			</screen>""" % (dlg_xh(440))
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -748,36 +900,71 @@ class OscamRestartScreen(DownloadXMLScreen):
 
 # ReaderDataScreen...
 class ReaderDataScreen(DownloadXMLScreen):
-	x,h = dlg_xh(720)
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
-			<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget source="data" render="Listbox" position="10,130" size="700,360" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  2, 2), size = ( 40, 28), font=2, flags = RT_HALIGN_LEFT, text = 0),
-						MultiContentEntryText(pos = ( 50, 5), size = ( 50, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (110, 5), size = (200, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (320, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (470, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+	if FULLHD:
+		# HD skin
+		x,h = dlg_xh(1200)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="ReaderDataScreen" >
+				<widget render="Label" source="title" position="20,60" size="1180,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget source="data" render="Listbox" position="20,100" size="1160,800" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  3, 3), size = ( 60, 37), font=2, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = ( 65, 3), size = ( 80, 36), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (235, 3), size = (300, 36), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (580, 3), size = (210, 36), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (800, 3), size = (210, 36), font=0, flags = RT_HALIGN_LEFT, text = 4),
 
-						MultiContentEntryText(pos = ( 20,25), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 5),
-						MultiContentEntryText(pos = ( 50,25), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 6),
-						MultiContentEntryText(pos = ( 20,40), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 7),
-						MultiContentEntryText(pos = ( 50,40), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 8),
-						MultiContentEntryText(pos = (320,25), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 9),
-						MultiContentEntryText(pos = (350,25), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 10),
-						MultiContentEntryText(pos = (320,40), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 11),
-						MultiContentEntryText(pos = (350,40), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 12),
-					],
-					"fonts": [gFont("Regular", 20), gFont("Regular", 15), gFont("Regular", 24)],
-					"itemHeight": 60
-					}
-				</convert>
-			</widget>
-			<widget name="KeyYellow" pixmap="%s" position="675,495" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
-		</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png"))
-	
+							MultiContentEntryText(pos = ( 65,42), size = ( 20, 30), font=1, flags = RT_HALIGN_LEFT, text = 5),
+							MultiContentEntryText(pos = ( 85,42), size = (490, 30), font=1, flags = RT_HALIGN_LEFT, text = 6),
+							MultiContentEntryText(pos = ( 65,74), size = ( 20, 30), font=1, flags = RT_HALIGN_LEFT, text = 7),
+							MultiContentEntryText(pos = ( 85,74), size = (490, 30), font=1, flags = RT_HALIGN_LEFT, text = 8),
+							MultiContentEntryText(pos = (580,42), size = ( 30, 30), font=1, flags = RT_HALIGN_LEFT, text = 9),
+							MultiContentEntryText(pos = (610,42), size = (490, 30), font=1, flags = RT_HALIGN_LEFT, text = 10),
+							MultiContentEntryText(pos = (580,74), size = ( 30, 30), font=1, flags = RT_HALIGN_LEFT, text = 11),
+							MultiContentEntryText(pos = (610,74), size = (490, 30), font=1, flags = RT_HALIGN_LEFT, text = 12),
+						],
+						"fonts": [gFont("Regular", 30), gFont("Regular", 23), gFont("Regular", 36)],
+						"itemHeight": 110
+						}
+					</convert>
+				</widget>
+				<widget name="KeyYellow" pixmap="%s" position="975,1000" size="53,38" zPosition="4" transparent="1" alphatest="on"/>
+			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png"))
+
+	else:
+		# Low res skin
+		x,h = dlg_xh(720)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
+				<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget source="data" render="Listbox" position="10,130" size="700,360" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  2, 2), size = ( 40, 28), font=2, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = ( 40, 5), size = ( 25, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (110, 5), size = (200, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (320, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (470, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+
+							MultiContentEntryText(pos = ( 40,25), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 5),
+							MultiContentEntryText(pos = ( 70,25), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 6),
+							MultiContentEntryText(pos = ( 40,40), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 7),
+							MultiContentEntryText(pos = ( 70,40), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 8),
+							MultiContentEntryText(pos = (320,25), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 9),
+							MultiContentEntryText(pos = (350,25), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 10),
+							MultiContentEntryText(pos = (320,40), size = ( 20, 20), font=1, flags = RT_HALIGN_LEFT, text = 11),
+							MultiContentEntryText(pos = (350,40), size = (300, 20), font=1, flags = RT_HALIGN_LEFT, text = 12),
+						],
+						"fonts": [gFont("Regular", 20), gFont("Regular", 15), gFont("Regular", 24)],
+						"itemHeight": 60
+						}
+					</convert>
+				</widget>
+				<widget name="KeyYellow" pixmap="%s" position="675,495" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
+			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png"))
+
+
 	def __init__(self, session, part, oServer):
 		self.skin = ReaderDataScreen.skin
 		self.session = session
@@ -859,18 +1046,21 @@ class ReaderDataScreen(DownloadXMLScreen):
 		self.setTitle(r[0].totalcards+' Cards@'+r[0].label+'('+r[0].hostaddress+')')
 		for c in r[0].cards:
 			p = c.providers
-			if len(p) == 4:
+			if len(p) > 4:
 				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,p[0].service,p[1].number,p[1].service,p[2].number,p[2].service,p[3].number,p[3].service))
+				str(len(p)),_("providers on this card max. display is:"),' ',_("Use Oscam Webif to see them all."),'4',' ',' ',' '))
+			elif len(p) == 4:
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,p[3].number,'@'+p[3].provid+'='+p[3].service))
 			elif len(p) == 3:
 				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,p[0].service,p[1].number,p[1].service,p[2].number,p[2].service,' ',' '))
+				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,' ',' '))
 			elif len(p) == 2:
 				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,p[0].service,p[1].number,p[1].service,' ',' ',' ',' '))
+				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,' ',' ',' ',' '))
 			elif len(p) == 1:
 				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,p[0].service,' ',' ',' ',' ',' ',' '))
+				p[0].number,'@'+p[0].provid+'='+p[0].service,' ',' ',' ',' ',' ',' '))
 		self["data"].setList(list)
 		self.r = r
 
@@ -890,12 +1080,11 @@ class LogDataList(MenuList):
 
 # LogDataScreen...
 class LogDataScreen(DownloadXMLScreen):
-	w = getDesktop(0).size().width()
-	if w == 1920:
+	if FULLHD:
 		skin = """
 		<screen flags="wfNoBorder" position="0,0" size="1920,1080" name="LogDataScreen" >
-			<widget render="Label" source="title"  position="10,10" size="1910,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;24"/>
-			<widget name="data" position="10,40" size="1900,1030" scrollbarMode="showOnDemand" />
+			<widget render="Label" source="title"  position="10,10" size="1910,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+			<widget name="data" position="10,50" size="1900,1020" scrollbarMode="showOnDemand" />
 		</screen>"""
 	elif w == 1280:
 		skin = """
@@ -915,7 +1104,8 @@ class LogDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position="10,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="data" position="10,130" size="700,352" scrollbarMode="showOnDemand" />
 			</screen>"""
-	
+
+
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
 		self.skin = LogDataScreen.skin
@@ -924,10 +1114,10 @@ class LogDataScreen(DownloadXMLScreen):
 
 		DownloadXMLScreen.__init__(self, session, part, oServer)
 
-		if LogDataScreen.w == 1920:
+		if FULLHD:
 			self.entryW = 1878
-			self.entryH = 16
-			self["data"] = LogDataList([], 16)
+			self.entryH = 30
+			self["data"] = LogDataList([], 21)
 		elif LogDataScreen.w == 1280:
 			self.entryW = 1198
 			self.entryH = 18
@@ -959,7 +1149,7 @@ class LogDataScreen(DownloadXMLScreen):
 		dom = xml.dom.minidom.parseString(self.data)
 		log = self.parseXML(dom)
 
-		self.setTitle("Logfile@"+self.oServer.serverName)
+		self.setTitle(_("Logfile")+"@"+self.oServer.serverName)
 		list = []
 		for line in log.splitlines():
 			if "rejected" in line or "invalid" in line: c = "0xff2222" # red
@@ -979,32 +1169,60 @@ class LogDataScreen(DownloadXMLScreen):
 
 # ReaderlistScreen...
 class ReaderlistScreen(DownloadXMLScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="ReaderlistScreen" >
-			<widget render="Label" source="title"  position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="label0" position=" 50,130" size="180,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position="230,130" size="130,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="360,130" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget source="data" render="Listbox" position="20,153" size="400,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (16, 16), png = 0),
-						MultiContentEntryText(pos = ( 30, 2), size = (175, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (215, 2), size = (135, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (355, 2), size = ( 15, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 24
-					}
-				</convert>
-			</widget>
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-			<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-			<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
-			<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
-		</screen>""" % (dlg_xh(440))
-	
+	if FULLHD:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="850,%d" name="ReaderlistScreen" >
+				<widget render="Label" source="title"  position=" 20, 30" size="810,36" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="label0" position=" 60,70" size="400,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
+				<widget render="Label" source="label1" position="470,70" size="260,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
+				<widget render="Label" source="label2" position="740,70" size=" 30,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
+				<widget source="data" render="Listbox" position="20,110" size="810,790" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (5, 8), size = (24, 24), png = 0),
+							MultiContentEntryText(pos = ( 40, 3), size = (400, 36), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (450, 3), size = (260, 36), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (720, 3), size = ( 30, 36), font=0, flags = RT_HALIGN_LEFT, text = 3),
+						],
+						"fonts": [gFont("Regular", 28)],
+						"itemHeight": 32
+						}
+					</convert>
+				</widget>
+				<eLabel text="" position="20,900" size="810,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRedtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,930" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,930" size="210,60" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;28"/>
+			</screen>""" % (dlg_xh(850))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="ReaderlistScreen" >
+				<widget render="Label" source="title"  position=" 20, 80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="label0" position=" 50,130" size="180,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position="230,130" size="130,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="360,130" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,153" size="400,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (16, 16), png = 0),
+							MultiContentEntryText(pos = ( 30, 2), size = (175, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (215, 2), size = (135, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (355, 2), size = ( 15, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 24
+						}
+					</convert>
+				</widget>
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
+			</screen>""" % (dlg_xh(440))
+
+
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
 		self.skin = ReaderlistScreen.skin
@@ -1026,9 +1244,15 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions"],
 		{
 			"up": self.upPressed,
-			"down": self.downPressed,			
+			"down": self.downPressed,
+
+
+
 			"left": self.leftPressed,
-			"right": self.rightPressed,			
+			"right": self.rightPressed,
+
+
+
 			"red": self.redPressed,
 			"green": self.greenPressed,
 			"cancel": self.Close
@@ -1133,7 +1357,10 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self["data"].selectPrevious()
 		self.setupButtons()
 
-	def downPressed(self):			
+	def downPressed(self):
+
+
+
 		if self.download:
 			return
 		self["data"].selectNext()
@@ -1142,81 +1369,159 @@ class ReaderlistScreen(DownloadXMLScreen):
 	def leftPressed(self):
 		pass
 
-	def rightPressed(self):			
+	def rightPressed(self):
+
+
+
 		pass
 
 # ReaderstatsScreen...
 class ReaderstatsScreen(DownloadXMLScreen):
-	# picon skin...
-	skin1 = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
-			<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label3" position="415,203" size="100,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
-						MultiContentEntryText(pos = (115, 2), size = (165, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
-						MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
-						MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6),
-					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 30
-					}
-				</convert>
-			</widget>
-		</screen>""" % (dlg_xh(720))
+	w = getDesktop(0).size().width()
+	if w >= 1920:
+		# HD picon skin...
+		skin1 = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
+				<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="415,203" size="100,20" halign="center" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
+							MultiContentEntryText(pos = (115, 2), size = (165, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_CENTER, text = 3),
+							MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
+							MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 30
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(1390))
 
-	# without picons...
-	skin2 = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
-			<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label3" position="415,203" size="100,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
-						MultiContentEntryText(pos = ( 65, 2), size = (215, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
-						MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
-					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 24
-					}
-				</convert>
-			</widget>
-		</screen>""" % (dlg_xh(720))
+		# HD without picons...
+		skin2 = """
+			<screen flags="wfNoBorder" position="%d,0" size="1390,%d" name="ReaderstatsScreen" >
+				<widget render="Label" source="title" position="20,60" size="1080,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="lEMMerror"   position="  0,100" size="340,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMwritten" position="340,100" size="340,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMskipped" position="680,100" size="340,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMblocked" position="920,100" size="340,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMerror"   position="  0,165" size="340,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMwritten" position="340,165" size="340,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMskipped" position="680,165" size="340,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMblocked" position="920,165" size="340,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label0" position=" 30,200" size=" 90,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label1" position="125,200" size="540,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label2" position="670,200" size="265,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label3" position="940,200" size="150,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label4" position="1095,200" size="140,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label5" position="1240,200" size="135,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget source="data" render="Listbox" position="20,235" size="1350,660" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  5, 3), size = ( 90, 36), font=0, flags = RT_HALIGN_RIGHT, text = 0),
+							MultiContentEntryText(pos = (100, 3), size = (540, 36), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (645, 3), size = (265, 36), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (915, 3), size = (150, 36), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (1070, 3), size = (140, 36), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (1215, 3), size = (135, 36), font=0, flags = RT_HALIGN_LEFT, text = 5),
+						],
+						"fonts": [gFont("Regular", 30)],
+						"itemHeight": 40
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(1390))
+
+
+	else:
+		# picon skin...
+		skin1 = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
+				<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="415,203" size="100,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
+							MultiContentEntryText(pos = (115, 2), size = (165, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
+							MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 30
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(720))
+
+		# without picons...
+		skin2 = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
+				<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="415,203" size="100,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
+							MultiContentEntryText(pos = ( 65, 2), size = (215, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 24
+						}
+					</convert>
+				</widget>
+			</screen>""" % (dlg_xh(720))
 
 	def __init__(self, session, reader, part, oServer):
 		self.oServer = oServer
@@ -1232,7 +1537,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 
 		self["label0"] = StaticText(_("req."))
 		self["label1"] = StaticText(_("channelname"))
-		self["label2"] = StaticText(_("caid:srvid"))
+		self["label2"] = StaticText(_("caid:provid:srvid"))
 		self["label3"] = StaticText(_("status"))
 		self["label4"] = StaticText(_("lasttime"))
 		self["label5"] = StaticText(_("avgtime"))
@@ -1313,49 +1618,93 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["EMMblocked"].setText(EMMblocked[:-3])
 
 		list = []
+		self.picon = ePicLoad()
 		self.setTitle("Status Reader "+self.reader+" @"+self.oServer.serverName)
 		for e in self.ecms:
 			if USEPICONS.value:
-				picon = picons.getPicon(e.srvid)
-				list.append((e.val, e.channelname, e.caid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime, picon))
+				picon = getPicon(e.channelname)
+				if picon != "":
+					psw = 50
+					psh = 30
+					if FULLHD:
+						psw = 110
+						psh = 55
+					self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
+					self.picon.startDecode(picon, 0, 0, False)
+					png = self.picon.getData()
+				else:
+					png = None
+				list.append((e.val, e.channelname, e.caid+":"+e.provid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime, png))
 			else:
-				list.append((e.val, e.channelname, e.caid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime))
+				list.append((e.val, e.channelname, e.caid+":"+e.provid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime))
 
-		# Nach Anzahl der Anfragen sortieren...
+		# Sort by number of requests...
 		list.sort(compare)
 		self["data"].setList(list)
 		self["data"].setIndex(self.oldIndex)
 
 # UserstatsScreen...
 class UserstatsScreen(DownloadXMLScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="UserstatsScreen" >
-			<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="label0" position=" 50,130" size="145,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position="195,130" size="145,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="340,130" size="155,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label3" position="495,130" size="205,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (16, 16), png = 0),
-						MultiContentEntryText(pos = ( 30, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryText(pos = (175, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-						MultiContentEntryText(pos = (320, 2), size = (150, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (475, 2), size = (205, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
-					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 24
-					}
-				</convert>
-			</widget>
-			<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-			<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-			<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
-			<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
-		</screen>""" % (dlg_xh(720))
-	
+	if FULLHD:
+	# HD skin
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="UserstatsScreen" >
+				<widget render="Label" source="title"  position=" 30,40" size="1020,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="label0" position=" 75,90" size="220,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label1" position="300,90" size="220,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label2" position="525,90" size="235,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label3" position="765,90" size="395,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget source="data" render="Listbox" position="30,125" size="1140,770" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (8, 8), size = (24, 24), png = 0),
+							MultiContentEntryText(pos = ( 45, 3), size = (220, 30), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (270, 3), size = (220, 30), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (495, 3), size = (235, 30), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (735, 3), size = (395, 30), font=0, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 27)],
+						"itemHeight": 31
+						}
+					</convert>
+				</widget>
+				<eLabel text="" position="30,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,910" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRedtext" position="20,910" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,910" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,910" size="210,60" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;24"/>
+			</screen>""" % (dlg_xh(1200))
+
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="UserstatsScreen" >
+				<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="label0" position=" 50,130" size="145,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position="195,130" size="145,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="340,130" size="155,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="495,130" size="205,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (16, 16), png = 0),
+							MultiContentEntryText(pos = ( 30, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (175, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (320, 2), size = (150, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (475, 2), size = (205, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 24
+						}
+					</convert>
+				</widget>
+				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
+			</screen>""" % (dlg_xh(720))
+
+
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
 		self.skin = UserstatsScreen.skin
@@ -1377,9 +1726,11 @@ class UserstatsScreen(DownloadXMLScreen):
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions"],
 		{
 			"up": self.upPressed,
-			"down": self.downPressed,			
+			"down": self.downPressed,
+
 			"left": self.leftPressed,
-			"right": self.rightPressed,			
+			"right": self.rightPressed,
+
 			"red": self.redPressed,
 			"green": self.greenPressed,
 			"cancel": self.Close
@@ -1435,7 +1786,7 @@ class UserstatsScreen(DownloadXMLScreen):
 
 	def setList(self):
 		list = []
-		self.setTitle("All Clients@"+self.oServer.serverName)
+		self.setTitle(_("All Clients")+"@"+self.oServer.serverName)
 		for index, u in enumerate(self.users):
 			if u.timeonchannel != "n/a":
 				self["label1"].setText(_("time on channel"))
@@ -1493,7 +1844,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self["data"].selectPrevious()
 		self.setupButtons()
 
-	def downPressed(self):			
+	def downPressed(self):
 		if self.download:
 			return
 		self["data"].selectNext()
@@ -1502,70 +1853,135 @@ class UserstatsScreen(DownloadXMLScreen):
 	def leftPressed(self):
 		pass
 
-	def rightPressed(self):			
+	def rightPressed(self):
 		pass
 
 # StatusDataScreen...
 class StatusDataScreen(DownloadXMLScreen):
-	# picon skin...
-	skin1 = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="StatusDataScreen" >
-			<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="label0" position=" 20,130" size="140,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position="160,130" size="146,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="306,130" size=" 34,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label3" position="340,130" size=" 80,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label4" position="420,130" size="280,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;17"/>
-			<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  2, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 0),
-						MultiContentEntryText(pos = (145, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryPixmapAlphaTest(pos = (290, 4), size = (16, 16), png = 2),
-						MultiContentEntryText(pos = (310, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_CENTER, text = 3),
-						MultiContentEntryPixmapAlphaTest(pos = (405, 0), size = (50, 30), png = 6),
-						MultiContentEntryText(pos = (460, 2), size = (220, 24), font=1, flags = RT_HALIGN_LEFT, text = 4),
-					],
-					"fonts": [gFont("Regular", 20), gFont("Regular", 18)],
-					"itemHeight": 30
-					}
-				</convert>
+	if FULLHD:
+		# HD picon skin...
+		skin1 = """
+				<screen flags="wfNoBorder" position="%d,0" size="1310,%d" name="StatusDataScreen" >
+					<widget render="Label" source="title"  position=" 20, 40" size=" 960, 39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+					<widget render="Label" source="label0" position=" 20, 80" size=" 320, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label1" position="350, 80" size=" 250, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label2" position="610, 80" size="  50, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label3" position="670, 80" size=" 130, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label4" position="805, 80" size=" 110, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label5" position="920, 80" size=" 370, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget source="data" render="Listbox" position=" 20,108" size="1270,800" scrollbarMode="showOnDemand">
+						<convert type="TemplatedMultiContent">
+							{"template": [
+								MultiContentEntryText(pos = (  2, 3), size = (320, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 0),
+								MultiContentEntryText(pos = (332, 2), size = (250, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
+								MultiContentEntryPixmapAlphaTest(pos = (605, 23), size = (50, 58), png = 2),
+								MultiContentEntryText(pos = (652, 2), size = (110, 66), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 3),
+								MultiContentEntryPixmapAlphaTest(pos = (775, 0), size = (110, 55), png = 4),
+								MultiContentEntryText(pos = (890, 2), size = (370, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 5),
+							],
+							"fonts": [gFont("Regular", 26)],
+							"itemHeight": 60
+							}
+						</convert>
+					</widget>
+					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
+					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+				</screen>""" % (dlg_xh(1310))
+
+		# HD without picons...
+		skin2 = """
+				<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="StatusDataScreen" >
+					<widget render="Label" source="title"  position=" 20, 40" size=" 960, 39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+					<widget render="Label" source="label0" position=" 20, 80" size=" 320, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label1" position="350, 80" size=" 250, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label2" position="610, 80" size="  50, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label3" position="670, 80" size=" 130, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget render="Label" source="label4" position="810, 80" size=" 370, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+					<widget source="data" render="Listbox" position=" 20,108" size="1160,800" scrollbarMode="showOnDemand">
+						<convert type="TemplatedMultiContent">
+							{"template": [
+								MultiContentEntryText(pos = (  2, 3), size = (320, 28), font=0, flags = RT_HALIGN_LEFT, text = 0),
+								MultiContentEntryText(pos = (332, 2), size = (250, 28), font=0, flags = RT_HALIGN_LEFT, text = 1),
+								MultiContentEntryPixmapAlphaTest(pos = (600, 4), size = (50, 28), png = 2),
+								MultiContentEntryText(pos = (652, 2), size = (130, 28), font=0, flags = RT_HALIGN_LEFT, text = 3),
+								MultiContentEntryText(pos = (792, 2), size = (370, 28), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							],
+							"fonts": [gFont("Regular", 26)],
+							"itemHeight": 32
+							}
+						</convert>
+					</widget>
+					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
+					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+				</screen>""" % (dlg_xh(1200))
+
+	else:
+		# picon skin...
+		skin1 = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="StatusDataScreen" >
+				<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="label0" position=" 20,130" size="140,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position="160,130" size="146,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="306,130" size=" 34,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="340,130" size=" 80,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="420,130" size="110,55" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label5" position="530,130" size="280,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  2, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = (145, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryPixmapAlphaTest(pos = (290, 4), size = (16, 16), png = 2),
+							MultiContentEntryText(pos = (310, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_CENTER, text = 3),
+							MultiContentEntryPixmapAlphaTest(pos = (405, 0), size = (50, 30), png = 6),
+							MultiContentEntryText(pos = (460, 2), size = (220, 24), font=1, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 20), gFont("Regular", 18)],
+						"itemHeight": 30
+						}
+					</convert>
 			</widget>
-			<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-			<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-			<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-		</screen>""" % (dlg_xh(720))
-	# without picons...
-	skin2 = """
-		<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="StatusDataScreen" >
-			<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget render="Label" source="label0" position=" 20,130" size="160,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label1" position="180,130" size="150,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label2" position="326,130" size=" 34,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label3" position="360,130" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-			<widget render="Label" source="label4" position="450,130" size="250,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;17"/>
-			<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryText(pos = (  2, 2), size = (154, 24), font=0, flags = RT_HALIGN_LEFT, text = 0),
-						MultiContentEntryText(pos = (160, 2), size = (158, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-						MultiContentEntryPixmapAlphaTest(pos = (310, 4), size = (16, 16), png = 2),
-						MultiContentEntryText(pos = (340, 2), size = ( 88, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
-						MultiContentEntryText(pos = (430, 2), size = (250, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
-					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 24
-					}
-				</convert>
-			</widget>
-			<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-			<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-			<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-		</screen>""" % (dlg_xh(720))
+				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+			</screen>""" % (dlg_xh(720))
+		# without picons...
+		skin2 = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="StatusDataScreen" >
+				<widget render="Label" source="title"  position=" 20, 80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="label0" position=" 20,130" size="160,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position="180,130" size="150,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="326,130" size=" 34,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="360,130" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="450,130" size="250,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;17"/>
+				<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  2, 2), size = (154, 24), font=0, flags = RT_HALIGN_LEFT, text = 0),
+							MultiContentEntryText(pos = (160, 2), size = (158, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryPixmapAlphaTest(pos = (310, 4), size = (16, 16), png = 2),
+							MultiContentEntryText(pos = (340, 2), size = ( 88, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (430, 2), size = (250, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 24
+						}
+					</convert>
+				</widget>
+				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+			</screen>""" % (dlg_xh(720))
 
 	def __init__(self, session, type, part, oServer):
 		self.type = type
@@ -1588,7 +2004,13 @@ class StatusDataScreen(DownloadXMLScreen):
 				self["label3"] = StaticText(_("ECM Time"))
 			else:
 				self["label3"] = StaticText(_("Idle Time"))
-			self["label4"] = StaticText(_("Channel"))
+
+			if USEPICONS.value:
+				self["label4"] = StaticText(_("Picon"))
+				self["label5"] = StaticText(_("Channel"))
+			else:
+				self["label4"] = StaticText(_("Channel"))
+
 			self["ButtonYellow"] = Pixmap()
 			self["ButtonYellowtext"] = Button(_("show client info"))
 			self["ButtonBlue"] = Pixmap()
@@ -1601,10 +2023,13 @@ class StatusDataScreen(DownloadXMLScreen):
 				self["label3"] = StaticText(_("ECM Time"))
 			else:
 				self["label3"] = StaticText(_("Idle Time"))
+
 			if USEPICONS.value:
-				self["label4"] = StaticText(_("Channel  Protocol"))
+				self["label4"] = StaticText(_("Picon"))
+				self["label5"] = StaticText(_("Protocol"))
 			else:
 				self["label4"] = StaticText(_("Protocol"))
+
 			self["ButtonYellow"] = Pixmap()
 			self["ButtonYellowtext"] = Button(_("show reader info"))
 			self["ButtonBlue"] = Pixmap()
@@ -1648,6 +2073,7 @@ class StatusDataScreen(DownloadXMLScreen):
 				for snode in node.childNodes:
 					if snode.nodeName == "request":
 						c.caid = str(snode.getAttribute("caid"))
+						c.provid = str(snode.getAttribute("provid"))
 						c.srvid = str(snode.getAttribute("srvid"))
 						c.ecmtime = str(snode.getAttribute("ecmtime"))
 						c.ecmhistory = str(snode.getAttribute("ecmhistory"))
@@ -1675,31 +2101,51 @@ class StatusDataScreen(DownloadXMLScreen):
 
 	def setList(self):
 		dlist = []
+		self.picon = ePicLoad()
 		if self.type == "clients":
-			self.setTitle("Clients@"+self.oServer.serverName)
+			self.setTitle(_("Connected Clients")+"@"+self.oServer.serverName)
 			for index, c in enumerate(self.status):
 				if c.type == "c":
 					if USEECM.value:
 						idle = c.ecmtime
 					else:
 						idle = elapsedTime(c.idle, "%02d:%02d:%02d")
+					if USEPICONS.value:
+						picon = getPicon(c.service)
+						if picon != "":
+							psw = 50
+							psh = 30
+							if FULLHD:
+								psw = 110
+								psh = 55
+							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
+							self.picon.startDecode(picon, 0, 0, False)
+							png = self.picon.getData()
 
 					if self.hideIdle:
 						if c.answered != "":
 							if USEPICONS.value:
-								picon = picons.getPicon(c.srvid)
-								dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index, picon))
+								dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, png, c.service, index))
 							else:
 								dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index))
 					else:
 						if USEPICONS.value:
-							picon = picons.getPicon(c.srvid)
-							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index, picon))
+							picon = getPicon(c.service)
+							if picon != "":
+								psw = 50
+								psh = 30
+								if FULLHD:
+									psw = 110
+									psh = 55
+								self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
+								self.picon.startDecode(picon, 0, 0, False)
+								png = self.picon.getData()
+							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, png, c.service, index))
 						else:
 							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index))
 
 		elif self.type == "readers":
-			self.setTitle(_("Readers@")+self.oServer.serverName)
+			self.setTitle(_("Connected Readers")+"@"+self.oServer.serverName)
 			for index, c in enumerate(self.status):
 				if USEECM.value:
 					idle = c.ecmtime
@@ -1708,8 +2154,17 @@ class StatusDataScreen(DownloadXMLScreen):
 
 				if c.type == "r" or c.type == "p":
 					if USEPICONS.value:
-						picon = picons.getPicon(c.srvid)
-						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, c.protocol, index, picon))
+						picon = getPicon(c.protocol)
+						if picon != "":
+							psw = 50
+							psh = 30
+							if FULLHD:
+								psw = 110
+								psh = 55
+							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
+							self.picon.startDecode(picon, 0, 0, False)
+							png = self.picon.getData()			
+						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, png, c.protocol, index))
 					else:
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, c.protocol, index))
 
@@ -1719,7 +2174,10 @@ class StatusDataScreen(DownloadXMLScreen):
 	def yellowPressed(self):
 		if self.download or self["data"].count()==0:
 			return
-		index = self["data"].getCurrent()[5]
+		if USEPICONS.value:
+			index = self["data"].getCurrent()[6]
+		else:
+			index = self["data"].getCurrent()[5]
 		if index is not None:
 			self.timer.stop()
 			self.session.openWithCallback(self.backCB, ClientDataScreen, self.type, self.oServer, self.status[index])
@@ -1744,21 +2202,24 @@ class StatusDataScreen(DownloadXMLScreen):
 
 # mainScreen...
 class OscamStatus(Screen):
+	x, h = dlg_xh(660)
 	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamStatus" >
-			<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget source="menu" render="Listbox" position="20,130" size="400,320" scrollbarMode="showOnDemand">
+		<screen flags="wfNoBorder" position="%d,0" size="660,%d" name="OscamStatus" >
+			<widget render="Label" source="title" position="20,80" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+			<widget name="KeyMenu" pixmap="%s" position="20,905" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
+			<widget render="Label" source="KeyMenuText" position="95,903" size="560,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;30"/>
+			<widget source="menu" render="Listbox" position="20,130" size="600,480" scrollbarMode="showOnDemand">
 				<convert type="TemplatedMultiContent">
 					{"template": [
-						MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (32, 32), png = 0),
-						MultiContentEntryText(pos = (50, 0), size = (330, 40), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
+						MultiContentEntryPixmapAlphaTest(pos = (8, 15), size = (48, 48), png = 0),
+						MultiContentEntryText(pos = (75, 0), size = (495, 60), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
 					],
-					"fonts": [gFont("Regular", 20)],
-					"itemHeight": 40
+					"fonts": [gFont("Regular", 30)],
+					"itemHeight": 60
 					}
 				</convert>
 			</widget>
-		</screen>"""  % (dlg_xh(440))
+		</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 
 	def __init__(self, session):
 		self.skin = OscamStatus.skin
@@ -1788,6 +2249,8 @@ class OscamStatus(Screen):
 			"cancel": self.close,
 			"menu": self.globalsDlg
 		}, -1)
+		self["KeyMenu"] = Pixmap()
+		self["KeyMenuText"] = StaticText(_("Configuration screen"))
 
 		oscamServers = readCFG()
 		index = LASTSERVER.value
@@ -1795,18 +2258,6 @@ class OscamStatus(Screen):
 			index = 0
 
 		self.SetupCB(oscamServers[index])
-		self.piconsLoaded = False
-		if USEPICONS.value:
-			self.loadPicons()
-
-	def loadPicons(self):
-		global picons
-		picons = piconLoader(PICONPATH.value)
-		if picons.hasLoaded:
-			self.piconsLoaded = True
-			print "[OscamStatus] Picons activated..."
-		else:
-			USEPICONS.value = False
 
 	def action(self):
 		returnValue = self["menu"].getCurrent()[2]
@@ -1835,15 +2286,24 @@ class OscamStatus(Screen):
 			self["title"].setText(_("Oscam Status ")+VERSION+" @"+self.oServer.serverName)
 
 	def globalsDlg(self):
-		self.oldpath = PICONPATH.value
+#		self.oldpath = PICONPATH.value
 		self.session.openWithCallback(self.globalsCB, globalsConfigScreen)
 
 	def globalsCB(self):
 		x,h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
-		if USEPICONS.value:
-			if not self.piconsLoaded or self.oldpath != PICONPATH.value:
-				self.loadPicons()
+
+	def findPicon(self, service=None):
+		if service is not None:
+			sname = ':'.join(service.split(':')[:11])
+			pos = sname.rfind(':')
+			if pos != -1:
+				sname = sname[:pos].rstrip(':').replace(':','_')
+				for path in self.searchPiconPaths:
+					pngname = path + sname + ".png"
+					if fileExists(pngname):
+						return pngname
+		return ""
 
 def main(session,**kwargs):
 	session.open(OscamStatus)

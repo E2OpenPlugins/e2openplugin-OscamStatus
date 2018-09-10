@@ -28,7 +28,10 @@ from Components.config import ConfigPassword
 from Components.config import ConfigSubsection
 from Components.config import getConfigListEntry
 
-from enigma import eListboxPythonMultiContent, eListbox, getDesktop, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, ePoint
+from enigma import eListboxPythonMultiContent, eListbox, getDesktop, gFont, \
+                   RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, BT_SCALE, BT_KEEP_ASPECT_RATIO, \
+                   ePoint, eSize, eRect, loadPNG
+
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 
@@ -41,7 +44,7 @@ config.plugins.OscamStatus.xOffset = ConfigInteger(default = 50, limits=(0,100))
 config.plugins.OscamStatus.useECM = ConfigYesNo(default = False)
 config.plugins.OscamStatus.useIP = ConfigYesNo(default = True)
 config.plugins.OscamStatus.usePicons = ConfigYesNo(default = False)
-config.plugins.OscamStatus.PiconPath = ConfigText(default = resolveFilename(SCOPE_SKIN,"picon_50x30"), fixed_size = False, visible_width=40)
+#config.plugins.OscamStatus.PiconPath = ConfigText(default = resolveFilename(SCOPE_SKIN,"picon_50x30"), fixed_size = False, visible_width=40)
 
 # export Variables...
 LASTSERVER = config.plugins.OscamStatus.lastServer
@@ -49,8 +52,7 @@ EXTMENU = config.plugins.OscamStatus.extMenu
 XOFFSET = config.plugins.OscamStatus.xOffset
 USEECM = config.plugins.OscamStatus.useECM
 USEPICONS = config.plugins.OscamStatus.usePicons
-PICONPATH = config.plugins.OscamStatus.PiconPath
-picons = None
+#PICONPATH = config.plugins.OscamStatus.PiconPath
 
 oscam_regex = {
 	'ConfigDir': re.compile(r'ConfigDir:\s*(?P<ConfigDir>.*)\n'),
@@ -117,16 +119,29 @@ def dlg_xh(w):
 	return x, h
 
 class globalsConfigScreen(Screen, ConfigListScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="globalsConfigScreen" >
-			<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-			<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-		</screen>""" % (dlg_xh(440))
+	w = getDesktop(0).size().width()
+	if w >= 1920:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="860,%d" name="globalsConfigScreen" >
+				<widget render="Label" source="title" position="30,20" size="600,49" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget name="config" position="30,80" size="800,900" scrollbarMode="showOnDemand" font="Regular;28" itemHeight="36"/>
+				<eLabel text="" position="30,932" size="800,3" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="30,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonRedtext" position="30,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;30"/>
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="245,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="245,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;30"/>
+			</screen>""" % (dlg_xh(860))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="globalsConfigScreen" >
+				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+			</screen>""" % (dlg_xh(440))
 
 	def __init__(self, session):
 		self.skin = globalsConfigScreen.skin
@@ -139,7 +154,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		list.append(getConfigListEntry(_("ECM Time in \"connected\" Dialog"), config.plugins.OscamStatus.useECM))
 		list.append(getConfigListEntry(_("Server address always in IP Format"), config.plugins.OscamStatus.useIP))
 		list.append(getConfigListEntry(_("Use Picons"), config.plugins.OscamStatus.usePicons))
-		list.append(getConfigListEntry(_("Picons Path"), config.plugins.OscamStatus.PiconPath))
+#		list.append(getConfigListEntry(_("Picons Path"), config.plugins.OscamStatus.PiconPath))
 		ConfigListScreen.__init__(self, list, session = session)
 
 		self["title"] = StaticText(_("Oscam Status globals Setup"))
@@ -228,14 +243,19 @@ def writeCFG(oscamServers):
 class OscamServerEntryList(MenuList):
 	def __init__(self, list, enableWrapAround = True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
-		self.l.setFont(0, gFont("Regular", 20))
-		self.l.setFont(1, gFont("Regular", 18))
+		w = getDesktop(0).size().width()
+		if w >= 1920:
+			self.l.setFont(0, gFont("Regular", 30))
+			self.l.setFont(1, gFont("Regular", 27))
+		else:
+			self.l.setFont(0, gFont("Regular", 20))
+			self.l.setFont(1, gFont("Regular", 18))
 		self.pic0 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "skin_default/icons/lock_off.png"))
 		self.pic1 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "skin_default/icons/lock_on.png"))
 
 	def postWidgetCreate(self, instance):
 		MenuList.postWidgetCreate(self, instance)
-		instance.setItemHeight(30)
+		instance.setItemHeight(40)
 
 	def makeList(self, index):
 		self.list = []
@@ -253,29 +273,53 @@ class OscamServerEntryList(MenuList):
 				else:
 					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, ' '))
 			res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
-			res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 200, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+			w = getDesktop(0).size().width()
+			if w >= 1920:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 285, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 330, 3, 210, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+			else:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
 			#res.append((eListboxPythonMultiContent.TYPE_TEXT, 410, 3,  65, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverPort))
 			if i.useSSL: tx = "SSL"
 			else: tx = ""
-			res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+			if w >= 1920:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+			else:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
 			self.list.append(res)
 		self.l.setList(self.list)
 		self.moveToIndex(index)
 
 # OscamServerEntriesListConfigScreen...
 class OscamServerEntriesListConfigScreen(Screen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamServerEntriesListConfigScreen" >
-			<widget render="Label" source="title" position="20,80" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget name="list" position="20,130" size="400,288" scrollbarMode="showOnDemand" />
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-			<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="10,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonGreentext" position="10,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<ePixmap name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="150,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonYellowtext" position="150,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<ePixmap name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="290,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonBluetext" position="290,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-		</screen>""" % (dlg_xh(440))
+	w = getDesktop(0).size().width()
+	if w >= 1920:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="700,%d" name="OscamServerEntriesListConfigScreen" >
+				<widget render="Label" source="title" position="30,30" size="360,36" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget name="list" position="30,80" size="620,840" scrollbarMode="showOnDemand" />
+				<eLabel text="" position="30,932" size="640,3" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="20,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<ePixmap name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="235,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonYellowtext" position="235,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<ePixmap name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="450,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonBluetext" position="450,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+			</screen>""" % (dlg_xh(700))
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamServerEntriesListConfigScreen" >
+				<widget render="Label" source="title" position="20,80" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget name="list" position="20,130" size="400,288" scrollbarMode="showOnDemand" />
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="10,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="10,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<ePixmap name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="150,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonYellowtext" position="150,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="black" font="Regular;18"/>
+				<ePixmap name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="290,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonBluetext" position="290,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+			</screen>""" % (dlg_xh(440))
 
 	def __init__(self, session):
 		self.skin = OscamServerEntriesListConfigScreen.skin
@@ -359,16 +403,30 @@ class OscamServerEntriesListConfigScreen(Screen):
 
 # OscamServerEntryConfigScreen...
 class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamServerEntryConfigScreen" >
-			<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-			<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
-			<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-			<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-			<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-			<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-		</screen>""" % (dlg_xh(440))
+	w = getDesktop(0).size().width()
+	if w >= 1920:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="800,%d" name="OscamServerEntryConfigScreen" >
+				<widget render="Label" source="title" position="20,60" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget name="config" position="20,110" size="760,800" scrollbarMode="showOnDemand" font="Regular;28" itemHeight="32" />
+				<eLabel text="" position="20,900" size="800,4" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonRedtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
+			</screen>""" % (dlg_xh(800))
+
+	else:
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamServerEntryConfigScreen" >
+				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
+				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
+				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
+			</screen>""" % (dlg_xh(440))
 
 	def __init__(self, session, entry, index):
 		self.skin = OscamServerEntryConfigScreen.skin
@@ -461,47 +519,4 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 			oscamServers[self.index] = entry
 		writeCFG(oscamServers)
 		self.close()
-
-from os import path, listdir
-class piconLoader:
-	def __init__(self, Path):
-		self.hasLoaded = False
-		if path.exists(Path):
-			self.Path = Path
-			self.picons = {}
-			for fname in listdir(self.Path):
-				items = fname.split('_')
-				# Only file with sref name, also picon png...
-				if len(items) > 8:
-					#t  = self.picons.get(items[3], 'n/a')
-					#if t != 'n/a':
-					#	print fname, t
-					self.picons[items[3]] = fname
-			if len(self.picons) == 0:
-				print "[OscamStatus] ERROR: no picons found!"
-				return
-			else:
-				print "[OscamStatus] %d picons found..." % len(self.picons)
-				self.hasLoaded = True
-				return
-		else:
-			print "[OscamStatus] ERROR: wrong picons path!"
-			return
-
-	def getPicon(self, srvid):
-		# FTA transmitter or not found...
-		if srvid == '0000':
-			return None
-
-		# keine fuehrenden Nullen...
-		while srvid[0] == '0':
-			srvid = srvid[1:]
-
-		# Get file name from dict...
-		fname = self.picons.get(srvid, 'n/a')
-		if fname != 'n/a':
-			piconpath = self.Path+'/'+fname
-			return LoadPixmap(cached=True, path=piconpath)
-		else:
-			return LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png"))
 
