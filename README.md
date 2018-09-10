@@ -17,4 +17,9 @@ Version 1.1
 
 Version 1.2
 * Improve Autodetect
-* Autodetected server name is not saved nor readed from configuration file
+* Autodetected server name is not saved nor read from configuration file
+
+Version 1.3
+* Fully adapted screens for Full HD
+* Provid is now also displayed (useful for Seca & Viaccess)
+* Support E2 picon by name
