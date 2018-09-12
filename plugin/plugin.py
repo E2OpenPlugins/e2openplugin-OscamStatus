@@ -400,7 +400,7 @@ class ClientDataScreen(Screen):
 	else:
 		part1 = """
 				<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="ClientDataScreen" >
-					<widget render="Label" source="title"  position=" 20, 70" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+					<widget render="Label" source="title"  position=" 20, 70" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 					<widget render="Label" source="lprotocol" position="  20,100" size="120,20" font="Regular;18"/>
 					<widget render="Label" source= "protocol" position="140,100" size="235,20" font="Regular;18"/>
 					<widget render="Label" source="lprotocolext" position=" 20,120" size="120,20" font="Regular;18"/>
@@ -409,8 +409,8 @@ class ClientDataScreen(Screen):
 					<widget render="Label" source= "au" position="140,180" size="235,20" font="Regular;18"/>
 					<widget render="Label" source="lcaid" position=" 20,200" size="120,20" font="Regular;18"/>
 					<widget render="Label" source= "caid" position="140,200" size="235,20" font="Regular;18"/>
-					<widget render="Label" source="lprovid" position="220,200" size="130,30" font="Regular;27"/>
-					<widget render="Label" source= "provid" position="350,200" size="90,30" font="Regular;27"/>
+					<widget render="Label" source="lprovid" position="220,200" size="130,30" font="Regular;18"/>
+					<widget render="Label" source= "provid" position="350,200" size="90,30" font="Regular;18"/>
 					<widget render="Label" source="lsrvid" position=" 20,220" size="120,20" font="Regular;18"/>
 					<widget render="Label" source= "srvid" position="140,220" size="235,20" font="Regular;18"/>
 					<widget render="Label" source="lecmtime" position=" 20,240" size="120,20" font="Regular;18"/>
@@ -942,7 +942,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  2, 2), size = ( 40, 28), font=2, flags = RT_HALIGN_LEFT, text = 0),
-							MultiContentEntryText(pos = ( 40, 5), size = ( 25, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = ( 40, 5), size = ( 68, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
 							MultiContentEntryText(pos = (110, 5), size = (200, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
 							MultiContentEntryText(pos = (320, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
 							MultiContentEntryText(pos = (470, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
@@ -2203,24 +2203,44 @@ class StatusDataScreen(DownloadXMLScreen):
 
 # mainScreen...
 class OscamStatus(Screen):
-	x, h = dlg_xh(660)
-	skin = """
-		<screen flags="wfNoBorder" position="%d,0" size="660,%d" name="OscamStatus" >
-			<widget render="Label" source="title" position="20,80" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
-			<widget name="KeyMenu" pixmap="%s" position="20,905" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
-			<widget render="Label" source="KeyMenuText" position="95,903" size="560,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;30"/>
-			<widget source="menu" render="Listbox" position="20,130" size="600,480" scrollbarMode="showOnDemand">
-				<convert type="TemplatedMultiContent">
-					{"template": [
-						MultiContentEntryPixmapAlphaTest(pos = (8, 15), size = (48, 48), png = 0),
-						MultiContentEntryText(pos = (75, 0), size = (495, 60), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
-					],
-					"fonts": [gFont("Regular", 30)],
-					"itemHeight": 60
-					}
-				</convert>
-			</widget>
-		</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+	if FULLHD:
+		x, h = dlg_xh(660)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="660,%d" name="OscamStatus" >
+				<widget render="Label" source="title" position="20,80" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget name="KeyMenu" pixmap="%s" position="20,905" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
+				<widget render="Label" source="KeyMenuText" position="95,903" size="560,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;30"/>
+				<widget source="menu" render="Listbox" position="20,130" size="600,480" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (8, 15), size = (48, 48), png = 0),
+							MultiContentEntryText(pos = (75, 0), size = (495, 60), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
+						],
+						"fonts": [gFont("Regular", 30)],
+						"itemHeight": 60
+						}
+					</convert>
+				</widget>
+			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+	else:
+		x, h = dlg_xh(440)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamStatus" >
+				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget name="KeyMenu" pixmap="%s" position="20,500" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
+				<widget render="Label" source="KeyMenuText" position="95,497" size="400,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;20"/>
+				<widget source="menu" render="Listbox" position="20,130" size="400,320" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryPixmapAlphaTest(pos = (5, 4), size = (32, 32), png = 0),
+							MultiContentEntryText(pos = (50, 0), size = (330, 40), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
+						],
+						"fonts": [gFont("Regular", 20)],
+						"itemHeight": 40
+						}
+					</convert>
+				</widget>
+			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 
 	def __init__(self, session):
 		self.skin = OscamStatus.skin
