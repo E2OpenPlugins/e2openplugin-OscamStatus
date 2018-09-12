@@ -1080,6 +1080,7 @@ class LogDataList(MenuList):
 
 # LogDataScreen...
 class LogDataScreen(DownloadXMLScreen):
+	w = getDesktop(0).size().width()
 	if FULLHD:
 		skin = """
 		<screen flags="wfNoBorder" position="0,0" size="1920,1080" name="LogDataScreen" >
