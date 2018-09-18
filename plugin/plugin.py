@@ -49,7 +49,7 @@ from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigS
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
-VERSION = "1.3"
+VERSION = "1.3.1"
 TIMERTICK = 10000
 
 FULLHD = False
@@ -285,7 +285,7 @@ class ReaderServiceDataScreen(Screen):
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="1080,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="15,50" size="1050,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
-				<widget source="data" render="Listbox" position="15,100" size="1050,898" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="15,100" size="1050,891" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  1, 0), size = ( 82, 33), font=0, flags = RT_HALIGN_LEFT, text = 0),
@@ -694,7 +694,7 @@ class OscamDataScreen(DownloadXMLScreen):
 				<widget render="Label" source= "uptime" position="170,285" size="550,30" font="Regular;27"/>
 				<widget render="Label" source="lreadonly" position=" 30,315" size="130,30" font="Regular;27"/>
 				<widget render="Label" source= "readonly" position="170,315" size="535,30" font="Regular;27"/>
-				<eLabel text="" position="30,675" size="600,3" transparent="0" backgroundColor="#ffffff" />
+				<eLabel text="" position="30,675" size="600,2" transparent="0" backgroundColor="#ffffff" />
 			</screen>""" % (dlg_xh(720))
 	else:
 		skin = """
@@ -906,7 +906,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="20,60" size="1180,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
-				<widget source="data" render="Listbox" position="20,100" size="1160,800" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="20,100" size="1160,770" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  3, 3), size = ( 60, 37), font=2, flags = RT_HALIGN_LEFT, text = 0),
@@ -1085,13 +1085,13 @@ class LogDataScreen(DownloadXMLScreen):
 		skin = """
 		<screen flags="wfNoBorder" position="0,0" size="1920,1080" name="LogDataScreen" >
 			<widget render="Label" source="title"  position="10,10" size="1910,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
-			<widget name="data" position="10,50" size="1900,1020" scrollbarMode="showOnDemand" />
+			<widget name="data" position="10,50" size="1900,1032" scrollbarMode="showOnDemand" />
 		</screen>"""
 	elif w == 1280:
 		skin = """
 			<screen flags="wfNoBorder" position="0,0" size="1280,720" name="LogDataScreen" >
 				<widget render="Label" source="title"  position="40,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-				<widget name="data" position="40,120" size="1200,500" scrollbarMode="showOnDemand" />
+				<widget name="data" position="40,120" size="1200,504" scrollbarMode="showOnDemand" />
 			</screen>"""
 	elif w == 1024: 
 		skin = """
@@ -1117,8 +1117,8 @@ class LogDataScreen(DownloadXMLScreen):
 
 		if FULLHD:
 			self.entryW = 1878
-			self.entryH = 30
-			self["data"] = LogDataList([], 21)
+			self.entryH = 22
+			self["data"] = LogDataList([], 22)
 		elif LogDataScreen.w == 1280:
 			self.entryW = 1198
 			self.entryH = 18
@@ -1176,14 +1176,14 @@ class ReaderlistScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position=" 20, 30" size="810,36" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
 				<widget render="Label" source="label0" position=" 60,70" size="400,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
 				<widget render="Label" source="label1" position="470,70" size="260,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
-				<widget render="Label" source="label2" position="740,70" size=" 30,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
-				<widget source="data" render="Listbox" position="20,110" size="810,790" scrollbarMode="showOnDemand">
+				<widget render="Label" source="label2" position="740,70" size="100,36" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;28"/>
+				<widget source="data" render="Listbox" position="20,110" size="810,768" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryPixmapAlphaTest(pos = (5, 8), size = (24, 24), png = 0),
 							MultiContentEntryText(pos = ( 40, 3), size = (400, 36), font=0, flags = RT_HALIGN_LEFT, text = 1),
 							MultiContentEntryText(pos = (450, 3), size = (260, 36), font=0, flags = RT_HALIGN_LEFT, text = 2),
-							MultiContentEntryText(pos = (720, 3), size = ( 30, 36), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (720, 3), size = (100, 36), font=0, flags = RT_HALIGN_LEFT, text = 3),
 						],
 						"fonts": [gFont("Regular", 28)],
 						"itemHeight": 32
@@ -1398,7 +1398,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 				<widget render="Label" source="label3" position="415,203" size="100,20" halign="center" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="20,225" size="680,300" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
@@ -1434,7 +1434,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 				<widget render="Label" source="label3" position="940,200" size="150,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
 				<widget render="Label" source="label4" position="1095,200" size="140,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
 				<widget render="Label" source="label5" position="1240,200" size="135,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
-				<widget source="data" render="Listbox" position="20,235" size="1350,660" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="20,235" size="1350,640" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  5, 3), size = ( 90, 36), font=0, flags = RT_HALIGN_RIGHT, text = 0),
@@ -1471,7 +1471,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 				<widget render="Label" source="label3" position="415,203" size="100,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget source="data" render="Listbox" position="20,225" size="680,288" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="20,225" size="680,300" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
@@ -1655,7 +1655,7 @@ class UserstatsScreen(DownloadXMLScreen):
 				<widget render="Label" source="label1" position="300,90" size="220,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
 				<widget render="Label" source="label2" position="525,90" size="235,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
 				<widget render="Label" source="label3" position="765,90" size="395,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
-				<widget source="data" render="Listbox" position="30,125" size="1140,770" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="30,125" size="1140,775" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryPixmapAlphaTest(pos = (8, 8), size = (24, 24), png = 0),
@@ -1870,7 +1870,7 @@ class StatusDataScreen(DownloadXMLScreen):
 					<widget render="Label" source="label3" position="670, 80" size=" 130, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
 					<widget render="Label" source="label4" position="805, 80" size=" 110, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
 					<widget render="Label" source="label5" position="920, 80" size=" 370, 28" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
-					<widget source="data" render="Listbox" position=" 20,108" size="1270,800" scrollbarMode="showOnDemand">
+					<widget source="data" render="Listbox" position=" 20,108" size="1270,780" scrollbarMode="showOnDemand">
 						<convert type="TemplatedMultiContent">
 							{"template": [
 								MultiContentEntryText(pos = (  2, 3), size = (320, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 0),
@@ -1933,7 +1933,7 @@ class StatusDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="label3" position="340,130" size=" 80,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label4" position="420,130" size="110,55" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
 				<widget render="Label" source="label5" position="530,130" size="280,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget source="data" render="Listbox" position="20,153" size="680,288" scrollbarMode="showOnDemand">
+				<widget source="data" render="Listbox" position="20,153" size="680,300" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
 							MultiContentEntryText(pos = (  2, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 0),
@@ -2208,7 +2208,7 @@ class OscamStatus(Screen):
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="660,%d" name="OscamStatus" >
 				<widget render="Label" source="title" position="20,80" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
-				<widget name="KeyMenu" pixmap="%s" position="20,905" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
+				<widget name="KeyMenu" pixmap="%s" position="20,905" size="60,30" zPosition="5" transparent="0" alphatest="on"/>
 				<widget render="Label" source="KeyMenuText" position="95,903" size="560,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;30"/>
 				<widget source="menu" render="Listbox" position="20,130" size="600,480" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
@@ -2227,7 +2227,7 @@ class OscamStatus(Screen):
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="440,%d" name="OscamStatus" >
 				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-				<widget name="KeyMenu" pixmap="%s" position="20,500" size="60,30" zPosition="5" transparent="1" alphatest="on"/>
+				<widget name="KeyMenu" pixmap="%s" position="20,500" size="60,30" zPosition="5" transparent="0" alphatest="on"/>
 				<widget render="Label" source="KeyMenuText" position="95,497" size="400,34" valign="center" halign="left" zPosition="5" transparent="0" foregroundColor="#ffffff" font="Regular;20"/>
 				<widget source="menu" render="Listbox" position="20,130" size="400,320" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">

@@ -21,5 +21,15 @@ Version 1.2
 
 Version 1.3
 * Fully adapted screens for Full HD
-* Provid is now also displayed (useful for Seca & Viaccess)
-* Support E2 picon by name
+* Provid is now also displayed (useful for Nagra, Seca & Viaccess)
+* Support E2 picons by name
+
+Version 1.3.1
+* Small cosmetic fixes in Full HD
+Remark: to have a nice looking Full HD logging screen it is advised to define a multiple of 43
+in your **oscam.conf** section *global* parameter *loghistorylines* (exemple to have 4 pages of logging)
+```
+[global]
+loghistorylines               = 172
+```
+
