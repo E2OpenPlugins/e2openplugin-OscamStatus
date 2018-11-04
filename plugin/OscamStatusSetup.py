@@ -218,8 +218,9 @@ def readCFG():
 	if len(oscamServers) == 0:
 		print "[OscamStatus] no config file found"
 	tmp = oscamServer()
-	if parse_oscam_version_file('/tmp/.oscam/oscam.version',tmp):
-		parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf",tmp)
+	if parse_oscam_version_file('/tmp/.oscam/oscam.version', tmp):
+		if hasattr(tmp, 'ConfigDir'):
+			parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf", tmp)
 	oscamServers.append(tmp)
 	return oscamServers
 
