@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OscamStatus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 15:00+0200\n"
+"POT-Creation-Date: 2019-01-31 20:39+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: ims <ims21@users.sourceforge.net>\n"
 "Language-Team: PLi\n"
@@ -20,46 +20,46 @@ msgstr ""
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d dnů %d hodin %d minut %d sekund"
 
-#: ../plugin.py:2002 ../plugin.py:2021
+#: ../plugin.py:2003 ../plugin.py:2022
 msgid "AU"
 msgstr ""
 
-#: ../plugin.py:1789
+#: ../plugin.py:1790
 #, fuzzy
 msgid "All Clients"
 msgstr "Klient"
 
-#: ../plugin.py:1305
+#: ../plugin.py:1306
 msgid "All Readers @"
 msgstr "Všechny čtečky @"
 
-#: ../plugin.py:2010 ../plugin.py:2012
+#: ../plugin.py:2011 ../plugin.py:2013
 msgid "Channel"
 msgstr "Kanál"
 
-#: ../plugin.py:464 ../plugin.py:1716
+#: ../plugin.py:464 ../plugin.py:1717
 msgid "Client"
 msgstr "Klient"
 
-#: ../plugin.py:2253
+#: ../plugin.py:2274
 msgid "Configuration screen"
 msgstr ""
 
-#: ../plugin.py:2106
+#: ../plugin.py:2107
 #, fuzzy
 msgid "Connected Clients"
 msgstr "připojení klienti"
 
-#: ../plugin.py:2148
+#: ../plugin.py:2149
 #, fuzzy
 msgid "Connected Readers"
 msgstr "připojené čtečky"
 
-#: ../OscamStatusSetup.py:375
+#: ../OscamStatusSetup.py:376
 msgid "Do you really want to delete this entry?"
 msgstr "Opravdu chcete smazat tuto položku?"
 
-#: ../plugin.py:2004 ../plugin.py:2023
+#: ../plugin.py:2005 ../plugin.py:2024
 msgid "ECM Time"
 msgstr "ECM čas"
 
@@ -67,15 +67,15 @@ msgstr "ECM čas"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "ECM čas v \"připojeném\" okně"
 
-#: ../plugin.py:1717
+#: ../plugin.py:1718
 msgid "IP"
 msgstr "IP"
 
-#: ../plugin.py:2006 ../plugin.py:2025
+#: ../plugin.py:2007 ../plugin.py:2026
 msgid "Idle Time"
 msgstr "Nečinnost"
 
-#: ../plugin.py:1152
+#: ../plugin.py:1153
 #, fuzzy
 msgid "Logfile"
 msgstr "log soubor"
@@ -84,7 +84,7 @@ msgstr "log soubor"
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Možná nastavte 'chaninfo = 0' v oscam.conf"
 
-#: ../plugin.py:2000 ../plugin.py:2019
+#: ../plugin.py:2001 ../plugin.py:2020
 msgid "Name"
 msgstr "Jméno"
 
@@ -92,28 +92,28 @@ msgstr "Jméno"
 msgid "Oscam Download Error"
 msgstr ""
 
-#: ../OscamStatusSetup.py:482
+#: ../OscamStatusSetup.py:483
 msgid "Oscam Server Address"
 msgstr "Adresa serveru"
 
-#: ../OscamStatusSetup.py:481
+#: ../OscamStatusSetup.py:482
 msgid "Oscam Server Name"
 msgstr "Název serveru"
 
-#: ../OscamStatusSetup.py:463
+#: ../OscamStatusSetup.py:464
 msgid "Oscam Server Setup"
 msgstr "Nastavení Oscam serveru"
 
-#: ../OscamStatusSetup.py:332
+#: ../OscamStatusSetup.py:333
 msgid "Oscam Servers"
 msgstr "Oscam servery"
 
-#: ../plugin.py:628 ../plugin.py:875 ../plugin.py:892 ../plugin.py:2312
-#: ../plugin.py:2314
+#: ../plugin.py:628 ../plugin.py:875 ../plugin.py:892 ../plugin.py:2333
+#: ../plugin.py:2335
 msgid "Oscam Status"
 msgstr ""
 
-#: ../plugin.py:2286
+#: ../plugin.py:2307
 msgid "Oscam Status "
 msgstr ""
 
@@ -125,24 +125,24 @@ msgstr "Oscam Status - celkové nastavení"
 msgid "Oscam XML Error"
 msgstr ""
 
-#: ../OscamStatusSetup.py:485
+#: ../OscamStatusSetup.py:486
 msgid "Password (httppwd)"
 msgstr "Heslo (httppwd)"
 
-#: ../plugin.py:2009 ../plugin.py:2028
+#: ../plugin.py:2010 ../plugin.py:2029
 #, fuzzy
 msgid "Picon"
 msgstr "Použít Pikony"
 
-#: ../OscamStatusSetup.py:483
+#: ../OscamStatusSetup.py:484
 msgid "Port"
 msgstr "Port"
 
-#: ../plugin.py:1235 ../plugin.py:1719 ../plugin.py:2029 ../plugin.py:2031
+#: ../plugin.py:1236 ../plugin.py:1720 ../plugin.py:2030 ../plugin.py:2032
 msgid "Protocol"
 msgstr "Protokol"
 
-#: ../plugin.py:466 ../plugin.py:1234 ../plugin.py:2001
+#: ../plugin.py:466 ../plugin.py:1235 ../plugin.py:2002
 msgid "Reader"
 msgstr "Čtečka"
 
@@ -154,7 +154,7 @@ msgstr "Adresa serveru vždy v IP formátu"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Zobrazit plugin v extended menu"
 
-#: ../plugin.py:1718 ../plugin.py:2020
+#: ../plugin.py:1719 ../plugin.py:2021
 msgid "Status"
 msgstr "Stav"
 
@@ -166,7 +166,7 @@ msgstr ""
 msgid "Use Picons"
 msgstr "Použít Pikony"
 
-#: ../OscamStatusSetup.py:484
+#: ../OscamStatusSetup.py:485
 msgid "Username (httpuser)"
 msgstr "Uživatel (httpuser)"
 
@@ -174,47 +174,47 @@ msgstr "Uživatel (httpuser)"
 msgid "X-Offset (move left)"
 msgstr "X-posun (vlevo)"
 
-#: ../plugin.py:1543
+#: ../plugin.py:1544
 msgid "avgtime"
 msgstr ""
 
-#: ../plugin.py:1540
+#: ../plugin.py:1541
 msgid "caid:provid:srvid"
 msgstr ""
 
-#: ../plugin.py:1539
+#: ../plugin.py:1540
 msgid "channelname"
 msgstr ""
 
-#: ../OscamStatusSetup.py:335
+#: ../OscamStatusSetup.py:336
 msgid "delete"
 msgstr "smazat"
 
-#: ../plugin.py:1722
+#: ../plugin.py:1723
 msgid "disable client"
 msgstr "zakázat klienta"
 
-#: ../plugin.py:1240
+#: ../plugin.py:1241
 msgid "disable reader"
 msgstr "zakázat čtečku"
 
-#: ../OscamStatusSetup.py:334
+#: ../OscamStatusSetup.py:335
 msgid "edit"
 msgstr "upravit"
 
-#: ../plugin.py:1724
+#: ../plugin.py:1725
 msgid "enable client"
 msgstr "povolit klienta"
 
-#: ../plugin.py:1242
+#: ../plugin.py:1243
 msgid "enable reader"
 msgstr "povolit čtečku"
 
-#: ../plugin.py:2017 ../plugin.py:2194
+#: ../plugin.py:2018 ../plugin.py:2195
 msgid "hide idle clients"
 msgstr "skrýt nečinné klienty"
 
-#: ../plugin.py:1542
+#: ../plugin.py:1543
 msgid "lasttime"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "loading..."
 msgstr "načítá se..."
 
-#: ../OscamStatusSetup.py:333
+#: ../OscamStatusSetup.py:334
 msgid "new"
 msgstr "nový"
 
@@ -238,17 +238,17 @@ msgstr ""
 msgid "providers on this card max. display is:"
 msgstr ""
 
-#: ../plugin.py:888
-#, python-format
-msgid "really really shutdown oscam@%s?"
-msgstr "skutečně vypnout oscam@%s?"
-
 #: ../plugin.py:882
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "skutečně restartovat oscam@%s?"
 
-#: ../plugin.py:1538
+#: ../plugin.py:888
+#, fuzzy, python-format
+msgid "really shutdown oscam@%s?"
+msgstr "skutečně vypnout oscam@%s?"
+
+#: ../plugin.py:1539
 msgid "req."
 msgstr ""
 
@@ -256,59 +256,59 @@ msgstr ""
 msgid "restart oscam"
 msgstr "restartovat oscam"
 
-#: ../OscamStatusSetup.py:161 ../OscamStatusSetup.py:464
+#: ../OscamStatusSetup.py:161 ../OscamStatusSetup.py:465
 msgid "return"
 msgstr "zavřít"
 
-#: ../OscamStatusSetup.py:162 ../OscamStatusSetup.py:465
+#: ../OscamStatusSetup.py:162 ../OscamStatusSetup.py:466
 msgid "save"
 msgstr "uložit"
 
-#: ../plugin.py:2240
+#: ../plugin.py:2261
 msgid "server info"
 msgstr "server info"
 
-#: ../plugin.py:2241
+#: ../plugin.py:2262
 msgid "server restart/shutdown"
 msgstr "restartovat/vypnout server"
 
-#: ../plugin.py:2242
+#: ../plugin.py:2263
 msgid "server setup"
 msgstr "nastavení serveru"
 
-#: ../plugin.py:2236
+#: ../plugin.py:2257
 msgid "show all clients"
 msgstr "všichni klienti"
 
-#: ../plugin.py:2238
+#: ../plugin.py:2259
 msgid "show all readers"
 msgstr "všechny čtečky"
 
-#: ../plugin.py:2015
+#: ../plugin.py:2016
 msgid "show client info"
 msgstr "info o klientovi"
 
-#: ../plugin.py:2235
+#: ../plugin.py:2256
 msgid "show connected clients"
 msgstr "připojení klienti"
 
-#: ../plugin.py:2237
+#: ../plugin.py:2258
 msgid "show connected readers"
 msgstr "připojené čtečky"
 
-#: ../plugin.py:2196
+#: ../plugin.py:2197
 msgid "show idle clients"
 msgstr "nečinní klienti"
 
-#: ../plugin.py:2239
+#: ../plugin.py:2260
 msgid "show logfile"
 msgstr "log soubor"
 
-#: ../plugin.py:2034
+#: ../plugin.py:2035
 msgid "show reader info"
 msgstr "info o čtečce"
 
-#: ../plugin.py:2036
+#: ../plugin.py:2037
 msgid "show readerstats"
 msgstr "status čtečky"
 
@@ -316,23 +316,23 @@ msgstr "status čtečky"
 msgid "shutdown oscam"
 msgstr "vypnout oscam"
 
-#: ../plugin.py:1541
+#: ../plugin.py:1542
 msgid "status"
 msgstr "stav"
 
-#: ../plugin.py:1792
+#: ../plugin.py:1793
 msgid "time on channel"
 msgstr "Čas na kanálu"
 
-#: ../plugin.py:1236
+#: ../plugin.py:1237
 msgid "type"
 msgstr "typ"
 
-#: ../OscamStatusSetup.py:486
+#: ../OscamStatusSetup.py:487
 msgid "use SSL"
 msgstr "používat SSL"
 
-#: ../plugin.py:2312 ../plugin.py:2314
+#: ../plugin.py:2333 ../plugin.py:2335
 msgid "whats going on?"
 msgstr "co se děje?"
 

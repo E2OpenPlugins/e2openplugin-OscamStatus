@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 15:00+0200\n"
+"POT-Creation-Date: 2019-01-31 20:39+0100\n"
 "PO-Revision-Date: 2015-10-12 23:43+0300\n"
 "Last-Translator: Dimitrij <Dima-73@inbox.lv>\n"
 "Language-Team: \n"
@@ -17,46 +17,46 @@ msgstr ""
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d дней %d часов %d минут %d секунд"
 
-#: ../plugin.py:2002 ../plugin.py:2021
+#: ../plugin.py:2003 ../plugin.py:2022
 msgid "AU"
 msgstr ""
 
-#: ../plugin.py:1789
+#: ../plugin.py:1790
 #, fuzzy
 msgid "All Clients"
 msgstr "Клиент"
 
-#: ../plugin.py:1305
+#: ../plugin.py:1306
 msgid "All Readers @"
 msgstr "Все ридеры @"
 
-#: ../plugin.py:2010 ../plugin.py:2012
+#: ../plugin.py:2011 ../plugin.py:2013
 msgid "Channel"
 msgstr "Канал"
 
-#: ../plugin.py:464 ../plugin.py:1716
+#: ../plugin.py:464 ../plugin.py:1717
 msgid "Client"
 msgstr "Клиент"
 
-#: ../plugin.py:2253
+#: ../plugin.py:2274
 msgid "Configuration screen"
 msgstr ""
 
-#: ../plugin.py:2106
+#: ../plugin.py:2107
 #, fuzzy
 msgid "Connected Clients"
 msgstr "показать подключенные клиенты"
 
-#: ../plugin.py:2148
+#: ../plugin.py:2149
 #, fuzzy
 msgid "Connected Readers"
 msgstr "показать подключенные ридеры"
 
-#: ../OscamStatusSetup.py:375
+#: ../OscamStatusSetup.py:376
 msgid "Do you really want to delete this entry?"
 msgstr "Действительно удалить эту запись?"
 
-#: ../plugin.py:2004 ../plugin.py:2023
+#: ../plugin.py:2005 ../plugin.py:2024
 msgid "ECM Time"
 msgstr "Время ECM"
 
@@ -64,15 +64,15 @@ msgstr "Время ECM"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "Время ECM в \"подключено\" диалоге"
 
-#: ../plugin.py:1717
+#: ../plugin.py:1718
 msgid "IP"
 msgstr "АЙПИ"
 
-#: ../plugin.py:2006 ../plugin.py:2025
+#: ../plugin.py:2007 ../plugin.py:2026
 msgid "Idle Time"
 msgstr "Время простоя"
 
-#: ../plugin.py:1152
+#: ../plugin.py:1153
 #, fuzzy
 msgid "Logfile"
 msgstr "показать лог файл"
@@ -81,7 +81,7 @@ msgstr "показать лог файл"
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Может установите 'chaninfo = 0' в oscam.conf"
 
-#: ../plugin.py:2000 ../plugin.py:2019
+#: ../plugin.py:2001 ../plugin.py:2020
 msgid "Name"
 msgstr "Имя"
 
@@ -89,28 +89,28 @@ msgstr "Имя"
 msgid "Oscam Download Error"
 msgstr "Ошибка загрузки XML"
 
-#: ../OscamStatusSetup.py:482
+#: ../OscamStatusSetup.py:483
 msgid "Oscam Server Address"
 msgstr "Адрес сервера оскама"
 
-#: ../OscamStatusSetup.py:481
+#: ../OscamStatusSetup.py:482
 msgid "Oscam Server Name"
 msgstr "Имя сервера оскама"
 
-#: ../OscamStatusSetup.py:463
+#: ../OscamStatusSetup.py:464
 msgid "Oscam Server Setup"
 msgstr "Настройки сервера оскама"
 
-#: ../OscamStatusSetup.py:332
+#: ../OscamStatusSetup.py:333
 msgid "Oscam Servers"
 msgstr "Сервера оскама"
 
-#: ../plugin.py:628 ../plugin.py:875 ../plugin.py:892 ../plugin.py:2312
-#: ../plugin.py:2314
+#: ../plugin.py:628 ../plugin.py:875 ../plugin.py:892 ../plugin.py:2333
+#: ../plugin.py:2335
 msgid "Oscam Status"
 msgstr "Статус оскама"
 
-#: ../plugin.py:2286
+#: ../plugin.py:2307
 msgid "Oscam Status "
 msgstr "Статус оскама "
 
@@ -122,24 +122,24 @@ msgstr "Глобальные настроки статуса оскама"
 msgid "Oscam XML Error"
 msgstr "Ошибка XML оскама"
 
-#: ../OscamStatusSetup.py:485
+#: ../OscamStatusSetup.py:486
 msgid "Password (httppwd)"
 msgstr "Пароль"
 
-#: ../plugin.py:2009 ../plugin.py:2028
+#: ../plugin.py:2010 ../plugin.py:2029
 #, fuzzy
 msgid "Picon"
 msgstr "Использовать пиконы"
 
-#: ../OscamStatusSetup.py:483
+#: ../OscamStatusSetup.py:484
 msgid "Port"
 msgstr "Порт"
 
-#: ../plugin.py:1235 ../plugin.py:1719 ../plugin.py:2029 ../plugin.py:2031
+#: ../plugin.py:1236 ../plugin.py:1720 ../plugin.py:2030 ../plugin.py:2032
 msgid "Protocol"
 msgstr "Протокол"
 
-#: ../plugin.py:466 ../plugin.py:1234 ../plugin.py:2001
+#: ../plugin.py:466 ../plugin.py:1235 ../plugin.py:2002
 msgid "Reader"
 msgstr "Ридер"
 
@@ -151,7 +151,7 @@ msgstr "Адрес сервера всегда в формате АЙПИ"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Показать плагин в меню дополнений"
 
-#: ../plugin.py:1718 ../plugin.py:2020
+#: ../plugin.py:1719 ../plugin.py:2021
 msgid "Status"
 msgstr "Статус"
 
@@ -163,7 +163,7 @@ msgstr ""
 msgid "Use Picons"
 msgstr "Использовать пиконы"
 
-#: ../OscamStatusSetup.py:484
+#: ../OscamStatusSetup.py:485
 msgid "Username (httpuser)"
 msgstr "Логин"
 
@@ -171,48 +171,48 @@ msgstr "Логин"
 msgid "X-Offset (move left)"
 msgstr "X-смещение (перемещение влево)"
 
-#: ../plugin.py:1543
+#: ../plugin.py:1544
 msgid "avgtime"
 msgstr ""
 
-#: ../plugin.py:1540
+#: ../plugin.py:1541
 msgid "caid:provid:srvid"
 msgstr ""
 
-#: ../plugin.py:1539
+#: ../plugin.py:1540
 #, fuzzy
 msgid "channelname"
 msgstr "Канал"
 
-#: ../OscamStatusSetup.py:335
+#: ../OscamStatusSetup.py:336
 msgid "delete"
 msgstr "Удалить"
 
-#: ../plugin.py:1722
+#: ../plugin.py:1723
 msgid "disable client"
 msgstr "отключить клиента"
 
-#: ../plugin.py:1240
+#: ../plugin.py:1241
 msgid "disable reader"
 msgstr "отключить ридер"
 
-#: ../OscamStatusSetup.py:334
+#: ../OscamStatusSetup.py:335
 msgid "edit"
 msgstr "Редактировать"
 
-#: ../plugin.py:1724
+#: ../plugin.py:1725
 msgid "enable client"
 msgstr "включить клиента"
 
-#: ../plugin.py:1242
+#: ../plugin.py:1243
 msgid "enable reader"
 msgstr "включить ридер"
 
-#: ../plugin.py:2017 ../plugin.py:2194
+#: ../plugin.py:2018 ../plugin.py:2195
 msgid "hide idle clients"
 msgstr "скрыть клиентов в простое"
 
-#: ../plugin.py:1542
+#: ../plugin.py:1543
 msgid "lasttime"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr ""
 msgid "loading..."
 msgstr "загрузка..."
 
-#: ../OscamStatusSetup.py:333
+#: ../OscamStatusSetup.py:334
 msgid "new"
 msgstr "Новый"
 
@@ -236,17 +236,17 @@ msgstr ""
 msgid "providers on this card max. display is:"
 msgstr ""
 
-#: ../plugin.py:888
-#, python-format
-msgid "really really shutdown oscam@%s?"
-msgstr "Действительно выключить oscam@%s?"
-
 #: ../plugin.py:882
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "Действительно сделать рестарт oscam@%s?"
 
-#: ../plugin.py:1538
+#: ../plugin.py:888
+#, fuzzy, python-format
+msgid "really shutdown oscam@%s?"
+msgstr "Действительно выключить oscam@%s?"
+
+#: ../plugin.py:1539
 msgid "req."
 msgstr ""
 
@@ -254,59 +254,59 @@ msgstr ""
 msgid "restart oscam"
 msgstr "рестарт оскама"
 
-#: ../OscamStatusSetup.py:161 ../OscamStatusSetup.py:464
+#: ../OscamStatusSetup.py:161 ../OscamStatusSetup.py:465
 msgid "return"
 msgstr "Возврат"
 
-#: ../OscamStatusSetup.py:162 ../OscamStatusSetup.py:465
+#: ../OscamStatusSetup.py:162 ../OscamStatusSetup.py:466
 msgid "save"
 msgstr "Сохранить"
 
-#: ../plugin.py:2240
+#: ../plugin.py:2261
 msgid "server info"
 msgstr "инфо сервера"
 
-#: ../plugin.py:2241
+#: ../plugin.py:2262
 msgid "server restart/shutdown"
 msgstr "рестарт/выключение сервера"
 
-#: ../plugin.py:2242
+#: ../plugin.py:2263
 msgid "server setup"
 msgstr "настройки сервера"
 
-#: ../plugin.py:2236
+#: ../plugin.py:2257
 msgid "show all clients"
 msgstr "показать все клиенты"
 
-#: ../plugin.py:2238
+#: ../plugin.py:2259
 msgid "show all readers"
 msgstr "показать все ридеры"
 
-#: ../plugin.py:2015
+#: ../plugin.py:2016
 msgid "show client info"
 msgstr "показать инфо клиента"
 
-#: ../plugin.py:2235
+#: ../plugin.py:2256
 msgid "show connected clients"
 msgstr "показать подключенные клиенты"
 
-#: ../plugin.py:2237
+#: ../plugin.py:2258
 msgid "show connected readers"
 msgstr "показать подключенные ридеры"
 
-#: ../plugin.py:2196
+#: ../plugin.py:2197
 msgid "show idle clients"
 msgstr "показать клиенты в простое"
 
-#: ../plugin.py:2239
+#: ../plugin.py:2260
 msgid "show logfile"
 msgstr "показать лог файл"
 
-#: ../plugin.py:2034
+#: ../plugin.py:2035
 msgid "show reader info"
 msgstr "показать инфо ридера"
 
-#: ../plugin.py:2036
+#: ../plugin.py:2037
 msgid "show readerstats"
 msgstr "показать статистику ридеров"
 
@@ -314,23 +314,23 @@ msgstr "показать статистику ридеров"
 msgid "shutdown oscam"
 msgstr "выключение оскама"
 
-#: ../plugin.py:1541
+#: ../plugin.py:1542
 msgid "status"
 msgstr "статус"
 
-#: ../plugin.py:1792
+#: ../plugin.py:1793
 msgid "time on channel"
 msgstr "время на канале"
 
-#: ../plugin.py:1236
+#: ../plugin.py:1237
 msgid "type"
 msgstr "тип"
 
-#: ../OscamStatusSetup.py:486
+#: ../OscamStatusSetup.py:487
 msgid "use SSL"
 msgstr "Использовать SSL"
 
-#: ../plugin.py:2312 ../plugin.py:2314
+#: ../plugin.py:2333 ../plugin.py:2335
 msgid "whats going on?"
 msgstr "просмотр статистики"
 
