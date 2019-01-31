@@ -32,4 +32,5 @@ in your **oscam.conf** section *global* parameter *loghistorylines* (exemple to 
 [global]
 loghistorylines               = 172
 ```
-
+Version 1.3.2
+* Fix in source text

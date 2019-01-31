@@ -885,7 +885,7 @@ class OscamRestartScreen(DownloadXMLScreen):
 		if self.download:
 			return
 		self.mode = "shutdown"
-		self.mbox(_("really really shutdown oscam@%s?")%self.oServer.serverName)
+		self.mbox(_("really shutdown oscam@%s?")%self.oServer.serverName)
 
 	def mbox(self, txt):
 		msg = self.session.openWithCallback(self.mboxCB, MessageBox, txt, default = False)
