@@ -126,9 +126,9 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 				<widget render="Label" source="title" position="30,20" size="600,49" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
 				<widget name="config" position="30,80" size="800,900" scrollbarMode="showOnDemand" font="Regular;28" itemHeight="36"/>
 				<eLabel text="" position="30,932" size="800,3" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="30,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonRed" pixmap="buttons/red.png" position="30,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonRedtext" position="30,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;30"/>
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="245,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="245,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="245,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;30"/>
 			</screen>""" % (dlg_xh(860))
 	else:
@@ -137,9 +137,9 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
 				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonRed" pixmap="buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
 			</screen>""" % (dlg_xh(440))
 
@@ -251,8 +251,8 @@ class OscamServerEntryList(MenuList):
 		else:
 			self.l.setFont(0, gFont("Regular", 20))
 			self.l.setFont(1, gFont("Regular", 18))
-		self.pic0 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "skin_default/icons/lock_off.png"))
-		self.pic1 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "skin_default/icons/lock_on.png"))
+		self.pic0 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "icons/lock_off.png"))
+		self.pic1 = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN, "icons/lock_on.png"))
 
 	def postWidgetCreate(self, instance):
 		MenuList.postWidgetCreate(self, instance)
@@ -301,11 +301,11 @@ class OscamServerEntriesListConfigScreen(Screen):
 				<widget render="Label" source="title" position="30,30" size="360,36" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
 				<widget name="list" position="30,80" size="620,840" scrollbarMode="showOnDemand" />
 				<eLabel text="" position="30,932" size="640,3" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="20,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="20,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
-				<ePixmap name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="235,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonYellow" pixmap="buttons/yellow.png" position="235,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonYellowtext" position="235,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
-				<ePixmap name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="450,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonBlue" pixmap="buttons/blue.png" position="450,940" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonBluetext" position="450,940" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
 			</screen>""" % (dlg_xh(700))
 	else:
@@ -314,11 +314,11 @@ class OscamServerEntriesListConfigScreen(Screen):
 				<widget render="Label" source="title" position="20,80" size="360,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="list" position="20,130" size="400,288" scrollbarMode="showOnDemand" />
 				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="10,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="10,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="10,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<ePixmap name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="150,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonYellow" pixmap="buttons/yellow.png" position="150,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonYellowtext" position="150,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="black" font="Regular;18"/>
-				<ePixmap name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="290,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonBlue" pixmap="buttons/blue.png" position="290,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonBluetext" position="290,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
 			</screen>""" % (dlg_xh(440))
 
@@ -411,9 +411,9 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 				<widget render="Label" source="title" position="20,60" size="600,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
 				<widget name="config" position="20,110" size="760,800" scrollbarMode="showOnDemand" font="Regular;28" itemHeight="32" />
 				<eLabel text="" position="20,900" size="800,4" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonRed" pixmap="buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonRedtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
 			</screen>""" % (dlg_xh(800))
 
@@ -423,9 +423,9 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 				<widget render="Label" source="title" position="20,80" size="400,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="config" position="20,130" size="400,200" scrollbarMode="showOnDemand" />
 				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-				<ePixmap name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonRed" pixmap="buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<ePixmap name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<ePixmap name="ButtonGreen" pixmap="buttons/green.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget render="Label" source= "ButtonGreentext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
 			</screen>""" % (dlg_xh(440))
 
