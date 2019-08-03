@@ -781,9 +781,9 @@ class OscamRestartScreen(DownloadXMLScreen):
 				<widget render="Label" source="lreadonly" position=" 30,315" size="130,30" font="Regular;27"/>
 				<widget render="Label" source= "readonly" position="170,315" size="535,30" font="Regular;27"/>
 				<eLabel text="" position="30,675" size="660,3" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="30,690" size="210,60" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="30,690" size="210,60" zPosition="4" alphatest="on"/>
 				<widget name="ButtonYellowtext" position="30,690" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;26"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,690" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBlue" pixmap="buttons/blue.png" position="240,690" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonBluetext" position="240,690" size="209,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
 			</screen>""" % (dlg_xh(720))
 	else:
@@ -801,9 +801,9 @@ class OscamRestartScreen(DownloadXMLScreen):
 				<widget render="Label" source="lreadonly" position=" 20,210" size="90,20" font="Regular;18"/>
 				<widget render="Label" source= "readonly" position="115,210" size="360,20" font="Regular;18"/>
 				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBlue" pixmap="buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(440))
 
@@ -1191,9 +1191,9 @@ class ReaderlistScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="20,900" size="810,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRed" pixmap="buttons/red.png" position="20,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonRedtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;28"/>
-				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,930" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreen" pixmap="buttons/green.png" position="20,930" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,930" size="210,60" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;28"/>
 			</screen>""" % (dlg_xh(850))
 	else:
@@ -1217,9 +1217,9 @@ class ReaderlistScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="20,450" size="400,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRed" pixmap="buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreen" pixmap="buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(440))
 
@@ -1670,9 +1670,9 @@ class UserstatsScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="30,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,910" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRed" pixmap="buttons/red.png" position="20,910" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonRedtext" position="20,910" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
-				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,910" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreen" pixmap="buttons/green.png" position="20,910" size="210,60" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,910" size="210,60" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;24"/>
 			</screen>""" % (dlg_xh(1200))
 
@@ -1699,9 +1699,9 @@ class UserstatsScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonRed" pixmap="skin_default/buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonRed" pixmap="buttons/red.png" position="20,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonRedtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
-				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
+				<widget name="ButtonGreen" pixmap="buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 
@@ -1886,9 +1886,9 @@ class StatusDataScreen(DownloadXMLScreen):
 						</convert>
 					</widget>
 					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
-					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
 					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
-					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBlue" pixmap="buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
 				</screen>""" % (dlg_xh(1310))
 
@@ -1916,9 +1916,9 @@ class StatusDataScreen(DownloadXMLScreen):
 						</convert>
 					</widget>
 					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
-					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
 					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
-					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBlue" pixmap="buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
 					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
 				</screen>""" % (dlg_xh(1200))
 
@@ -1949,9 +1949,9 @@ class StatusDataScreen(DownloadXMLScreen):
 					</convert>
 			</widget>
 				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
 				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBlue" pixmap="buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 		# without picons...
@@ -1978,9 +1978,9 @@ class StatusDataScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellow" pixmap="buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
 				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBlue" pixmap="buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
 				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 
@@ -2334,4 +2334,3 @@ def Plugins(**kwargs):
 	if EXTMENU.value:
 		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
 	return l
-
