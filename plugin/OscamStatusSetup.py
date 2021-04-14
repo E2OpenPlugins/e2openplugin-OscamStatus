@@ -534,4 +534,3 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 			oscamServers[self.index] = entry
 		writeCFG(oscamServers)
 		self.close()
-

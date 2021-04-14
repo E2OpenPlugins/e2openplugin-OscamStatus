@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #===============================================================================
 # OscamStatus Plugin by puhvogel 2011-2018
-# modified by Pr2 
+# modified by Pr2
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -68,7 +68,7 @@ def getPicon(channelname):
 		elif len(channelname) > 2 and channelname.endswith('hd'):
 			pngname = path + channelname[:-2] + ".png"
 			if fileExists(pngname):
-				return pngname		
+				return pngname
 	pngname = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
 	return pngname
 
@@ -250,7 +250,7 @@ class card:
 		self.nodes = []
 
 
-class provider: 
+class provider:
 	def __init__(self):
 		self.number = "n/a"
 		self.sa = "n/a"
@@ -1126,7 +1126,7 @@ class LogDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position="40,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="data" position="40,120" size="1200,504" scrollbarMode="showOnDemand" />
 			</screen>"""
-	elif w == 1024: 
+	elif w == 1024:
 		skin = """
 			<screen flags="wfNoBorder" position="0,0" size="1024,576" name="LogDataScreen" >
 				<widget render="Label" source="title"  position="42,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -1297,9 +1297,9 @@ class ReaderlistScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/disabled.png"))
-		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/enabled.png"))
 
 		self.isReadonly = True
@@ -1773,14 +1773,14 @@ class UserstatsScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/disabled.png"))
-		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/enabled.png"))
 
 		self.isReadonly = True
 		self.index = 0
-        
+
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
@@ -1829,9 +1829,9 @@ class UserstatsScreen(DownloadXMLScreen):
 				self["label1"].setText(_("time on channel"))
 				u.ip = elapsedTime(u.timeonchannel, "%02d:%02d:%02d")
 			if "disabled" in u.status:
-				list.append((self.icondis, u.name, u.ip, u.status, u.protocol, index))        
+				list.append((self.icondis, u.name, u.ip, u.status, u.protocol, index))
 			else:
-				list.append((self.iconena, u.name, u.ip, u.status, u.protocol, index))        
+				list.append((self.iconena, u.name, u.ip, u.status, u.protocol, index))
 		self["data"].setList(list)
 		if self.index < len(list):
 			self["data"].setIndex(self.index)
@@ -2081,11 +2081,11 @@ class StatusDataScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		auRed = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auRed = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_red.png"))
-		auGreen = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auGreen = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_green.png"))
-		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_yellow.png"))
 		# dict for Status AU
 		self.auEntrys = {"1": auGreen, "0": auRed, "-1": auYellow}
@@ -2202,7 +2202,7 @@ class StatusDataScreen(DownloadXMLScreen):
 								psh = 55
 							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
 							self.picon.startDecode(picon, 0, 0, False)
-							png = self.picon.getData()			
+							png = self.picon.getData()
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, png, c.protocol, index))
 					else:
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, c.protocol, index))
@@ -2293,14 +2293,14 @@ class OscamStatus(Screen):
 			icon.append(LoadPixmap(cached=True, path=ipath + i + ".png"))
 
 		list = []
-		list.append((icon[0], _("show connected clients"), "clients"))        
-		list.append((icon[1], _("show all clients"), "allClients"))        
-		list.append((icon[2], _("show connected readers"), "readers"))        
-		list.append((icon[3], _("show all readers"), "allReaders"))        
-		list.append((icon[4], _("show logfile"), "log"))        
-		list.append((icon[5], _("server info"), "info"))        
-		list.append((icon[6], _("server restart/shutdown"), "restart"))        
-		list.append((icon[7], _("server setup"), "setup"))        
+		list.append((icon[0], _("show connected clients"), "clients"))
+		list.append((icon[1], _("show all clients"), "allClients"))
+		list.append((icon[2], _("show connected readers"), "readers"))
+		list.append((icon[3], _("show all readers"), "allReaders"))
+		list.append((icon[4], _("show logfile"), "log"))
+		list.append((icon[5], _("server info"), "info"))
+		list.append((icon[6], _("server restart/shutdown"), "restart"))
+		list.append((icon[7], _("server setup"), "setup"))
 
 		self["title"] = StaticText("")
 		self["menu"] = List(list)
@@ -2376,4 +2376,3 @@ def Plugins(**kwargs):
 	if EXTMENU.value:
 		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
 	return l
-
