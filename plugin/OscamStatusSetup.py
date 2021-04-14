@@ -39,12 +39,12 @@ import re
 import os.path
 
 config.plugins.OscamStatus  = ConfigSubsection()
-config.plugins.OscamStatus.lastServer = ConfigInteger(default = 0)
-config.plugins.OscamStatus.extMenu = ConfigYesNo(default = True)
-config.plugins.OscamStatus.xOffset = ConfigInteger(default = 50, limits=(0,100))
-config.plugins.OscamStatus.useECM = ConfigYesNo(default = False)
-config.plugins.OscamStatus.useIP = ConfigYesNo(default = True)
-config.plugins.OscamStatus.usePicons = ConfigYesNo(default = False)
+config.plugins.OscamStatus.lastServer = ConfigInteger(default=0)
+config.plugins.OscamStatus.extMenu = ConfigYesNo(default=True)
+config.plugins.OscamStatus.xOffset = ConfigInteger(default=50, limits=(0,100))
+config.plugins.OscamStatus.useECM = ConfigYesNo(default=False)
+config.plugins.OscamStatus.useIP = ConfigYesNo(default=True)
+config.plugins.OscamStatus.usePicons = ConfigYesNo(default=False)
 #config.plugins.OscamStatus.PiconPath = ConfigText(default = resolveFilename(SCOPE_SKIN,"picon_50x30"), fixed_size = False, visible_width=40)
 
 # export Variables...
@@ -157,7 +157,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		list.append(getConfigListEntry(_("Server address always in IP Format"), config.plugins.OscamStatus.useIP))
 		list.append(getConfigListEntry(_("Use Picons"), config.plugins.OscamStatus.usePicons))
 #		list.append(getConfigListEntry(_("Picons Path"), config.plugins.OscamStatus.PiconPath))
-		ConfigListScreen.__init__(self, list, session = session)
+		ConfigListScreen.__init__(self, list, session=session)
 
 		self["title"] = StaticText(_("Oscam Status globals Setup"))
 		self["ButtonRedtext"] = StaticText(_("return"))
@@ -244,7 +244,7 @@ def writeCFG(oscamServers):
 		os.remove(CFG)
 
 class OscamServerEntryList(MenuList):
-	def __init__(self, list, enableWrapAround = True):
+	def __init__(self, list, enableWrapAround=True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
 		w = getDesktop(0).size().width()
 		if w >= 1920:
@@ -451,18 +451,18 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 
 		serverPort = int(entry.serverPort)
 
-		self.serverNameConfigEntry = NoSave(ConfigText(default = entry.serverName, fixed_size = False, visible_width=20))
+		self.serverNameConfigEntry = NoSave(ConfigText(default=entry.serverName, fixed_size=False, visible_width=20))
 		if self.isIP:
-			self.serverIPConfigEntry = NoSave(ConfigIP( default = serverIP, auto_jump=True))
+			self.serverIPConfigEntry = NoSave(ConfigIP( default=serverIP, auto_jump=True))
 		else:
-			self.serverIPConfigEntry = NoSave(ConfigText(default = entry.serverIP, fixed_size = False, visible_width=20))
+			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
 			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
-		self.portConfigEntry       = NoSave(ConfigInteger(default = serverPort, limits=(0,65536)))
-		self.usernameConfigEntry   = NoSave(ConfigText(default = entry.username, fixed_size = False, visible_width=20))
-		self.passwordConfigEntry   = NoSave(ConfigPassword(default = entry.password, fixed_size = False))
+		self.portConfigEntry       = NoSave(ConfigInteger(default=serverPort, limits=(0,65536)))
+		self.usernameConfigEntry   = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
+		self.passwordConfigEntry   = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
 		self.useSSLConfigEntry     = NoSave(ConfigYesNo(entry.useSSL))
 
-		ConfigListScreen.__init__(self, [], session = session)
+		ConfigListScreen.__init__(self, [], session=session)
 		self.createSetup()
 
 		self["title"] = StaticText(_("Oscam Server Setup"))

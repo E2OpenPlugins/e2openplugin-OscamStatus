@@ -73,7 +73,7 @@ def getPicon(channelname):
 
 
 # Converts past seconds into days, hours, minutes and seconds ...
-def elapsedTime(s, fmt, hasDays = False):
+def elapsedTime(s, fmt, hasDays=False):
 	try:
 		secs = long(s)
 		if hasDays:
@@ -155,7 +155,7 @@ class GetPage2(Thread):
 		mp.send(0)
 
 		try:
-			page = urllib2.urlopen(request, timeout = 5).read()
+			page = urllib2.urlopen(request, timeout=5).read()
 
 		except urllib2.URLError, err:
 			error = "Error: "
@@ -892,7 +892,7 @@ class OscamRestartScreen(DownloadXMLScreen):
 		self.mbox(_("really shutdown oscam@%s?")%self.oServer.serverName)
 
 	def mbox(self, txt):
-		msg = self.session.openWithCallback(self.mboxCB, MessageBox, txt, default = False)
+		msg = self.session.openWithCallback(self.mboxCB, MessageBox, txt, default=False)
 		msg.setTitle(_("Oscam Status"))
 
 	def mboxCB(self, retval):
@@ -1073,7 +1073,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 
 # LogDataList...
 class LogDataList(MenuList):
-	def __init__(self, list, fontSize, enableWrapAround = True):
+	def __init__(self, list, fontSize, enableWrapAround=True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
 		self.fontSize = fontSize
 		self.l.setFont(0, gFont("Regular", self.fontSize))
@@ -1727,7 +1727,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self["label1"] = StaticText(_("IP"))
 		self["label2"] = StaticText(_("Status"))
 		self["label3"] = StaticText(_("Protocol"))
-		self["data"] = List(list, enableWrapAround = True)
+		self["data"] = List(list, enableWrapAround=True)
 		self["ButtonRed"] = Pixmap()
 		self["ButtonRedtext"] = Button(_("disable client"))
 		self["ButtonGreen"] = Pixmap()
@@ -2259,7 +2259,7 @@ class OscamStatus(Screen):
 		ipath = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/")
 		icon = []
 		for i in ["icon1", "icon2", "icon3", "icon4", "icon5", "icon6", "icon7", "icon8"]:
-			icon.append(LoadPixmap(cached = True, path = ipath + i + ".png"))
+			icon.append(LoadPixmap(cached=True, path=ipath + i + ".png"))
 
 		list = []
 		list.append((icon[0], _("show connected clients"), "clients"))        
@@ -2339,8 +2339,8 @@ def main(session,**kwargs):
 	session.open(OscamStatus)
 
 def Plugins(**kwargs):
-	l = [PluginDescriptor(name= _("Oscam Status"), description=_("whats going on?"), where = PluginDescriptor.WHERE_PLUGINMENU, icon="OscamStatus.png", fnc=main)]
+	l = [PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_PLUGINMENU, icon="OscamStatus.png", fnc=main)]
 	if EXTMENU.value:
-		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
+		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
 	return l
 
