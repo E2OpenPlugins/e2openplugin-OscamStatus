@@ -38,7 +38,7 @@ from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 import re
 import os.path
 
-config.plugins.OscamStatus  = ConfigSubsection()
+config.plugins.OscamStatus = ConfigSubsection()
 config.plugins.OscamStatus.lastServer = ConfigInteger(default=0)
 config.plugins.OscamStatus.extMenu = ConfigYesNo(default=True)
 config.plugins.OscamStatus.xOffset = ConfigInteger(default=50, limits=(0,100))
@@ -97,7 +97,7 @@ def parse_oscam_conf_file(filepath,data):
 
 				if key == 'httpport':
 					port = match.group('httpport')
-					data.serverName="Autodetected"
+					data.serverName = "Autodetected"
 					if port[0] == '+':
 						data.useSSL = True
 						data.serverPort = port[1:]
@@ -186,11 +186,11 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 
 class oscamServer:
 	serverName = "NewServer"
-	serverIP   = "127.0.0.1"
+	serverIP = "127.0.0.1"
 	serverPort = "8081"
-	username   = "username"
-	password   = "password"
-	useSSL     = False
+	username = "username"
+	password = "password"
+	useSSL = False
 
 CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "/etc/enigma2/oscamstatus.cfg")
 
@@ -222,7 +222,7 @@ def readCFG():
 	tmp = oscamServer()
 	if parse_oscam_version_file('/tmp/.oscam/oscam.version', tmp):
 		if hasattr(tmp, 'ConfigDir'):
-			parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf", tmp)
+			parse_oscam_conf_file(tmp.ConfigDir + "/oscam.conf", tmp)
 	oscamServers.append(tmp)
 	return oscamServers
 
@@ -232,12 +232,12 @@ def writeCFG(oscamServers):
 	print "[OscamStatus] writing datfile..."
 	for line in oscamServers:
 		if line.serverName != 'Autodetected':
-			cfg.write(line.username+' ')
-			cfg.write(line.password+' ')
-			cfg.write(line.serverIP+' ')
-			cfg.write(line.serverPort+' ')
-			cfg.write(line.serverName+' ')
-			cfg.write(str(int(line.useSSL))+'\n')
+			cfg.write(line.username + ' ')
+			cfg.write(line.password + ' ')
+			cfg.write(line.serverIP + ' ')
+			cfg.write(line.serverPort + ' ')
+			cfg.write(line.serverName + ' ')
+			cfg.write(str(int(line.useSSL)) + '\n')
 			savedconfig = 1
 	cfg.close()
 	if not savedconfig:
@@ -269,29 +269,29 @@ class OscamServerEntryList(MenuList):
 				if self.pic1:
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 5, 1, 25, 24, self.pic1))
 				else:
-					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, 'x'))
+					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, 'x'))
 			else:
 				if self.pic0:
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 5, 1, 25, 24, self.pic0))
 				else:
-					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, ' '))
-			res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
+					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, ' '))
+			res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 120, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
 			w = getDesktop(0).size().width()
 			if w >= 1920:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 285, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 330, 3, 210, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 285, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 330, 3, 210, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverIP))
 			else:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 120, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverIP))
 			#res.append((eListboxPythonMultiContent.TYPE_TEXT, 410, 3,  65, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverPort))
 			if i.useSSL:
 				tx = "SSL"
 			else:
 				tx = ""
 			if w >= 1920:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, tx))
 			else:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, tx))
 			self.list.append(res)
 		self.l.setList(self.list)
 		self.moveToIndex(index)
@@ -457,10 +457,10 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		else:
 			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
 			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
-		self.portConfigEntry       = NoSave(ConfigInteger(default=serverPort, limits=(0,65536)))
-		self.usernameConfigEntry   = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
-		self.passwordConfigEntry   = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
-		self.useSSLConfigEntry     = NoSave(ConfigYesNo(entry.useSSL))
+		self.portConfigEntry = NoSave(ConfigInteger(default=serverPort, limits=(0,65536)))
+		self.usernameConfigEntry = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
+		self.passwordConfigEntry = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
+		self.useSSLConfigEntry = NoSave(ConfigYesNo(entry.useSSL))
 
 		ConfigListScreen.__init__(self, [], session=session)
 		self.createSetup()
@@ -508,15 +508,15 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 
 	def Save(self):
 		entry = oscamServer()
-		entry.username   = self.usernameConfigEntry.value
-		entry.password   = self.passwordConfigEntry.value
+		entry.username = self.usernameConfigEntry.value
+		entry.password = self.passwordConfigEntry.value
 		entry.serverName = self.serverNameConfigEntry.value
 		if self.isIP:
-			entry.serverIP   = "%d.%d.%d.%d" % tuple(self.serverIPConfigEntry.value)
+			entry.serverIP = "%d.%d.%d.%d" % tuple(self.serverIPConfigEntry.value)
 		else:
-			entry.serverIP   = self.serverIPConfigEntry.value
+			entry.serverIP = self.serverIPConfigEntry.value
 		entry.serverPort = str(self.portConfigEntry.value)
-		entry.useSSL     = self.useSSLConfigEntry.value
+		entry.useSSL = self.useSSLConfigEntry.value
 		oscamServers = readCFG()
 		if self.index == -1:
 			oscamServers.append(entry)
