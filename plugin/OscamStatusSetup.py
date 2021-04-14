@@ -62,6 +62,7 @@ oscam_regex = {
 	'httppwd': re.compile(r'httppwd\s*=\s*(?P<httppwd>.*)\n'),
 }
 
+
 def _parse_line(line):
 	for key, rx in oscam_regex.items():
 		match = rx.search(line)
@@ -69,6 +70,7 @@ def _parse_line(line):
 			return key, match
 	# if no matches
 	return None, None
+
 
 def parse_oscam_version_file(filepath, data):
 	# open the file and read through it line by line
@@ -85,6 +87,7 @@ def parse_oscam_version_file(filepath, data):
 				line = file_object.readline()
 		return 1
 	return 0
+
 
 def parse_oscam_conf_file(filepath, data):
 	# open the file and read through it line by line
@@ -119,6 +122,7 @@ def dlg_xh(w):
 		x = 0
 	h = getDesktop(0).size().height()
 	return x, h
+
 
 class globalsConfigScreen(Screen, ConfigListScreen):
 	w = getDesktop(0).size().width()
@@ -184,6 +188,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 			x[1].cancel()
 		self.close()
 
+
 class oscamServer:
 	serverName = "NewServer"
 	serverIP = "127.0.0.1"
@@ -192,7 +197,9 @@ class oscamServer:
 	password = "password"
 	useSSL = False
 
+
 CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "/etc/enigma2/oscamstatus.cfg")
+
 
 def readCFG():
 	cfg = None
@@ -226,6 +233,7 @@ def readCFG():
 	oscamServers.append(tmp)
 	return oscamServers
 
+
 def writeCFG(oscamServers):
 	cfg = file(CFG, "w")
 	savedconfig = 0
@@ -242,6 +250,7 @@ def writeCFG(oscamServers):
 	cfg.close()
 	if not savedconfig:
 		os.remove(CFG)
+
 
 class OscamServerEntryList(MenuList):
 	def __init__(self, list, enableWrapAround=True):
@@ -297,6 +306,8 @@ class OscamServerEntryList(MenuList):
 		self.moveToIndex(index)
 
 # OscamServerEntriesListConfigScreen...
+
+
 class OscamServerEntriesListConfigScreen(Screen):
 	w = getDesktop(0).size().width()
 	if w >= 1920:
@@ -380,7 +391,6 @@ class OscamServerEntriesListConfigScreen(Screen):
 		message = _("Do you really want to delete this entry?")
 		msg = self.session.openWithCallback(self.Confirmed, MessageBox, message)
 		msg.setTitle("Oscam Status")
-
 
 	def Confirmed(self, confirmed):
 		if not confirmed:

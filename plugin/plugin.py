@@ -56,6 +56,7 @@ FULLHD = False
 if getDesktop(0).size().width() >= 1920:
 	FULLHD = True
 
+
 def getPicon(channelname):
 	searchPiconPaths = ['/usr/share/enigma2/picon/', '/media/usb/picon/', '/media/cf/picon/', '/picon/', '/media/hdd/picon/']
 	channelname = re.sub(r'\[.*?\]', '', channelname)
@@ -87,6 +88,7 @@ def elapsedTime(s, fmt, hasDays=False):
 	except ValueError:
 		return s
 
+
 class ThreadQueue:
 	def __init__(self):
 		self.__list = []
@@ -105,11 +107,14 @@ class ThreadQueue:
 		lock.release()
 		return ret
 
+
 THREAD_WORKING = 1
 THREAD_FINISHED = 2
 THREAD_ERROR = 3
 
 # twisted can not digest auth, whatever ...
+
+
 class GetPage2(Thread):
 	def __init__(self):
 		Thread.__init__(self)
@@ -188,6 +193,7 @@ class oscamdata:
 		self.uptime = "n/a"
 		self.readonly = "n/a"
 
+
 class client:
 	def __init__(self):
 		self.type = "n/a"
@@ -209,6 +215,7 @@ class client:
 		self.port = "n/a"
 		self.connection = "n/a"
 
+
 class user:
 	def __init__(self):
 		self.name = "n/a"
@@ -217,6 +224,7 @@ class user:
 		self.protocol = "n/a"
 		self.timeonchannel = "n/a" # ab 6793
 
+
 class reader:
 	def __init__(self):
 		self.label = "n/a"
@@ -224,6 +232,7 @@ class reader:
 		self.hostport = "n/a"
 		self.totalcards = "n/a"
 		self.cards = []
+
 
 class card:
 	def __init__(self):
@@ -240,6 +249,7 @@ class card:
 		self.totalnodes = "n/a"
 		self.nodes = []
 
+
 class provider: 
 	def __init__(self):
 		self.number = "n/a"
@@ -248,10 +258,12 @@ class provider:
 		self.provid = "n/a"
 		self.service = "n/a"
 
+
 class pnode:
 	def __init__(self):
 		self.number = "n/a"
 		self.hexval = "n/a"
+
 
 class ecm:
 	def __init__(self):
@@ -266,11 +278,13 @@ class ecm:
 		self.lastrequest = "n/a"
 		self.val = "n/a"
 
+
 class emm:
 	def __init__(self):
 		self.type = "n/a"
 		self.result = "n/a"
 		self.val = "n/a"
+
 
 class readerlist:
 	def __init__(self):
@@ -280,6 +294,8 @@ class readerlist:
 		self.enabled = "n/a"
 
 # ReaderServiceDataScreen...
+
+
 class ReaderServiceDataScreen(Screen):
 	if FULLHD:
 		skin = """
@@ -348,6 +364,8 @@ class ReaderServiceDataScreen(Screen):
 		self.instance.move(ePoint(x, 0))
 
 # ClientDataScreen...
+
+
 class ClientDataScreen(Screen):
 	if FULLHD:
 		# HD skin
@@ -566,6 +584,8 @@ class ClientDataScreen(Screen):
 		self.close(0)
 
 # "Mother" of all download windows ...
+
+
 class DownloadXMLScreen(Screen):
 	def __init__(self, session, part, oServer, timerOn=True):
 		self.oServer = oServer
@@ -683,6 +703,8 @@ class DownloadXMLScreen(Screen):
 		self["title"].setText(txt)
 
 # OscamDataScreen...
+
+
 class OscamDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -769,6 +791,8 @@ class OscamDataScreen(DownloadXMLScreen):
 		self["readonly"].setText(d.readonly)
 
 # OscamRestartScreen...
+
+
 class OscamRestartScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -903,6 +927,8 @@ class OscamRestartScreen(DownloadXMLScreen):
 				self.sendNewPart("shutdown&action=shutdown")
 
 # ReaderDataScreen...
+
+
 class ReaderDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		# HD skin
@@ -967,7 +993,6 @@ class ReaderDataScreen(DownloadXMLScreen):
 				</widget>
 				<widget name="KeyYellow" pixmap="%s" position="675,495" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
 			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png"))
-
 
 	def __init__(self, session, part, oServer):
 		self.skin = ReaderDataScreen.skin
@@ -1072,6 +1097,8 @@ class ReaderDataScreen(DownloadXMLScreen):
 		self.session.open(ReaderServiceDataScreen, self.r)
 
 # LogDataList...
+
+
 class LogDataList(MenuList):
 	def __init__(self, list, fontSize, enableWrapAround=True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
@@ -1083,6 +1110,8 @@ class LogDataList(MenuList):
 		instance.setItemHeight(self.fontSize + 2)
 
 # LogDataScreen...
+
+
 class LogDataScreen(DownloadXMLScreen):
 	w = getDesktop(0).size().width()
 	if FULLHD:
@@ -1109,7 +1138,6 @@ class LogDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position="10,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="data" position="10,130" size="700,352" scrollbarMode="showOnDemand" />
 			</screen>"""
-
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -1178,6 +1206,8 @@ class LogDataScreen(DownloadXMLScreen):
 			self["data"].moveToIndex(x - 1)
 
 # ReaderlistScreen...
+
+
 class ReaderlistScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -1231,7 +1261,6 @@ class ReaderlistScreen(DownloadXMLScreen):
 				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(440))
-
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -1369,8 +1398,6 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def downPressed(self):
 
-
-
 		if self.download:
 			return
 		self["data"].selectNext()
@@ -1381,11 +1408,11 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def rightPressed(self):
 
-
-
 		pass
 
 # ReaderstatsScreen...
+
+
 class ReaderstatsScreen(DownloadXMLScreen):
 	w = getDesktop(0).size().width()
 	if w >= 1920:
@@ -1459,7 +1486,6 @@ class ReaderstatsScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 			</screen>""" % (dlg_xh(1390))
-
 
 	else:
 		# picon skin...
@@ -1654,6 +1680,8 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["data"].setIndex(self.oldIndex)
 
 # UserstatsScreen...
+
+
 class UserstatsScreen(DownloadXMLScreen):
 	if FULLHD:
 	# HD skin
@@ -1713,7 +1741,6 @@ class UserstatsScreen(DownloadXMLScreen):
 				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="2" transparent="1" alphatest="on"/>
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
-
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -1867,6 +1894,8 @@ class UserstatsScreen(DownloadXMLScreen):
 		pass
 
 # StatusDataScreen...
+
+
 class StatusDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		# HD picon skin...
@@ -2211,6 +2240,8 @@ class StatusDataScreen(DownloadXMLScreen):
 		self.timer.start(TIMERTICK)
 
 # mainScreen...
+
+
 class OscamStatus(Screen):
 	if FULLHD:
 		x, h = dlg_xh(660)
@@ -2335,8 +2366,10 @@ class OscamStatus(Screen):
 						return pngname
 		return ""
 
+
 def main(session, **kwargs):
 	session.open(OscamStatus)
+
 
 def Plugins(**kwargs):
 	l = [PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_PLUGINMENU, icon="OscamStatus.png", fnc=main)]
