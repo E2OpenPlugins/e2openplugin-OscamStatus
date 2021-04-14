@@ -35,7 +35,8 @@ from enigma import eListboxPythonMultiContent, eListbox, getDesktop, gFont, \
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 
-import re, os.path
+import re
+import os.path
 
 config.plugins.OscamStatus  = ConfigSubsection()
 config.plugins.OscamStatus.lastServer = ConfigInteger(default = 0)
