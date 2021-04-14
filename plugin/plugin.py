@@ -570,8 +570,10 @@ class DownloadXMLScreen(Screen):
 	def __init__(self, session, part, oServer, timerOn=True):
 		self.oServer = oServer
 		self["title"] = StaticText("")
-		if oServer.useSSL: self.url = "https://"
-		else: self.url = "http://"
+		if oServer.useSSL:
+			self.url = "https://"
+		else:
+			self.url = "http://"
 		self.url += oServer.serverIP+":"+oServer.serverPort+"/oscamapi.html?part="+part
 		self.oldurl = self.url
 		self.download = False
@@ -601,8 +603,10 @@ class DownloadXMLScreen(Screen):
 
 	def sendNewPart(self, part):
 		self.timer.stop()
-		if self.oServer.useSSL: url = "https://"
-		else: url = "http://"
+		if self.oServer.useSSL:
+			url = "https://"
+		else:
+			url = "http://"
 
 		url += self.oServer.serverIP+":"+self.oServer.serverPort
 		url += "/oscamapi.html?part="+part
@@ -1047,19 +1051,19 @@ class ReaderDataScreen(DownloadXMLScreen):
 		for c in r[0].cards:
 			p = c.providers
 			if len(p) > 4:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,
 				str(len(p)),_("providers on this card max. display is:"),' ',_("Use Oscam Webif to see them all."),'4',' ',' ',' '))
 			elif len(p) == 4:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,
 				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,p[3].number,'@'+p[3].provid+'='+p[3].service))
 			elif len(p) == 3:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,
 				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,' ',' '))
 			elif len(p) == 2:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,
 				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,' ',' ',' ',' '))
 			elif len(p) == 1:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
+				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,
 				p[0].number,'@'+p[0].provid+'='+p[0].service,' ',' ',' ',' ',' ',' '))
 		self["data"].setList(list)
 		self.r = r
@@ -1153,11 +1157,16 @@ class LogDataScreen(DownloadXMLScreen):
 		self.setTitle(_("Logfile")+"@"+self.oServer.serverName)
 		list = []
 		for line in log.splitlines():
-			if "rejected" in line or "invalid" in line: c = "0xff2222" # red
-			elif "written" in line: c = "0xff8c00" # orange
-			elif " r " in line: c = "0xffd700" # yellow
-			elif " p " in line: c = "0xadff2f" # green
-			else: c = "0xffffff" # blanc
+			if "rejected" in line or "invalid" in line:
+				c = "0xff2222" # red
+			elif "written" in line:
+				c = "0xff8c00" # orange
+			elif " r " in line:
+				c = "0xffd700" # yellow
+			elif " p " in line:
+				c = "0xadff2f" # green
+			else:
+				c = "0xffffff" # blanc
 			item = [line]
 			item.append((eListboxPythonMultiContent.TYPE_TEXT, 1, 1, self.entryW, self.entryH, 0, RT_HALIGN_LEFT, line, int(c, 16)))
 			list.append(item)

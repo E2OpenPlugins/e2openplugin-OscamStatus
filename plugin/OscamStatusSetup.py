@@ -115,7 +115,8 @@ def parse_oscam_conf_file(filepath,data):
 
 def dlg_xh(w):
 	x = getDesktop(0).size().width() - w - XOFFSET.value
-	if x < 0: x = 0
+	if x < 0:
+		x = 0
 	h = getDesktop(0).size().height()
 	return x, h
 
@@ -283,8 +284,10 @@ class OscamServerEntryList(MenuList):
 				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
 				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
 			#res.append((eListboxPythonMultiContent.TYPE_TEXT, 410, 3,  65, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverPort))
-			if i.useSSL: tx = "SSL"
-			else: tx = ""
+			if i.useSSL:
+				tx = "SSL"
+			else:
+				tx = ""
 			if w >= 1920:
 				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
 			else:
