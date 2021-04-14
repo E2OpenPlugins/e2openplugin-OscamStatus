@@ -453,7 +453,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 
 		self.serverNameConfigEntry = NoSave(ConfigText(default=entry.serverName, fixed_size=False, visible_width=20))
 		if self.isIP:
-			self.serverIPConfigEntry = NoSave(ConfigIP( default=serverIP, auto_jump=True))
+			self.serverIPConfigEntry = NoSave(ConfigIP(default=serverIP, auto_jump=True))
 		else:
 			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
 			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')

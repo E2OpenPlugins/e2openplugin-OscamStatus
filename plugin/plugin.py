@@ -89,7 +89,7 @@ def elapsedTime(s, fmt, hasDays=False):
 
 class ThreadQueue:
 	def __init__(self):
-		self.__list = [ ]
+		self.__list = []
 		self.__lock = Lock()
 
 	def push(self, val):
@@ -151,7 +151,7 @@ class GetPage2(Thread):
 		urllib2.install_opener(opener)
 		request = urllib2.Request(self.url)
 
-		self.__messages.push((THREAD_WORKING, "Download Thread is running" ))
+		self.__messages.push((THREAD_WORKING, "Download Thread is running"))
 		mp.send(0)
 
 		try:
@@ -497,47 +497,47 @@ class ClientDataScreen(Screen):
 		self.name = data.name
 		self.protocol = data.protocol
 		self["lprotocol"] = StaticText("protocol:")
-		self[ "protocol"] = StaticText(data.protocol)
+		self["protocol"] = StaticText(data.protocol)
 		self["lprotocolext"] = StaticText("protocolext:")
 		if data.protocolext != "":
-			self[ "protocolext"] = StaticText(data.protocolext)
+			self["protocolext"] = StaticText(data.protocolext)
 		else:
-			self[ "protocolext"] = StaticText(_("not available"))
+			self["protocolext"] = StaticText(_("not available"))
 		self["lau"] = StaticText("au:")
-		self[ "au"] = StaticText(auEntrys[data.au])
+		self["au"] = StaticText(auEntrys[data.au])
 		self["lcaid"] = StaticText("caid:")
-		self[ "caid"] = StaticText(data.caid)
+		self["caid"] = StaticText(data.caid)
 		self["lprovid"] = StaticText("provid:")
-		self[ "provid"] = StaticText(data.provid)
+		self["provid"] = StaticText(data.provid)
 		self["lsrvid"] = StaticText("srvid:")
-		self[ "srvid"] = StaticText(data.srvid)
+		self["srvid"] = StaticText(data.srvid)
 		self["lecmtime"] = StaticText("ecmtime:")
 		if data.ecmtime != "":
-			self[ "ecmtime"] = StaticText(data.ecmtime)
+			self["ecmtime"] = StaticText(data.ecmtime)
 		else:
-			self[ "ecmtime"] = StaticText(_("not available"))
+			self["ecmtime"] = StaticText(_("not available"))
 		self["lecmhistory"] = StaticText("ecmhistory:")
-		self[ "historymax"] = StaticText(str(int(self.base)))
-		self[ "historymin"] = StaticText("0")
+		self["historymax"] = StaticText(str(int(self.base)))
+		self["historymin"] = StaticText("0")
 		self["lanswered"] = StaticText("answered:")
 		if data.answered != "":
-			self[ "answered"] = StaticText(data.answered)
+			self["answered"] = StaticText(data.answered)
 		else:
-			self[ "answered"] = StaticText(_("not available"))
+			self["answered"] = StaticText(_("not available"))
 		self["lservice"] = StaticText("service:")
-		self[ "service"] = StaticText(data.service)
+		self["service"] = StaticText(data.service)
 		self["llogin"] = StaticText("login:")
-		self[ "login"] = StaticText(data.login)
+		self["login"] = StaticText(data.login)
 		self["lonline"] = StaticText("online:")
-		self[ "online"] = StaticText(elapsedTime(data.online, "%02dd %02dh %02dm %02ds", True))
+		self["online"] = StaticText(elapsedTime(data.online, "%02dd %02dh %02dm %02ds", True))
 		self["lidle"] = StaticText("idle:")
-		self[ "idle"] = StaticText(elapsedTime(data.idle, "%02d:%02d:%02d"))
+		self["idle"] = StaticText(elapsedTime(data.idle, "%02d:%02d:%02d"))
 		self["lip"] = StaticText("ip:")
-		self[ "ip"] = StaticText(data.ip)
+		self["ip"] = StaticText(data.ip)
 		self["lport"] = StaticText("port:")
-		self[ "port"] = StaticText(data.port)
+		self["port"] = StaticText(data.port)
 		self["lconnection"] = StaticText("connection:")
-		self[ "connection"] = StaticText(data.connection)
+		self["connection"] = StaticText(data.connection)
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
 		{
@@ -726,15 +726,15 @@ class OscamDataScreen(DownloadXMLScreen):
 		DownloadXMLScreen.__init__(self, session, part, oServer, False)
 
 		self["lversion"] = StaticText("version:")
-		self[ "version"] = StaticText("")
+		self["version"] = StaticText("")
 		self["lrevision"] = StaticText("revision:")
-		self[ "revision"] = StaticText("")
+		self["revision"] = StaticText("")
 		self["lstarttime"] = StaticText("starttime:")
-		self[ "starttime"] = StaticText("")
+		self["starttime"] = StaticText("")
 		self["luptime"] = StaticText("uptime:")
-		self[ "uptime"] = StaticText("")
+		self["uptime"] = StaticText("")
 		self["lreadonly"] = StaticText("readonly:")
-		self[ "readonly"] = StaticText("")
+		self["readonly"] = StaticText("")
 		self["actions"] = ActionMap(["OkCancelActions"],
 
 		{
@@ -762,11 +762,11 @@ class OscamDataScreen(DownloadXMLScreen):
 		d = self.parseXML(dom)
 
 		self.setTitle("Oscam Server"+"@"+self.oServer.serverName)
-		self[ "version"].setText(d.version)
-		self[ "revision"].setText(d.revision)
-		self[ "starttime"].setText(d.starttime)
-		self[ "uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
-		self[ "readonly"].setText(d.readonly)
+		self["version"].setText(d.version)
+		self["revision"].setText(d.revision)
+		self["starttime"].setText(d.starttime)
+		self["uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
+		self["readonly"].setText(d.readonly)
 
 # OscamRestartScreen...
 class OscamRestartScreen(DownloadXMLScreen):
@@ -820,15 +820,15 @@ class OscamRestartScreen(DownloadXMLScreen):
 		DownloadXMLScreen.__init__(self, session, part, oServer, False)
 
 		self["lversion"] = StaticText("version:")
-		self[ "version"] = StaticText("")
+		self["version"] = StaticText("")
 		self["lrevision"] = StaticText("revision:")
-		self[ "revision"] = StaticText("")
+		self["revision"] = StaticText("")
 		self["lstarttime"] = StaticText("starttime:")
-		self[ "starttime"] = StaticText("")
+		self["starttime"] = StaticText("")
 		self["luptime"] = StaticText("uptime:")
-		self[ "uptime"] = StaticText("")
+		self["uptime"] = StaticText("")
 		self["lreadonly"] = StaticText("readonly:")
-		self[ "readonly"] = StaticText("")
+		self["readonly"] = StaticText("")
 
 		self["ButtonYellow"] = Pixmap()
 		self["ButtonYellowtext"] = Button(_("restart oscam"))
@@ -867,11 +867,11 @@ class OscamRestartScreen(DownloadXMLScreen):
 		d = self.parseXML(dom)
 
 		self.setTitle("Oscam Server"+"@"+self.oServer.serverName)
-		self[ "version"].setText(d.version)
-		self[ "revision"].setText(d.revision)
-		self[ "starttime"].setText(d.starttime)
-		self[ "uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
-		self[ "readonly"].setText(d.readonly)
+		self["version"].setText(d.version)
+		self["revision"].setText(d.revision)
+		self["starttime"].setText(d.starttime)
+		self["uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
+		self["readonly"].setText(d.readonly)
 
 		if not self.canRestart:
 			msg = _("you can\'t shutdown/restart this oscam.\n")
@@ -2230,7 +2230,7 @@ class OscamStatus(Screen):
 						}
 					</convert>
 				</widget>
-			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+			</screen>"""  % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 	else:
 		x, h = dlg_xh(440)
 		skin = """
@@ -2249,7 +2249,7 @@ class OscamStatus(Screen):
 						}
 					</convert>
 				</widget>
-			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+			</screen>"""  % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 
 	def __init__(self, session):
 		self.skin = OscamStatus.skin
