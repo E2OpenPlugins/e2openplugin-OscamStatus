@@ -41,7 +41,7 @@ import os.path
 config.plugins.OscamStatus = ConfigSubsection()
 config.plugins.OscamStatus.lastServer = ConfigInteger(default=0)
 config.plugins.OscamStatus.extMenu = ConfigYesNo(default=True)
-config.plugins.OscamStatus.xOffset = ConfigInteger(default=50, limits=(0,100))
+config.plugins.OscamStatus.xOffset = ConfigInteger(default=50, limits=(0, 100))
 config.plugins.OscamStatus.useECM = ConfigYesNo(default=False)
 config.plugins.OscamStatus.useIP = ConfigYesNo(default=True)
 config.plugins.OscamStatus.usePicons = ConfigYesNo(default=False)
@@ -70,7 +70,7 @@ def _parse_line(line):
 	# if no matches
 	return None, None
 
-def parse_oscam_version_file(filepath,data):
+def parse_oscam_version_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
 		with open(filepath, 'r') as file_object:
@@ -86,7 +86,7 @@ def parse_oscam_version_file(filepath,data):
 		return 1
 	return 0
 
-def parse_oscam_conf_file(filepath,data):
+def parse_oscam_conf_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
 		with open(filepath, 'r') as file_object:
@@ -171,7 +171,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def Save(self):
@@ -351,7 +351,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def updateEntrys(self):
@@ -457,7 +457,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		else:
 			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
 			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
-		self.portConfigEntry = NoSave(ConfigInteger(default=serverPort, limits=(0,65536)))
+		self.portConfigEntry = NoSave(ConfigInteger(default=serverPort, limits=(0, 65536)))
 		self.usernameConfigEntry = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
 		self.passwordConfigEntry = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
 		self.useSSLConfigEntry = NoSave(ConfigYesNo(entry.useSSL))
@@ -478,7 +478,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def createSetup(self):

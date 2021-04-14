@@ -344,7 +344,7 @@ class ReaderServiceDataScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 # ClientDataScreen...
@@ -454,7 +454,7 @@ class ClientDataScreen(Screen):
 		Screen.__init__(self, session)
 
 		# dict for Status AU
-		auEntrys = {"1":"ACTIVE", "0":"OFF", "-1":"ON"}
+		auEntrys = {"1": "ACTIVE", "0": "OFF", "-1": "ON"}
 
 		self["title"] = StaticText("")
 		self["KeyYellow"] = Pixmap()
@@ -549,7 +549,7 @@ class ClientDataScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def setProgress(self):
@@ -744,7 +744,7 @@ class OscamDataScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -846,7 +846,7 @@ class OscamRestartScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -906,7 +906,7 @@ class OscamRestartScreen(DownloadXMLScreen):
 class ReaderDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		# HD skin
-		x,h = dlg_xh(1200)
+		x, h = dlg_xh(1200)
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="20,60" size="1180,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
@@ -938,7 +938,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 
 	else:
 		# Low res skin
-		x,h = dlg_xh(720)
+		x, h = dlg_xh(720)
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -987,7 +987,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1052,19 +1052,19 @@ class ReaderDataScreen(DownloadXMLScreen):
 			p = c.providers
 			if len(p) > 4:
 				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
-				str(len(p)),_("providers on this card max. display is:"),' ',_("Use Oscam Webif to see them all."),'4',' ',' ',' '))
+				str(len(p)), _("providers on this card max. display is:"), ' ', _("Use Oscam Webif to see them all."), '4', ' ', ' ', ' '))
 			elif len(p) == 4:
 				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
-				p[0].number,'@' + p[0].provid + '=' + p[0].service,p[1].number,'@' + p[1].provid + '=' + p[1].service,p[2].number,'@' + p[2].provid + '=' + p[2].service,p[3].number,'@' + p[3].provid + '=' + p[3].service))
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, p[2].number, '@' + p[2].provid + '=' + p[2].service, p[3].number, '@' + p[3].provid + '=' + p[3].service))
 			elif len(p) == 3:
 				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
-				p[0].number,'@' + p[0].provid + '=' + p[0].service,p[1].number,'@' + p[1].provid + '=' + p[1].service,p[2].number,'@' + p[2].provid + '=' + p[2].service,' ',' '))
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, p[2].number, '@' + p[2].provid + '=' + p[2].service, ' ', ' '))
 			elif len(p) == 2:
 				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
-				p[0].number,'@' + p[0].provid + '=' + p[0].service,p[1].number,'@' + p[1].provid + '=' + p[1].service,' ',' ',' ',' '))
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, ' ', ' ', ' ', ' '))
 			elif len(p) == 1:
 				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
-				p[0].number,'@' + p[0].provid + '=' + p[0].service,' ',' ',' ',' ',' ',' '))
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, ' ', ' ', ' ', ' ', ' ', ' '))
 		self["data"].setList(list)
 		self.r = r
 
@@ -1147,7 +1147,7 @@ class LogDataScreen(DownloadXMLScreen):
 			d = str(node.firstChild.nodeValue.strip())
 			# in the OScam is still a small bug, in the log is a "'",
 			# Here the XML parser exits and is replaced by a "'" ...
-		d = d.replace("\xb4","\x27")
+		d = d.replace("\xb4", "\x27")
 		return d
 
 	def dlAction(self):
@@ -1279,7 +1279,7 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1570,7 +1570,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1757,7 +1757,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -2059,14 +2059,14 @@ class StatusDataScreen(DownloadXMLScreen):
 		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
 		                      "Extensions/OscamStatus/icons/au_yellow.png"))
 		# dict for Status AU
-		self.auEntrys = {"1":auGreen, "0":auRed, "-1":auYellow}
+		self.auEntrys = {"1": auGreen, "0": auRed, "-1": auYellow}
 
 		self.hideIdle = False
 
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -2320,7 +2320,7 @@ class OscamStatus(Screen):
 		self.session.openWithCallback(self.globalsCB, globalsConfigScreen)
 
 	def globalsCB(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def findPicon(self, service=None):
@@ -2328,14 +2328,14 @@ class OscamStatus(Screen):
 			sname = ':'.join(service.split(':')[:11])
 			pos = sname.rfind(':')
 			if pos != -1:
-				sname = sname[:pos].rstrip(':').replace(':','_')
+				sname = sname[:pos].rstrip(':').replace(':', '_')
 				for path in self.searchPiconPaths:
 					pngname = path + sname + ".png"
 					if fileExists(pngname):
 						return pngname
 		return ""
 
-def main(session,**kwargs):
+def main(session, **kwargs):
 	session.open(OscamStatus)
 
 def Plugins(**kwargs):
