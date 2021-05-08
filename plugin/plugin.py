@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #===============================================================================
 # OscamStatus Plugin by puhvogel 2011-2018
-# modified by Pr2 
+# modified by Pr2
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -56,6 +56,7 @@ FULLHD = False
 if getDesktop(0).size().width() >= 1920:
 	FULLHD = True
 
+
 def getPicon(channelname):
 	searchPiconPaths = ['/usr/share/enigma2/picon/', '/media/usb/picon/', '/media/cf/picon/', '/picon/', '/media/hdd/picon/']
 	channelname = re.sub(r'\[.*?\]', '', channelname)
@@ -67,13 +68,13 @@ def getPicon(channelname):
 		elif len(channelname) > 2 and channelname.endswith('hd'):
 			pngname = path + channelname[:-2] + ".png"
 			if fileExists(pngname):
-				return pngname		
-	pngname=resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
+				return pngname
+	pngname = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
 	return pngname
 
 
 # Converts past seconds into days, hours, minutes and seconds ...
-def elapsedTime(s, fmt, hasDays = False):
+def elapsedTime(s, fmt, hasDays=False):
 	try:
 		secs = long(s)
 		if hasDays:
@@ -87,9 +88,10 @@ def elapsedTime(s, fmt, hasDays = False):
 	except ValueError:
 		return s
 
+
 class ThreadQueue:
 	def __init__(self):
-		self.__list = [ ]
+		self.__list = []
 		self.__lock = Lock()
 
 	def push(self, val):
@@ -105,11 +107,14 @@ class ThreadQueue:
 		lock.release()
 		return ret
 
+
 THREAD_WORKING = 1
 THREAD_FINISHED = 2
 THREAD_ERROR = 3
 
 # twisted can not digest auth, whatever ...
+
+
 class GetPage2(Thread):
 	def __init__(self):
 		Thread.__init__(self)
@@ -151,11 +156,11 @@ class GetPage2(Thread):
 		urllib2.install_opener(opener)
 		request = urllib2.Request(self.url)
 
-		self.__messages.push((THREAD_WORKING, "Download Thread is running" ))
+		self.__messages.push((THREAD_WORKING, "Download Thread is running"))
 		mp.send(0)
 
 		try:
-			page = urllib2.urlopen(request, timeout = 5).read()
+			page = urllib2.urlopen(request, timeout=5).read()
 
 		except urllib2.URLError, err:
 			error = "Error: "
@@ -188,6 +193,7 @@ class oscamdata:
 		self.uptime = "n/a"
 		self.readonly = "n/a"
 
+
 class client:
 	def __init__(self):
 		self.type = "n/a"
@@ -209,6 +215,7 @@ class client:
 		self.port = "n/a"
 		self.connection = "n/a"
 
+
 class user:
 	def __init__(self):
 		self.name = "n/a"
@@ -217,6 +224,7 @@ class user:
 		self.protocol = "n/a"
 		self.timeonchannel = "n/a" # ab 6793
 
+
 class reader:
 	def __init__(self):
 		self.label = "n/a"
@@ -224,6 +232,7 @@ class reader:
 		self.hostport = "n/a"
 		self.totalcards = "n/a"
 		self.cards = []
+
 
 class card:
 	def __init__(self):
@@ -240,7 +249,8 @@ class card:
 		self.totalnodes = "n/a"
 		self.nodes = []
 
-class provider: 
+
+class provider:
 	def __init__(self):
 		self.number = "n/a"
 		self.sa = "n/a"
@@ -248,10 +258,12 @@ class provider:
 		self.provid = "n/a"
 		self.service = "n/a"
 
+
 class pnode:
 	def __init__(self):
 		self.number = "n/a"
 		self.hexval = "n/a"
+
 
 class ecm:
 	def __init__(self):
@@ -266,11 +278,13 @@ class ecm:
 		self.lastrequest = "n/a"
 		self.val = "n/a"
 
+
 class emm:
 	def __init__(self):
 		self.type = "n/a"
 		self.result = "n/a"
 		self.val = "n/a"
+
 
 class readerlist:
 	def __init__(self):
@@ -280,6 +294,8 @@ class readerlist:
 		self.enabled = "n/a"
 
 # ReaderServiceDataScreen...
+
+
 class ReaderServiceDataScreen(Screen):
 	if FULLHD:
 		skin = """
@@ -333,7 +349,7 @@ class ReaderServiceDataScreen(Screen):
 			for p in c.providers:
 				tmp.append((c.caid, p.provid, p.service, c.system, c.number))
 
-		self["title"] = StaticText(str(len(tmp))+' Services@'+r[0].label+'('+r[0].hostaddress+')')
+		self["title"] = StaticText(str(len(tmp)) + ' Services@' + r[0].label + '(' + r[0].hostaddress + ')')
 
 		self["data"] = List(sorted(tmp, compare))
 		self["actions"] = ActionMap(["OkCancelActions"],
@@ -344,10 +360,12 @@ class ReaderServiceDataScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 # ClientDataScreen...
+
+
 class ClientDataScreen(Screen):
 	if FULLHD:
 		# HD skin
@@ -446,7 +464,7 @@ class ClientDataScreen(Screen):
 				</screen>""" % resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png")
 
 	def __init__(self, session, type, oServer, data):
-		self.skin = ClientDataScreen.part1+ClientDataScreen.ecmhistory+ClientDataScreen.part2
+		self.skin = ClientDataScreen.part1 + ClientDataScreen.ecmhistory + ClientDataScreen.part2
 		print self.skin
 		self.session = session
 		self.type = type
@@ -454,16 +472,16 @@ class ClientDataScreen(Screen):
 		Screen.__init__(self, session)
 
 		# dict for Status AU
-		auEntrys = {"1":"ACTIVE", "0":"OFF", "-1":"ON"}
+		auEntrys = {"1": "ACTIVE", "0": "OFF", "-1": "ON"}
 
 		self["title"] = StaticText("")
 		self["KeyYellow"] = Pixmap()
 		self["KeyYellow"].hide()
 
 		if type == "clients":
-			self["title"].setText(_("Client")+" "+data.name+"@"+oServer.serverName)
+			self["title"].setText(_("Client") + " " + data.name + "@" + oServer.serverName)
 		else:
-			self["title"].setText(_("Reader")+" "+data.name+"@"+oServer.serverName)
+			self["title"].setText(_("Reader") + " " + data.name + "@" + oServer.serverName)
 			if data.protocol.startswith("cccam"):
 				self["KeyYellow"].show()
 
@@ -497,47 +515,47 @@ class ClientDataScreen(Screen):
 		self.name = data.name
 		self.protocol = data.protocol
 		self["lprotocol"] = StaticText("protocol:")
-		self[ "protocol"] = StaticText(data.protocol)
+		self["protocol"] = StaticText(data.protocol)
 		self["lprotocolext"] = StaticText("protocolext:")
 		if data.protocolext != "":
-			self[ "protocolext"] = StaticText(data.protocolext)
+			self["protocolext"] = StaticText(data.protocolext)
 		else:
-			self[ "protocolext"] = StaticText(_("not available"))
+			self["protocolext"] = StaticText(_("not available"))
 		self["lau"] = StaticText("au:")
-		self[ "au"] = StaticText(auEntrys[data.au])
+		self["au"] = StaticText(auEntrys[data.au])
 		self["lcaid"] = StaticText("caid:")
-		self[ "caid"] = StaticText(data.caid)
+		self["caid"] = StaticText(data.caid)
 		self["lprovid"] = StaticText("provid:")
-		self[ "provid"] = StaticText(data.provid)
+		self["provid"] = StaticText(data.provid)
 		self["lsrvid"] = StaticText("srvid:")
-		self[ "srvid"] = StaticText(data.srvid)
+		self["srvid"] = StaticText(data.srvid)
 		self["lecmtime"] = StaticText("ecmtime:")
 		if data.ecmtime != "":
-			self[ "ecmtime"] = StaticText(data.ecmtime)
+			self["ecmtime"] = StaticText(data.ecmtime)
 		else:
-			self[ "ecmtime"] = StaticText(_("not available"))
+			self["ecmtime"] = StaticText(_("not available"))
 		self["lecmhistory"] = StaticText("ecmhistory:")
-		self[ "historymax"] = StaticText(str(int(self.base)))
-		self[ "historymin"] = StaticText("0")
+		self["historymax"] = StaticText(str(int(self.base)))
+		self["historymin"] = StaticText("0")
 		self["lanswered"] = StaticText("answered:")
 		if data.answered != "":
-			self[ "answered"] = StaticText(data.answered)
+			self["answered"] = StaticText(data.answered)
 		else:
-			self[ "answered"] = StaticText(_("not available"))
+			self["answered"] = StaticText(_("not available"))
 		self["lservice"] = StaticText("service:")
-		self[ "service"] = StaticText(data.service)
+		self["service"] = StaticText(data.service)
 		self["llogin"] = StaticText("login:")
-		self[ "login"] = StaticText(data.login)
+		self["login"] = StaticText(data.login)
 		self["lonline"] = StaticText("online:")
-		self[ "online"] = StaticText(elapsedTime(data.online, "%02dd %02dh %02dm %02ds", True))
+		self["online"] = StaticText(elapsedTime(data.online, "%02dd %02dh %02dm %02ds", True))
 		self["lidle"] = StaticText("idle:")
-		self[ "idle"] = StaticText(elapsedTime(data.idle, "%02d:%02d:%02d"))
+		self["idle"] = StaticText(elapsedTime(data.idle, "%02d:%02d:%02d"))
 		self["lip"] = StaticText("ip:")
-		self[ "ip"] = StaticText(data.ip)
+		self["ip"] = StaticText(data.ip)
 		self["lport"] = StaticText("port:")
-		self[ "port"] = StaticText(data.port)
+		self["port"] = StaticText(data.port)
 		self["lconnection"] = StaticText("connection:")
-		self[ "connection"] = StaticText(data.connection)
+		self["connection"] = StaticText(data.connection)
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
 		{
@@ -549,30 +567,34 @@ class ClientDataScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def setProgress(self):
 		for i in range(20):
-			val = int((100.0*self.ecmhistory[i])/self.base)
+			val = int((100.0 * self.ecmhistory[i]) / self.base)
 			self["progress%d" % i].setValue(val)
 
 	def yellowPressed(self):
 		if self.type is not "clients" and self.protocol.startswith("cccam"):
-			part = "entitlement&label="+self.name
+			part = "entitlement&label=" + self.name
 			self.session.open(ReaderDataScreen, part, self.oServer)
 
 	def Close(self):
 		self.close(0)
 
 # "Mother" of all download windows ...
+
+
 class DownloadXMLScreen(Screen):
 	def __init__(self, session, part, oServer, timerOn=True):
 		self.oServer = oServer
 		self["title"] = StaticText("")
-		if oServer.useSSL: self.url = "https://"
-		else: self.url = "http://"
-		self.url += oServer.serverIP+":"+oServer.serverPort+"/oscamapi.html?part="+part
+		if oServer.useSSL:
+			self.url = "https://"
+		else:
+			self.url = "http://"
+		self.url += oServer.serverIP + ":" + oServer.serverPort + "/oscamapi.html?part=" + part
 		self.oldurl = self.url
 		self.download = False
 		self.data = False
@@ -601,11 +623,13 @@ class DownloadXMLScreen(Screen):
 
 	def sendNewPart(self, part):
 		self.timer.stop()
-		if self.oServer.useSSL: url = "https://"
-		else: url = "http://"
+		if self.oServer.useSSL:
+			url = "https://"
+		else:
+			url = "http://"
 
-		url += self.oServer.serverIP+":"+self.oServer.serverPort
-		url += "/oscamapi.html?part="+part
+		url += self.oServer.serverIP + ":" + self.oServer.serverPort
+		url += "/oscamapi.html?part=" + part
 		self.newurl = True
 		self.url = url
 		self.downloadXML()
@@ -679,6 +703,8 @@ class DownloadXMLScreen(Screen):
 		self["title"].setText(txt)
 
 # OscamDataScreen...
+
+
 class OscamDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -722,15 +748,15 @@ class OscamDataScreen(DownloadXMLScreen):
 		DownloadXMLScreen.__init__(self, session, part, oServer, False)
 
 		self["lversion"] = StaticText("version:")
-		self[ "version"] = StaticText("")
+		self["version"] = StaticText("")
 		self["lrevision"] = StaticText("revision:")
-		self[ "revision"] = StaticText("")
+		self["revision"] = StaticText("")
 		self["lstarttime"] = StaticText("starttime:")
-		self[ "starttime"] = StaticText("")
+		self["starttime"] = StaticText("")
 		self["luptime"] = StaticText("uptime:")
-		self[ "uptime"] = StaticText("")
+		self["uptime"] = StaticText("")
 		self["lreadonly"] = StaticText("readonly:")
-		self[ "readonly"] = StaticText("")
+		self["readonly"] = StaticText("")
 		self["actions"] = ActionMap(["OkCancelActions"],
 
 		{
@@ -740,7 +766,7 @@ class OscamDataScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -757,14 +783,16 @@ class OscamDataScreen(DownloadXMLScreen):
 		dom = xml.dom.minidom.parseString(self.data)
 		d = self.parseXML(dom)
 
-		self.setTitle("Oscam Server"+"@"+self.oServer.serverName)
-		self[ "version"].setText(d.version)
-		self[ "revision"].setText(d.revision)
-		self[ "starttime"].setText(d.starttime)
-		self[ "uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
-		self[ "readonly"].setText(d.readonly)
+		self.setTitle("Oscam Server" + "@" + self.oServer.serverName)
+		self["version"].setText(d.version)
+		self["revision"].setText(d.revision)
+		self["starttime"].setText(d.starttime)
+		self["uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
+		self["readonly"].setText(d.readonly)
 
 # OscamRestartScreen...
+
+
 class OscamRestartScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -816,15 +844,15 @@ class OscamRestartScreen(DownloadXMLScreen):
 		DownloadXMLScreen.__init__(self, session, part, oServer, False)
 
 		self["lversion"] = StaticText("version:")
-		self[ "version"] = StaticText("")
+		self["version"] = StaticText("")
 		self["lrevision"] = StaticText("revision:")
-		self[ "revision"] = StaticText("")
+		self["revision"] = StaticText("")
 		self["lstarttime"] = StaticText("starttime:")
-		self[ "starttime"] = StaticText("")
+		self["starttime"] = StaticText("")
 		self["luptime"] = StaticText("uptime:")
-		self[ "uptime"] = StaticText("")
+		self["uptime"] = StaticText("")
 		self["lreadonly"] = StaticText("readonly:")
-		self[ "readonly"] = StaticText("")
+		self["readonly"] = StaticText("")
 
 		self["ButtonYellow"] = Pixmap()
 		self["ButtonYellowtext"] = Button(_("restart oscam"))
@@ -842,7 +870,7 @@ class OscamRestartScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -862,12 +890,12 @@ class OscamRestartScreen(DownloadXMLScreen):
 		dom = xml.dom.minidom.parseString(self.data)
 		d = self.parseXML(dom)
 
-		self.setTitle("Oscam Server"+"@"+self.oServer.serverName)
-		self[ "version"].setText(d.version)
-		self[ "revision"].setText(d.revision)
-		self[ "starttime"].setText(d.starttime)
-		self[ "uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
-		self[ "readonly"].setText(d.readonly)
+		self.setTitle("Oscam Server" + "@" + self.oServer.serverName)
+		self["version"].setText(d.version)
+		self["revision"].setText(d.revision)
+		self["starttime"].setText(d.starttime)
+		self["uptime"].setText(elapsedTime(d.uptime, _("%d days %d hours %d minutes %d seconds"), True))
+		self["readonly"].setText(d.readonly)
 
 		if not self.canRestart:
 			msg = _("you can\'t shutdown/restart this oscam.\n")
@@ -879,16 +907,16 @@ class OscamRestartScreen(DownloadXMLScreen):
 		if self.download:
 			return
 		self.mode = "restart"
-		self.mbox(_("really restart oscam@%s?")%self.oServer.serverName)
+		self.mbox(_("really restart oscam@%s?") % self.oServer.serverName)
 
 	def bluePressed(self):
 		if self.download:
 			return
 		self.mode = "shutdown"
-		self.mbox(_("really shutdown oscam@%s?")%self.oServer.serverName)
+		self.mbox(_("really shutdown oscam@%s?") % self.oServer.serverName)
 
 	def mbox(self, txt):
-		msg = self.session.openWithCallback(self.mboxCB, MessageBox, txt, default = False)
+		msg = self.session.openWithCallback(self.mboxCB, MessageBox, txt, default=False)
 		msg.setTitle(_("Oscam Status"))
 
 	def mboxCB(self, retval):
@@ -899,10 +927,12 @@ class OscamRestartScreen(DownloadXMLScreen):
 				self.sendNewPart("shutdown&action=shutdown")
 
 # ReaderDataScreen...
+
+
 class ReaderDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		# HD skin
-		x,h = dlg_xh(1200)
+		x, h = dlg_xh(1200)
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="20,60" size="1180,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
@@ -934,7 +964,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 
 	else:
 		# Low res skin
-		x,h = dlg_xh(720)
+		x, h = dlg_xh(720)
 		skin = """
 			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderDataScreen" >
 				<widget render="Label" source="title" position="10,80" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -964,7 +994,6 @@ class ReaderDataScreen(DownloadXMLScreen):
 				<widget name="KeyYellow" pixmap="%s" position="675,495" size="35,25" zPosition="4" transparent="1" alphatest="on"/>
 			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/bt_yellow.png"))
 
-
 	def __init__(self, session, part, oServer):
 		self.skin = ReaderDataScreen.skin
 		self.session = session
@@ -983,7 +1012,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1043,24 +1072,24 @@ class ReaderDataScreen(DownloadXMLScreen):
 		r = self.parseXML(dom)
 
 		list = []
-		self.setTitle(r[0].totalcards+' Cards@'+r[0].label+'('+r[0].hostaddress+')')
+		self.setTitle(r[0].totalcards + ' Cards@' + r[0].label + '(' + r[0].hostaddress + ')')
 		for c in r[0].cards:
 			p = c.providers
 			if len(p) > 4:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				str(len(p)),_("providers on this card max. display is:"),' ',_("Use Oscam Webif to see them all."),'4',' ',' ',' '))
+				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
+				str(len(p)), _("providers on this card max. display is:"), ' ', _("Use Oscam Webif to see them all."), '4', ' ', ' ', ' '))
 			elif len(p) == 4:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,p[3].number,'@'+p[3].provid+'='+p[3].service))
+				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, p[2].number, '@' + p[2].provid + '=' + p[2].service, p[3].number, '@' + p[3].provid + '=' + p[3].service))
 			elif len(p) == 3:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,p[2].number,'@'+p[2].provid+'='+p[2].service,' ',' '))
+				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, p[2].number, '@' + p[2].provid + '=' + p[2].service, ' ', ' '))
 			elif len(p) == 2:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,'@'+p[0].provid+'='+p[0].service,p[1].number,'@'+p[1].provid+'='+p[1].service,' ',' ',' ',' '))
+				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, p[1].number, '@' + p[1].provid + '=' + p[1].service, ' ', ' ', ' ', ' '))
 			elif len(p) == 1:
-				list.append((c.number, c.caid, c.system, 'reshare = '+c.reshare, 'hops = '+c.hop,\
-				p[0].number,'@'+p[0].provid+'='+p[0].service,' ',' ',' ',' ',' ',' '))
+				list.append((c.number, c.caid, c.system, 'reshare = ' + c.reshare, 'hops = ' + c.hop,
+				p[0].number, '@' + p[0].provid + '=' + p[0].service, ' ', ' ', ' ', ' ', ' ', ' '))
 		self["data"].setList(list)
 		self.r = r
 
@@ -1068,8 +1097,10 @@ class ReaderDataScreen(DownloadXMLScreen):
 		self.session.open(ReaderServiceDataScreen, self.r)
 
 # LogDataList...
+
+
 class LogDataList(MenuList):
-	def __init__(self, list, fontSize, enableWrapAround = True):
+	def __init__(self, list, fontSize, enableWrapAround=True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
 		self.fontSize = fontSize
 		self.l.setFont(0, gFont("Regular", self.fontSize))
@@ -1079,6 +1110,8 @@ class LogDataList(MenuList):
 		instance.setItemHeight(self.fontSize + 2)
 
 # LogDataScreen...
+
+
 class LogDataScreen(DownloadXMLScreen):
 	w = getDesktop(0).size().width()
 	if FULLHD:
@@ -1093,7 +1126,7 @@ class LogDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position="40,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="data" position="40,120" size="1200,504" scrollbarMode="showOnDemand" />
 			</screen>"""
-	elif w == 1024: 
+	elif w == 1024:
 		skin = """
 			<screen flags="wfNoBorder" position="0,0" size="1024,576" name="LogDataScreen" >
 				<widget render="Label" source="title"  position="42,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
@@ -1105,7 +1138,6 @@ class LogDataScreen(DownloadXMLScreen):
 				<widget render="Label" source="title"  position="10,70" size="700,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
 				<widget name="data" position="10,130" size="700,352" scrollbarMode="showOnDemand" />
 			</screen>"""
-
 
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
@@ -1143,21 +1175,26 @@ class LogDataScreen(DownloadXMLScreen):
 			d = str(node.firstChild.nodeValue.strip())
 			# in the OScam is still a small bug, in the log is a "'",
 			# Here the XML parser exits and is replaced by a "'" ...
-		d = d.replace("\xb4","\x27")
+		d = d.replace("\xb4", "\x27")
 		return d
 
 	def dlAction(self):
 		dom = xml.dom.minidom.parseString(self.data)
 		log = self.parseXML(dom)
 
-		self.setTitle(_("Logfile")+"@"+self.oServer.serverName)
+		self.setTitle(_("Logfile") + "@" + self.oServer.serverName)
 		list = []
 		for line in log.splitlines():
-			if "rejected" in line or "invalid" in line: c = "0xff2222" # red
-			elif "written" in line: c = "0xff8c00" # orange
-			elif " r " in line: c = "0xffd700" # yellow
-			elif " p " in line: c = "0xadff2f" # green
-			else: c = "0xffffff" # blanc
+			if "rejected" in line or "invalid" in line:
+				c = "0xff2222" # red
+			elif "written" in line:
+				c = "0xff8c00" # orange
+			elif " r " in line:
+				c = "0xffd700" # yellow
+			elif " p " in line:
+				c = "0xadff2f" # green
+			else:
+				c = "0xffffff" # blanc
 			item = [line]
 			item.append((eListboxPythonMultiContent.TYPE_TEXT, 1, 1, self.entryW, self.entryH, 0, RT_HALIGN_LEFT, line, int(c, 16)))
 			list.append(item)
@@ -1166,9 +1203,11 @@ class LogDataScreen(DownloadXMLScreen):
 		# always at the end of the list ...
 		x = len(list)
 		if x:
-			self["data"].moveToIndex(x-1)
+			self["data"].moveToIndex(x - 1)
 
 # ReaderlistScreen...
+
+
 class ReaderlistScreen(DownloadXMLScreen):
 	if FULLHD:
 		skin = """
@@ -1223,7 +1262,6 @@ class ReaderlistScreen(DownloadXMLScreen):
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(440))
 
-
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
 		self.skin = ReaderlistScreen.skin
@@ -1259,9 +1297,9 @@ class ReaderlistScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/disabled.png"))
-		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/enabled.png"))
 
 		self.isReadonly = True
@@ -1270,7 +1308,7 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1303,9 +1341,9 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def setList(self):
 		list = []
-		self.setTitle(_("All Readers @")+self.oServer.serverName)
+		self.setTitle(_("All Readers @") + self.oServer.serverName)
 		for index, r in enumerate(self.readers):
-			if r.enabled=="1":
+			if r.enabled == "1":
 				list.append((self.iconena, r.label, r.protocol, r.type, r.enabled, index))
 			else:
 				list.append((self.icondis, r.label, r.protocol, r.type, r.enabled, index))
@@ -1336,20 +1374,20 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def redPressed(self):
 		if self.download or \
-		   self["data"].count()==0 or \
+		   self["data"].count() == 0 or \
 		   self.isReadonly or \
 		   self["data"].getCurrent()[4] == "0":
 			return
-		part = "readerlist&action=disable&label="+self["data"].getCurrent()[1]
+		part = "readerlist&action=disable&label=" + self["data"].getCurrent()[1]
 		self.sendNewPart(part)
 
 	def greenPressed(self):
 		if self.download or \
-		   self["data"].count()==0 or \
+		   self["data"].count() == 0 or \
 		   self.isReadonly or \
 		   self["data"].getCurrent()[4] == "1":
 			return
-		part = "readerlist&action=enable&label="+self["data"].getCurrent()[1]
+		part = "readerlist&action=enable&label=" + self["data"].getCurrent()[1]
 		self.sendNewPart(part)
 
 	def upPressed(self):
@@ -1359,8 +1397,6 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self.setupButtons()
 
 	def downPressed(self):
-
-
 
 		if self.download:
 			return
@@ -1372,11 +1408,11 @@ class ReaderlistScreen(DownloadXMLScreen):
 
 	def rightPressed(self):
 
-
-
 		pass
 
 # ReaderstatsScreen...
+
+
 class ReaderstatsScreen(DownloadXMLScreen):
 	w = getDesktop(0).size().width()
 	if w >= 1920:
@@ -1450,7 +1486,6 @@ class ReaderstatsScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 			</screen>""" % (dlg_xh(1390))
-
 
 	else:
 		# picon skin...
@@ -1542,11 +1577,11 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["label3"] = StaticText(_("status"))
 		self["label4"] = StaticText(_("lasttime"))
 		self["label5"] = StaticText(_("avgtime"))
-		self["lEMMerror"]   = StaticText("EMM error\nUK / G / S / UQ")
+		self["lEMMerror"] = StaticText("EMM error\nUK / G / S / UQ")
 		self["lEMMwritten"] = StaticText("EMM written\nUK / G / S / UQ")
 		self["lEMMskipped"] = StaticText("EMM skipped\nUK / G / S / UQ")
 		self["lEMMblocked"] = StaticText("EMM blocked\nUK / G / S / UQ")
-		self["EMMerror"]   = Label("")
+		self["EMMerror"] = Label("")
 		self["EMMwritten"] = Label("")
 		self["EMMskipped"] = Label("")
 		self["EMMblocked"] = Label("")
@@ -1561,7 +1596,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1604,15 +1639,15 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		for r in ["error", "written", "skipped", "blocked"]:
 			for t in ["unknown", "global", "shared", "unique"]:
 				for e in self.emms:
-					if r==e.result and t==e.type:
+					if r == e.result and t == e.type:
 						if r == "error":
-							EMMerror += e.val+" / "
+							EMMerror += e.val + " / "
 						if r == "written":
-							EMMwritten += e.val+" / "
+							EMMwritten += e.val + " / "
 						if r == "skipped":
-							EMMskipped += e.val+" / "
+							EMMskipped += e.val + " / "
 						if r == "blocked":
-							EMMblocked += e.val+" / "
+							EMMblocked += e.val + " / "
 		self["EMMerror"].setText(EMMerror[:-3])
 		self["EMMwritten"].setText(EMMwritten[:-3])
 		self["EMMskipped"].setText(EMMskipped[:-3])
@@ -1620,7 +1655,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 
 		list = []
 		self.picon = ePicLoad()
-		self.setTitle("Status Reader "+self.reader+" @"+self.oServer.serverName)
+		self.setTitle("Status Reader " + self.reader + " @" + self.oServer.serverName)
 		for e in self.ecms:
 			if USEPICONS.value:
 				picon = getPicon(e.channelname)
@@ -1635,9 +1670,9 @@ class ReaderstatsScreen(DownloadXMLScreen):
 					png = self.picon.getData()
 				else:
 					png = None
-				list.append((e.val, e.channelname, e.caid+":"+e.provid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime, png))
+				list.append((e.val, e.channelname, e.caid + ":" + e.provid + ":" + e.srvid, e.rcs, e.lasttime, e.avgtime, png))
 			else:
-				list.append((e.val, e.channelname, e.caid+":"+e.provid+":"+e.srvid, e.rcs, e.lasttime, e.avgtime))
+				list.append((e.val, e.channelname, e.caid + ":" + e.provid + ":" + e.srvid, e.rcs, e.lasttime, e.avgtime))
 
 		# Sort by number of requests...
 		list.sort(compare)
@@ -1645,6 +1680,8 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["data"].setIndex(self.oldIndex)
 
 # UserstatsScreen...
+
+
 class UserstatsScreen(DownloadXMLScreen):
 	if FULLHD:
 	# HD skin
@@ -1705,7 +1742,6 @@ class UserstatsScreen(DownloadXMLScreen):
 				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="3" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 
-
 	def __init__(self, session, part, oServer):
 		self.oServer = oServer
 		self.skin = UserstatsScreen.skin
@@ -1718,7 +1754,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self["label1"] = StaticText(_("IP"))
 		self["label2"] = StaticText(_("Status"))
 		self["label3"] = StaticText(_("Protocol"))
-		self["data"] = List(list, enableWrapAround = True)
+		self["data"] = List(list, enableWrapAround=True)
 		self["ButtonRed"] = Pixmap()
 		self["ButtonRedtext"] = Button(_("disable client"))
 		self["ButtonGreen"] = Pixmap()
@@ -1737,18 +1773,18 @@ class UserstatsScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.icondis = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/disabled.png"))
-		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		self.iconena = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/enabled.png"))
 
 		self.isReadonly = True
 		self.index = 0
-        
+
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -1787,15 +1823,15 @@ class UserstatsScreen(DownloadXMLScreen):
 
 	def setList(self):
 		list = []
-		self.setTitle(_("All Clients")+"@"+self.oServer.serverName)
+		self.setTitle(_("All Clients") + "@" + self.oServer.serverName)
 		for index, u in enumerate(self.users):
 			if u.timeonchannel != "n/a":
 				self["label1"].setText(_("time on channel"))
 				u.ip = elapsedTime(u.timeonchannel, "%02d:%02d:%02d")
 			if "disabled" in u.status:
-				list.append((self.icondis, u.name, u.ip, u.status, u.protocol, index))        
+				list.append((self.icondis, u.name, u.ip, u.status, u.protocol, index))
 			else:
-				list.append((self.iconena, u.name, u.ip, u.status, u.protocol, index))        
+				list.append((self.iconena, u.name, u.ip, u.status, u.protocol, index))
 		self["data"].setList(list)
 		if self.index < len(list):
 			self["data"].setIndex(self.index)
@@ -1823,20 +1859,20 @@ class UserstatsScreen(DownloadXMLScreen):
 
 	def redPressed(self):
 		if self.download or \
-		   self["data"].count()==0 or \
+		   self["data"].count() == 0 or \
 		   self.isReadonly or \
 		   "disabled" in self["data"].getCurrent()[3]:
 			return
-		part = "userconfig&user="+self["data"].getCurrent()[1]+"&disabled=1&action=Save"
+		part = "userconfig&user=" + self["data"].getCurrent()[1] + "&disabled=1&action=Save"
 		self.sendNewPart(part)
 
 	def greenPressed(self):
 		if self.download or \
-		   self["data"].count()==0 or \
+		   self["data"].count() == 0 or \
 		   self.isReadonly or \
 		   not "disabled" in self["data"].getCurrent()[3]:
 			return
-		part = "userconfig&user="+self["data"].getCurrent()[1]+"&disabled=0&action=Save"
+		part = "userconfig&user=" + self["data"].getCurrent()[1] + "&disabled=0&action=Save"
 		self.sendNewPart(part)
 
 	def upPressed(self):
@@ -1858,6 +1894,8 @@ class UserstatsScreen(DownloadXMLScreen):
 		pass
 
 # StatusDataScreen...
+
+
 class StatusDataScreen(DownloadXMLScreen):
 	if FULLHD:
 		# HD picon skin...
@@ -2043,21 +2081,21 @@ class StatusDataScreen(DownloadXMLScreen):
 			"cancel": self.Close
 		}, -1)
 
-		auRed = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auRed = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_red.png"))
-		auGreen = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auGreen = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_green.png"))
-		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN, 
+		auYellow = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_PLUGIN,
 		                      "Extensions/OscamStatus/icons/au_yellow.png"))
 		# dict for Status AU
-		self.auEntrys = {"1":auGreen, "0":auRed, "-1":auYellow}
+		self.auEntrys = {"1": auGreen, "0": auRed, "-1": auYellow}
 
 		self.hideIdle = False
 
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def parseXML(self, dom):
@@ -2104,7 +2142,7 @@ class StatusDataScreen(DownloadXMLScreen):
 		dlist = []
 		self.picon = ePicLoad()
 		if self.type == "clients":
-			self.setTitle(_("Connected Clients")+"@"+self.oServer.serverName)
+			self.setTitle(_("Connected Clients") + "@" + self.oServer.serverName)
 			for index, c in enumerate(self.status):
 				if c.type == "c":
 					if USEECM.value:
@@ -2146,7 +2184,7 @@ class StatusDataScreen(DownloadXMLScreen):
 							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index))
 
 		elif self.type == "readers":
-			self.setTitle(_("Connected Readers")+"@"+self.oServer.serverName)
+			self.setTitle(_("Connected Readers") + "@" + self.oServer.serverName)
 			for index, c in enumerate(self.status):
 				if USEECM.value:
 					idle = c.ecmtime
@@ -2164,7 +2202,7 @@ class StatusDataScreen(DownloadXMLScreen):
 								psh = 55
 							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
 							self.picon.startDecode(picon, 0, 0, False)
-							png = self.picon.getData()			
+							png = self.picon.getData()
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, png, c.protocol, index))
 					else:
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, c.protocol, index))
@@ -2173,7 +2211,7 @@ class StatusDataScreen(DownloadXMLScreen):
 		self["data"].setIndex(self.oldIndex)
 
 	def yellowPressed(self):
-		if self.download or self["data"].count()==0:
+		if self.download or self["data"].count() == 0:
 			return
 		if USEPICONS.value:
 			index = self["data"].getCurrent()[6]
@@ -2188,7 +2226,7 @@ class StatusDataScreen(DownloadXMLScreen):
 			return
 		if self.type == "readers" and self["data"].count():
 			reader = self["data"].getCurrent()[0]
-			part = "readerstats&label="+reader
+			part = "readerstats&label=" + reader
 			self.session.openWithCallback(self.backCB, ReaderstatsScreen, reader, part, self.oServer)
 			return
 		if self.hideIdle:
@@ -2202,6 +2240,8 @@ class StatusDataScreen(DownloadXMLScreen):
 		self.timer.start(TIMERTICK)
 
 # mainScreen...
+
+
 class OscamStatus(Screen):
 	if FULLHD:
 		x, h = dlg_xh(660)
@@ -2221,7 +2261,7 @@ class OscamStatus(Screen):
 						}
 					</convert>
 				</widget>
-			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 	else:
 		x, h = dlg_xh(440)
 		skin = """
@@ -2240,7 +2280,7 @@ class OscamStatus(Screen):
 						}
 					</convert>
 				</widget>
-			</screen>"""  % ( x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
+			</screen>""" % (x, h, resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/menu.png"))
 
 	def __init__(self, session):
 		self.skin = OscamStatus.skin
@@ -2250,17 +2290,17 @@ class OscamStatus(Screen):
 		ipath = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/")
 		icon = []
 		for i in ["icon1", "icon2", "icon3", "icon4", "icon5", "icon6", "icon7", "icon8"]:
-			icon.append(LoadPixmap(cached = True, path = ipath + i + ".png"))
+			icon.append(LoadPixmap(cached=True, path=ipath + i + ".png"))
 
 		list = []
-		list.append((icon[0], _("show connected clients"), "clients"))        
-		list.append((icon[1], _("show all clients"), "allClients"))        
-		list.append((icon[2], _("show connected readers"), "readers"))        
-		list.append((icon[3], _("show all readers"), "allReaders"))        
-		list.append((icon[4], _("show logfile"), "log"))        
-		list.append((icon[5], _("server info"), "info"))        
-		list.append((icon[6], _("server restart/shutdown"), "restart"))        
-		list.append((icon[7], _("server setup"), "setup"))        
+		list.append((icon[0], _("show connected clients"), "clients"))
+		list.append((icon[1], _("show all clients"), "allClients"))
+		list.append((icon[2], _("show connected readers"), "readers"))
+		list.append((icon[3], _("show all readers"), "allReaders"))
+		list.append((icon[4], _("show logfile"), "log"))
+		list.append((icon[5], _("server info"), "info"))
+		list.append((icon[6], _("server restart/shutdown"), "restart"))
+		list.append((icon[7], _("server setup"), "setup"))
 
 		self["title"] = StaticText("")
 		self["menu"] = List(list)
@@ -2275,7 +2315,7 @@ class OscamStatus(Screen):
 
 		oscamServers = readCFG()
 		index = LASTSERVER.value
-		if index+1 > len(oscamServers):
+		if index + 1 > len(oscamServers):
 			index = 0
 
 		self.SetupCB(oscamServers[index])
@@ -2304,14 +2344,14 @@ class OscamStatus(Screen):
 	def SetupCB(self, entry):
 		if entry:
 			self.oServer = entry
-			self["title"].setText(_("Oscam Status ")+VERSION+" @"+self.oServer.serverName)
+			self["title"].setText(_("Oscam Status ") + VERSION + " @" + self.oServer.serverName)
 
 	def globalsDlg(self):
 #		self.oldpath = PICONPATH.value
 		self.session.openWithCallback(self.globalsCB, globalsConfigScreen)
 
 	def globalsCB(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def findPicon(self, service=None):
@@ -2319,19 +2359,20 @@ class OscamStatus(Screen):
 			sname = ':'.join(service.split(':')[:11])
 			pos = sname.rfind(':')
 			if pos != -1:
-				sname = sname[:pos].rstrip(':').replace(':','_')
+				sname = sname[:pos].rstrip(':').replace(':', '_')
 				for path in self.searchPiconPaths:
 					pngname = path + sname + ".png"
 					if fileExists(pngname):
 						return pngname
 		return ""
 
-def main(session,**kwargs):
+
+def main(session, **kwargs):
 	session.open(OscamStatus)
 
-def Plugins(**kwargs):
-	l = [PluginDescriptor(name= _("Oscam Status"), description=_("whats going on?"), where = PluginDescriptor.WHERE_PLUGINMENU, icon="OscamStatus.png", fnc=main)]
-	if EXTMENU.value:
-		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
-	return l
 
+def Plugins(**kwargs):
+	l = [PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_PLUGINMENU, icon="OscamStatus.png", fnc=main)]
+	if EXTMENU.value:
+		l.append(PluginDescriptor(name=_("Oscam Status"), description=_("whats going on?"), where=PluginDescriptor.WHERE_EXTENSIONSMENU, icon="OscamStatus.png", fnc=main))
+	return l

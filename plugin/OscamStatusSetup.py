@@ -35,15 +35,16 @@ from enigma import eListboxPythonMultiContent, eListbox, getDesktop, gFont, \
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 
-import re, os.path
+import re
+import os.path
 
-config.plugins.OscamStatus  = ConfigSubsection()
-config.plugins.OscamStatus.lastServer = ConfigInteger(default = 0)
-config.plugins.OscamStatus.extMenu = ConfigYesNo(default = True)
-config.plugins.OscamStatus.xOffset = ConfigInteger(default = 50, limits=(0,100))
-config.plugins.OscamStatus.useECM = ConfigYesNo(default = False)
-config.plugins.OscamStatus.useIP = ConfigYesNo(default = True)
-config.plugins.OscamStatus.usePicons = ConfigYesNo(default = False)
+config.plugins.OscamStatus = ConfigSubsection()
+config.plugins.OscamStatus.lastServer = ConfigInteger(default=0)
+config.plugins.OscamStatus.extMenu = ConfigYesNo(default=True)
+config.plugins.OscamStatus.xOffset = ConfigInteger(default=50, limits=(0, 100))
+config.plugins.OscamStatus.useECM = ConfigYesNo(default=False)
+config.plugins.OscamStatus.useIP = ConfigYesNo(default=True)
+config.plugins.OscamStatus.usePicons = ConfigYesNo(default=False)
 #config.plugins.OscamStatus.PiconPath = ConfigText(default = resolveFilename(SCOPE_SKIN,"picon_50x30"), fixed_size = False, visible_width=40)
 
 # export Variables...
@@ -61,6 +62,7 @@ oscam_regex = {
 	'httppwd': re.compile(r'httppwd\s*=\s*(?P<httppwd>.*)\n'),
 }
 
+
 def _parse_line(line):
 	for key, rx in oscam_regex.items():
 		match = rx.search(line)
@@ -69,7 +71,8 @@ def _parse_line(line):
 	# if no matches
 	return None, None
 
-def parse_oscam_version_file(filepath,data):
+
+def parse_oscam_version_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
 		with open(filepath, 'r') as file_object:
@@ -85,7 +88,8 @@ def parse_oscam_version_file(filepath,data):
 		return 1
 	return 0
 
-def parse_oscam_conf_file(filepath,data):
+
+def parse_oscam_conf_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
 		with open(filepath, 'r') as file_object:
@@ -96,7 +100,7 @@ def parse_oscam_conf_file(filepath,data):
 
 				if key == 'httpport':
 					port = match.group('httpport')
-					data.serverName="Autodetected"
+					data.serverName = "Autodetected"
 					if port[0] == '+':
 						data.useSSL = True
 						data.serverPort = port[1:]
@@ -114,9 +118,11 @@ def parse_oscam_conf_file(filepath,data):
 
 def dlg_xh(w):
 	x = getDesktop(0).size().width() - w - XOFFSET.value
-	if x < 0: x = 0
+	if x < 0:
+		x = 0
 	h = getDesktop(0).size().height()
 	return x, h
+
 
 class globalsConfigScreen(Screen, ConfigListScreen):
 	w = getDesktop(0).size().width()
@@ -155,7 +161,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		list.append(getConfigListEntry(_("Server address always in IP Format"), config.plugins.OscamStatus.useIP))
 		list.append(getConfigListEntry(_("Use Picons"), config.plugins.OscamStatus.usePicons))
 #		list.append(getConfigListEntry(_("Picons Path"), config.plugins.OscamStatus.PiconPath))
-		ConfigListScreen.__init__(self, list, session = session)
+		ConfigListScreen.__init__(self, list, session=session)
 
 		self["title"] = StaticText(_("Oscam Status globals Setup"))
 		self["ButtonRedtext"] = StaticText(_("return"))
@@ -169,7 +175,7 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def Save(self):
@@ -182,15 +188,18 @@ class globalsConfigScreen(Screen, ConfigListScreen):
 			x[1].cancel()
 		self.close()
 
+
 class oscamServer:
 	serverName = "NewServer"
-	serverIP   = "127.0.0.1"
+	serverIP = "127.0.0.1"
 	serverPort = "8081"
-	username   = "username"
-	password   = "password"
-	useSSL     = False
+	username = "username"
+	password = "password"
+	useSSL = False
+
 
 CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "/etc/enigma2/oscamstatus.cfg")
+
 
 def readCFG():
 	cfg = None
@@ -220,9 +229,10 @@ def readCFG():
 	tmp = oscamServer()
 	if parse_oscam_version_file('/tmp/.oscam/oscam.version', tmp):
 		if hasattr(tmp, 'ConfigDir'):
-			parse_oscam_conf_file(tmp.ConfigDir+"/oscam.conf", tmp)
+			parse_oscam_conf_file(tmp.ConfigDir + "/oscam.conf", tmp)
 	oscamServers.append(tmp)
 	return oscamServers
+
 
 def writeCFG(oscamServers):
 	cfg = file(CFG, "w")
@@ -230,19 +240,20 @@ def writeCFG(oscamServers):
 	print "[OscamStatus] writing datfile..."
 	for line in oscamServers:
 		if line.serverName != 'Autodetected':
-			cfg.write(line.username+' ')
-			cfg.write(line.password+' ')
-			cfg.write(line.serverIP+' ')
-			cfg.write(line.serverPort+' ')
-			cfg.write(line.serverName+' ')
-			cfg.write(str(int(line.useSSL))+'\n')
+			cfg.write(line.username + ' ')
+			cfg.write(line.password + ' ')
+			cfg.write(line.serverIP + ' ')
+			cfg.write(line.serverPort + ' ')
+			cfg.write(line.serverName + ' ')
+			cfg.write(str(int(line.useSSL)) + '\n')
 			savedconfig = 1
 	cfg.close()
 	if not savedconfig:
 		os.remove(CFG)
 
+
 class OscamServerEntryList(MenuList):
-	def __init__(self, list, enableWrapAround = True):
+	def __init__(self, list, enableWrapAround=True):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
 		w = getDesktop(0).size().width()
 		if w >= 1920:
@@ -267,32 +278,36 @@ class OscamServerEntryList(MenuList):
 				if self.pic1:
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 5, 1, 25, 24, self.pic1))
 				else:
-					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, 'x'))
+					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, 'x'))
 			else:
 				if self.pic0:
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 5, 1, 25, 24, self.pic0))
 				else:
-					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, ' '))
-			res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
+					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, ' '))
+			res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 120, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
 			w = getDesktop(0).size().width()
 			if w >= 1920:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 285, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 330, 3, 210, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 285, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 330, 3, 210, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverIP))
 			else:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT,  40, 3, 120, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverName))
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverIP))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 120, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 165, 3, 275, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverIP))
 			#res.append((eListboxPythonMultiContent.TYPE_TEXT, 410, 3,  65, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, i.serverPort))
-			if i.useSSL: tx = "SSL"
-			else: tx = ""
-			if w >= 1920:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+			if i.useSSL:
+				tx = "SSL"
 			else:
-				res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, tx))
+				tx = ""
+			if w >= 1920:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 545, 3, 50, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, tx))
+			else:
+				res.append((eListboxPythonMultiContent.TYPE_TEXT, 370, 3, 30, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, tx))
 			self.list.append(res)
 		self.l.setList(self.list)
 		self.moveToIndex(index)
 
 # OscamServerEntriesListConfigScreen...
+
+
 class OscamServerEntriesListConfigScreen(Screen):
 	w = getDesktop(0).size().width()
 	if w >= 1920:
@@ -347,7 +362,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def updateEntrys(self):
@@ -376,7 +391,6 @@ class OscamServerEntriesListConfigScreen(Screen):
 		message = _("Do you really want to delete this entry?")
 		msg = self.session.openWithCallback(self.Confirmed, MessageBox, message)
 		msg.setTitle("Oscam Status")
-
 
 	def Confirmed(self, confirmed):
 		if not confirmed:
@@ -447,18 +461,18 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 
 		serverPort = int(entry.serverPort)
 
-		self.serverNameConfigEntry = NoSave(ConfigText(default = entry.serverName, fixed_size = False, visible_width=20))
+		self.serverNameConfigEntry = NoSave(ConfigText(default=entry.serverName, fixed_size=False, visible_width=20))
 		if self.isIP:
-			self.serverIPConfigEntry = NoSave(ConfigIP( default = serverIP, auto_jump=True))
+			self.serverIPConfigEntry = NoSave(ConfigIP(default=serverIP, auto_jump=True))
 		else:
-			self.serverIPConfigEntry = NoSave(ConfigText(default = entry.serverIP, fixed_size = False, visible_width=20))
+			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
 			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
-		self.portConfigEntry       = NoSave(ConfigInteger(default = serverPort, limits=(0,65536)))
-		self.usernameConfigEntry   = NoSave(ConfigText(default = entry.username, fixed_size = False, visible_width=20))
-		self.passwordConfigEntry   = NoSave(ConfigPassword(default = entry.password, fixed_size = False))
-		self.useSSLConfigEntry     = NoSave(ConfigYesNo(entry.useSSL))
+		self.portConfigEntry = NoSave(ConfigInteger(default=serverPort, limits=(0, 65536)))
+		self.usernameConfigEntry = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
+		self.passwordConfigEntry = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
+		self.useSSLConfigEntry = NoSave(ConfigYesNo(entry.useSSL))
 
-		ConfigListScreen.__init__(self, [], session = session)
+		ConfigListScreen.__init__(self, [], session=session)
 		self.createSetup()
 
 		self["title"] = StaticText(_("Oscam Server Setup"))
@@ -474,7 +488,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		self.onLayoutFinish.append(self.LayoutFinished)
 
 	def LayoutFinished(self):
-		x,h = dlg_xh(self.instance.size().width())
+		x, h = dlg_xh(self.instance.size().width())
 		self.instance.move(ePoint(x, 0))
 
 	def createSetup(self):
@@ -504,15 +518,15 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 
 	def Save(self):
 		entry = oscamServer()
-		entry.username   = self.usernameConfigEntry.value
-		entry.password   = self.passwordConfigEntry.value
+		entry.username = self.usernameConfigEntry.value
+		entry.password = self.passwordConfigEntry.value
 		entry.serverName = self.serverNameConfigEntry.value
 		if self.isIP:
-			entry.serverIP   = "%d.%d.%d.%d" % tuple(self.serverIPConfigEntry.value)
+			entry.serverIP = "%d.%d.%d.%d" % tuple(self.serverIPConfigEntry.value)
 		else:
-			entry.serverIP   = self.serverIPConfigEntry.value
+			entry.serverIP = self.serverIPConfigEntry.value
 		entry.serverPort = str(self.portConfigEntry.value)
-		entry.useSSL     = self.useSSLConfigEntry.value
+		entry.useSSL = self.useSSLConfigEntry.value
 		oscamServers = readCFG()
 		if self.index == -1:
 			oscamServers.append(entry)
@@ -520,4 +534,3 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 			oscamServers[self.index] = entry
 		writeCFG(oscamServers)
 		self.close()
-
