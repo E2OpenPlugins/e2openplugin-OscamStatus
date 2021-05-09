@@ -284,7 +284,6 @@ class OscamServerEntryList(MenuList):
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 5, 1, 25, 24, self.pic0))
 				else:
 					res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 3, 25, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, ' '))
-			res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 120, 24, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
 			w = getDesktop(0).size().width()
 			if w >= 1920:
 				res.append((eListboxPythonMultiContent.TYPE_TEXT, 40, 3, 285, 36, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, i.serverName))
