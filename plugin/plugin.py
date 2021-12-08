@@ -41,6 +41,17 @@ from threading import Thread, Lock
 import xml.dom.minidom
 import urllib2
 import ssl
+try:                                    
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:                                               
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass                                                             
+else:                                                                
+    # Handle target environment that doesn't support HTTPS verification         
+    ssl._create_default_https_context = _create_unverified_https_context
+from urllib import unquote_plus                                         
+from urllib2 import Request, urlopen, URLError, HTTPError
+
 from os import path, listdir
 import re
 
@@ -49,7 +60,7 @@ from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigS
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
-VERSION = "1.3.1"
+VERSION = "1.3.3"
 TIMERTICK = 10000
 
 FULLHD = False

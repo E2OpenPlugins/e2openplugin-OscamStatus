@@ -34,3 +34,6 @@ loghistorylines               = 172
 ```
 Version 1.3.2
 * Fix in source text
+
+Version 1.3.3
+* SSL Fix (Thanks Token for it)
