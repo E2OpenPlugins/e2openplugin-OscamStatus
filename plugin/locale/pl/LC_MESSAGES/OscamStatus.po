@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: OscamStatus\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-08 15:09+0100\n"
-"PO-Revision-Date: 2022-01-05 20:28+0100\n"
+"PO-Revision-Date: 2022-01-05 20:34+0100\n"
 "Last-Translator: lareq <lareq@lareq.eu>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -109,11 +109,11 @@ msgstr "Serwery Oscam"
 #: ../plugin.py:663 ../plugin.py:914 ../plugin.py:931 ../plugin.py:2386
 #: ../plugin.py:2388
 msgid "Oscam Status"
-msgstr "Status"
+msgstr "Oscam Status"
 
 #: ../plugin.py:2358
 msgid "Oscam Status "
-msgstr "Globalne ustawienia statusu "
+msgstr "Oscam Status"
 
 #: ../OscamStatusSetup.py:166
 msgid "Oscam Status globals Setup"
@@ -331,7 +331,7 @@ msgstr "użyj SSL"
 
 #: ../plugin.py:2386 ../plugin.py:2388
 msgid "whats going on?"
-msgstr "co się dzieje?"
+msgstr "co się dzieje w oscam?"
 
 #: ../plugin.py:912
 msgid "you can't shutdown/restart this oscam.\n"
