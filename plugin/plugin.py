@@ -2,6 +2,7 @@
 #===============================================================================
 # OscamStatus Plugin by puhvogel 2011-2018
 # modified by Pr2
+# adopted to  py3  by lareq 
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -9,7 +10,7 @@
 # version.
 #===============================================================================
 
-from __init__ import _
+from .__init__ import _
 from Plugins.Plugin import PluginDescriptor
 
 from Screens.Screen import Screen
@@ -39,7 +40,7 @@ except:
 
 from threading import Thread, Lock
 import xml.dom.minidom
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import ssl
 try:                                    
     _create_unverified_https_context = ssl._create_unverified_context
@@ -49,14 +50,15 @@ except AttributeError:
 else:                                                                
     # Handle target environment that doesn't support HTTPS verification         
     ssl._create_default_https_context = _create_unverified_https_context
-from urllib import unquote_plus                                         
-from urllib2 import Request, urlopen, URLError, HTTPError
+from urllib.parse import unquote_plus                                         
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 from os import path, listdir
 import re
 
 
-from OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigScreen, \
+from .OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigScreen, \
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
@@ -87,7 +89,7 @@ def getPicon(channelname):
 # Converts past seconds into days, hours, minutes and seconds ...
 def elapsedTime(s, fmt, hasDays=False):
 	try:
-		secs = long(s)
+		secs = int(s)
 		if hasDays:
 			days, secs = divmod(secs, 86400)
 		hours, secs = divmod(secs, 3600)
@@ -158,22 +160,22 @@ class GetPage2(Thread):
 		self.__running = True
 		self.__cancel = False
 
-		PasswdMgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+		PasswdMgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
 		PasswdMgr.add_password(None, self.url, self.username, self.password)
 
-		handler = urllib2.HTTPDigestAuthHandler(PasswdMgr)
-		opener = urllib2.build_opener(urllib2.HTTPHandler, handler)
+		handler = urllib.request.HTTPDigestAuthHandler(PasswdMgr)
+		opener = urllib.request.build_opener(urllib.request.HTTPHandler, handler)
 
-		urllib2.install_opener(opener)
-		request = urllib2.Request(self.url)
+		urllib.request.install_opener(opener)
+		request = urllib.request.Request(self.url)
 
 		self.__messages.push((THREAD_WORKING, "Download Thread is running"))
 		mp.send(0)
 
 		try:
-			page = urllib2.urlopen(request, timeout=5).read()
+			page = urllib.request.urlopen(request, timeout=5).read()
 
-		except urllib2.URLError, err:
+		except urllib.error.URLError as err:
 			error = "Error: "
 			if hasattr(err, "code"):
 				error += str(err.code)
@@ -476,7 +478,7 @@ class ClientDataScreen(Screen):
 
 	def __init__(self, session, type, oServer, data):
 		self.skin = ClientDataScreen.part1 + ClientDataScreen.ecmhistory + ClientDataScreen.part2
-		print self.skin
+		print(self.skin)
 		self.session = session
 		self.type = type
 		self.oServer = oServer
@@ -620,7 +622,7 @@ class DownloadXMLScreen(Screen):
 	def downloadXML(self):
 		self.setTitle(_("loading..."))
 		self.download = True
-		print "[OscamStatus] loading", self.url
+		print("[OscamStatus] loading", self.url)
 		self.getIndex()
 		# Message Queue initialisation...
 		getPage2.MessagePump.recv_msg.get().append(self.gotThreadMsg)
@@ -630,7 +632,7 @@ class DownloadXMLScreen(Screen):
 		except RuntimeError:
 			self.download = False
 			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
-			print "[OscamStatus] Thread already running..."
+			print("[OscamStatus] Thread already running...")
 
 	def sendNewPart(self, part):
 		self.timer.stop()
@@ -658,7 +660,7 @@ class DownloadXMLScreen(Screen):
 			errStr = str(msg[1])
 			if self.timerOn:
 				self.timer.stop()
-			print "[OscamStatus]", errStr
+			print("[OscamStatus]", errStr)
 			info = self.session.open(MessageBox, errStr, MessageBox.TYPE_ERROR)
 			info.setTitle(_("Oscam Status"))
 			self.close(1)
@@ -666,13 +668,13 @@ class DownloadXMLScreen(Screen):
 		elif msg[0] == THREAD_FINISHED:
 			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
 			self.download = False
-			print "[OscamStatus] Download finished"
+			print("[OscamStatus] Download finished")
 
 			self.data = msg[1]
 			self.download = False
 			# if no xml comes back something is not right ..
-			if not "<?xml version=\"1.0\"" in self.data:
-				print "[OscamStatus] Oscam Download Error: no xml"
+			if not ("<?xml version=\"1.0\"").encode() in self.data :
+				print("[OscamStatus] Oscam Download Error: no xml")
 				info = self.session.open(MessageBox, _("no xml"), MessageBox.TYPE_ERROR)
 				info.setTitle(_("Oscam Download Error"))
 				self.close(1)
@@ -689,7 +691,7 @@ class DownloadXMLScreen(Screen):
 				if self.timerOn:
 					self.timer.stop()
 				errmsg = str(node[0].firstChild.nodeValue.strip())
-				print "[OscamStatus] Oscam XML Error:", errmsg
+				print("[OscamStatus] Oscam XML Error:", errmsg)
 				info = self.session.open(MessageBox, _(errmsg), MessageBox.TYPE_ERROR)
 				info.setTitle(_("Oscam XML Error"))
 				self.close(1)

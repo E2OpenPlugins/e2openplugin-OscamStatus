@@ -7,7 +7,7 @@
 # version.
 #===============================================================================
 
-from __init__ import _
+from .__init__ import _
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 
@@ -64,7 +64,7 @@ oscam_regex = {
 
 
 def _parse_line(line):
-	for key, rx in oscam_regex.items():
+	for key, rx in list(oscam_regex.items()):
 		match = rx.search(line)
 		if match:
 			return key, match
@@ -209,7 +209,7 @@ def readCFG():
 	except:
 		pass
 	if cfg:
-		print "[OscamStatus] reading config file..."
+		print("[OscamStatus] reading config file...")
 		d = cfg.read()
 		cfg.close()
 		for line in d.splitlines():
@@ -225,7 +225,7 @@ def readCFG():
 				if tmp.serverName != 'Autodetected':
 					oscamServers.append(tmp)
 	if len(oscamServers) == 0:
-		print "[OscamStatus] no config file found"
+		print("[OscamStatus] no config file found")
 	tmp = oscamServer()
 	if parse_oscam_version_file('/tmp/.oscam/oscam.version', tmp):
 		if hasattr(tmp, 'ConfigDir'):
@@ -237,7 +237,7 @@ def readCFG():
 def writeCFG(oscamServers):
 	cfg = file(CFG, "w")
 	savedconfig = 0
-	print "[OscamStatus] writing datfile..."
+	print("[OscamStatus] writing datfile...")
 	for line in oscamServers:
 		if line.serverName != 'Autodetected':
 			cfg.write(line.username + ' ')
@@ -385,7 +385,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 			self.index = -1
 		if self.index > -1:
 			if self.index == config.plugins.OscamStatus.lastServer.value:
-				print "[OscamStatus] you can not delete the active entry..."
+				print("[OscamStatus] you can not delete the active entry...")
 				return
 		message = _("Do you really want to delete this entry?")
 		msg = self.session.openWithCallback(self.Confirmed, MessageBox, message)
@@ -465,7 +465,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 			self.serverIPConfigEntry = NoSave(ConfigIP(default=serverIP, auto_jump=True))
 		else:
 			self.serverIPConfigEntry = NoSave(ConfigText(default=entry.serverIP, fixed_size=False, visible_width=20))
-			self.serverIPConfigEntry.setUseableChars(u'1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
+			self.serverIPConfigEntry.setUseableChars('1234567890aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ.-_')
 		self.portConfigEntry = NoSave(ConfigInteger(default=serverPort, limits=(0, 65536)))
 		self.usernameConfigEntry = NoSave(ConfigText(default=entry.username, fixed_size=False, visible_width=20))
 		self.passwordConfigEntry = NoSave(ConfigPassword(default=entry.password, fixed_size=False))
