@@ -2,7 +2,7 @@
 #===============================================================================
 # OscamStatus Plugin by puhvogel 2011-2018
 # modified by Pr2
-# adopted to  py3  by lareq 
+# adopted to  py3  by lareq
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -40,23 +40,26 @@ except:
 
 from threading import Thread, Lock
 import xml.dom.minidom
-import urllib.request, urllib.error, urllib.parse
 import ssl
-try:                                    
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:                                               
-    # Legacy Python that doesn't verify HTTPS certificates by default
-    pass                                                             
-else:                                                                
-    # Handle target environment that doesn't support HTTPS verification         
-    ssl._create_default_https_context = _create_unverified_https_context
-from urllib.parse import unquote_plus                                         
-from urllib.request import Request, urlopen
-from urllib.error import URLError, HTTPError
+try:
+	_create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+	# Legacy Python that doesn't verify HTTPS certificates by default
+	pass
+else:
+	# Handle target environment that doesn't support HTTPS verification
+	ssl._create_default_https_context = _create_unverified_https_context
+
+try:
+	from urllib.request import Request, urlopen, HTTPHandler, HTTPPasswordMgrWithDefaultRealm, HTTPDigestAuthHandler, build_opener, install_opener
+	from urllib.parse import unquote_plus
+	from urllib.error import URLError, HTTPError
+except ImportError: # python 2 fallback
+	from urllib import unquote_plus
+	from urllib2 import Request, urlopen, URLError, HTTPError, HTTPHandler, HTTPPasswordMgrWithDefaultRealm, HTTPDigestAuthHandler, build_opener, install_opener
 
 from os import path, listdir
 import re
-
 
 from .OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigScreen, \
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
@@ -160,22 +163,22 @@ class GetPage2(Thread):
 		self.__running = True
 		self.__cancel = False
 
-		PasswdMgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+		PasswdMgr = HTTPPasswordMgrWithDefaultRealm()
 		PasswdMgr.add_password(None, self.url, self.username, self.password)
 
-		handler = urllib.request.HTTPDigestAuthHandler(PasswdMgr)
-		opener = urllib.request.build_opener(urllib.request.HTTPHandler, handler)
+		handler = HTTPDigestAuthHandler(PasswdMgr)
+		opener = build_opener(HTTPHandler, handler)
 
-		urllib.request.install_opener(opener)
-		request = urllib.request.Request(self.url)
+		install_opener(opener)
+		request = Request(self.url)
 
 		self.__messages.push((THREAD_WORKING, "Download Thread is running"))
 		mp.send(0)
 
 		try:
-			page = urllib.request.urlopen(request, timeout=5).read()
+			page = urlopen(request, timeout=5).read()
 
-		except urllib.error.URLError as err:
+		except URLError as err:
 			error = "Error: "
 			if hasattr(err, "code"):
 				error += str(err.code)
