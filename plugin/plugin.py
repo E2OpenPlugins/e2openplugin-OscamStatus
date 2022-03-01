@@ -1649,8 +1649,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self.setList()
 
 	def setList(self):
-		def compare(a, b):
-			return cmp(int(b[0]), int(a[0]))
+		
 		EMMerror = EMMwritten = EMMskipped = EMMblocked = ""
 		for r in ["error", "written", "skipped", "blocked"]:
 			for t in ["unknown", "global", "shared", "unique"]:
@@ -1691,7 +1690,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 				list.append((e.val, e.channelname, e.caid + ":" + e.provid + ":" + e.srvid, e.rcs, e.lasttime, e.avgtime))
 
 		# Sort by number of requests...
-		list.sort(compare)
+		list.sort(key=lambda x: int(x[0]))
 		self["data"].setList(list)
 		self["data"].setIndex(self.oldIndex)
 
