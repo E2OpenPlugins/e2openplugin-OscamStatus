@@ -287,7 +287,7 @@ msgstr "informacja o kliencie"
 
 #: ../plugin.py:2307
 msgid "show connected clients"
-msgstr "pokaż podłłączonych klientów"
+msgstr "pokaż podłączonych klientów"
 
 #: ../plugin.py:2309
 msgid "show connected readers"
