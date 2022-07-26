@@ -205,7 +205,7 @@ def readCFG():
 	cfg = None
 	oscamServers = []
 	try:
-		cfg = file(CFG, "r")
+		cfg = open(CFG, "r")
 	except:
 		pass
 	if cfg:
@@ -235,7 +235,7 @@ def readCFG():
 
 
 def writeCFG(oscamServers):
-	cfg = file(CFG, "w")
+	cfg = open(CFG, "w")
 	savedconfig = 0
 	print("[OscamStatus] writing datfile...")
 	for line in oscamServers:
