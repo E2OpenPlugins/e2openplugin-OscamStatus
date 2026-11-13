@@ -37,3 +37,6 @@ Version 1.3.2
 
 Version 1.3.3
 * SSL Fix (Thanks Token for it)
+
+Version 1.3.4
+* Add a green "Display Entitlements" button to the locally connected readers screen.

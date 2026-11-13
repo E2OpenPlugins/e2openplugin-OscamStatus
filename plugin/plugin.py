@@ -65,7 +65,7 @@ from .OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfig
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
-VERSION = "1.3.3"
+VERSION = "1.3.4"
 TIMERTICK = 10000
 
 FULLHD = False
@@ -592,7 +592,7 @@ class ClientDataScreen(Screen):
 			self["progress%d" % i].setValue(val)
 
 	def yellowPressed(self):
-		if self.type is not "clients" and self.protocol.startswith("cccam"):
+		if self.type != "clients" and self.protocol.startswith("cccam"):
 			part = "entitlement&label=" + self.name
 			self.session.open(ReaderDataScreen, part, self.oServer)
 
@@ -1908,6 +1908,192 @@ class UserstatsScreen(DownloadXMLScreen):
 	def rightPressed(self):
 		pass
 
+# EntitlementsScreen...
+
+
+class EntitlementsScreen(Screen):
+	if FULLHD:
+		x, h = dlg_xh(1200)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="1200,%d" name="EntitlementsScreen" >
+				<widget render="Label" source="title" position="20,40" size="1160,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="label0" position=" 20,90" size=" 40,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget render="Label" source="label1" position=" 65,90" size="430,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget render="Label" source="label2" position="500,90" size="190,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget render="Label" source="label3" position="695,90" size="160,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget render="Label" source="label4" position="860,90" size="155,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget render="Label" source="label5" position="1020,90" size="160,30" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;26"/>
+				<widget source="data" render="Listbox" position="20,125" size="1160,800" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  5, 3), size = ( 35, 34), font=0, flags = RT_HALIGN_CENTER, text = 0),
+							MultiContentEntryText(pos = ( 45, 3), size = (430, 34), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (480, 3), size = (190, 34), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (675, 3), size = (160, 34), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (840, 3), size = (155, 34), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (1000, 3), size = (160, 34), font=0, flags = RT_HALIGN_LEFT, text = 5),
+						],
+						"fonts": [gFont("Regular", 26)],
+						"itemHeight": 38
+						}
+					</convert>
+				</widget>
+			</screen>""" % (x, h)
+	else:
+		x, h = dlg_xh(720)
+		skin = """
+			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="EntitlementsScreen" >
+				<widget render="Label" source="title" position="20,60" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
+				<widget render="Label" source="label0" position=" 20,95" size=" 25,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label1" position=" 50,95" size="240,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label2" position="295,95" size="115,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label3" position="415,95" size=" 95,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label4" position="515,95" size=" 90,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget render="Label" source="label5" position="610,95" size=" 90,22" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
+				<widget source="data" render="Listbox" position="20,120" size="680,380" scrollbarMode="showOnDemand">
+					<convert type="TemplatedMultiContent">
+						{"template": [
+							MultiContentEntryText(pos = (  2, 2), size = ( 25, 24), font=0, flags = RT_HALIGN_CENTER, text = 0),
+							MultiContentEntryText(pos = ( 30, 2), size = (240, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
+							MultiContentEntryText(pos = (275, 2), size = (115, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
+							MultiContentEntryText(pos = (395, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
+							MultiContentEntryText(pos = (495, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
+							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
+						],
+						"fonts": [gFont("Regular", 18)],
+						"itemHeight": 26
+						}
+					</convert>
+				</widget>
+			</screen>""" % (x, h)
+
+	def __init__(self, session, reader_label, oServer):
+		self.skin = EntitlementsScreen.skin
+		self.session = session
+		self.reader = reader_label
+		self.oServer = oServer
+		Screen.__init__(self, session)
+
+		self["title"] = StaticText(_("Entitlements: ") + self.reader + "@" + self.oServer.serverName)
+		self["label0"] = StaticText("")
+		self["label1"] = StaticText(_("Name"))
+		self["label2"] = StaticText(_("CAID:Provid"))
+		self["label3"] = StaticText(_("Class"))
+		self["label4"] = StaticText(_("Start"))
+		self["label5"] = StaticText(_("Expire"))
+		self["data"] = List([])
+
+		self["actions"] = ActionMap(["OkCancelActions"],
+		{
+			"cancel": self.Close
+		}, -1)
+
+		self.onLayoutFinish.append(self.LayoutFinished)
+		self.onFirstExecBegin.append(self.loadEntitlements)
+
+	def LayoutFinished(self):
+		x, h = dlg_xh(self.instance.size().width())
+		self.instance.move(ePoint(x, 0))
+        
+	def Close(self):
+		self.close(0)
+
+	def loadEntitlements(self):
+		try:
+			from html import unescape
+		except ImportError:
+			from HTMLParser import HTMLParser
+			unescape = HTMLParser().unescape
+		from datetime import datetime
+
+		protocol = "https://" if self.oServer.useSSL else "http://"
+		ent_url = protocol + self.oServer.serverIP + ":" + self.oServer.serverPort + "/entitlements.html?label=" + self.reader
+
+		PasswdMgr = HTTPPasswordMgrWithDefaultRealm()
+		PasswdMgr.add_password(None, ent_url, self.oServer.username, self.oServer.password)
+		handler = HTTPDigestAuthHandler(PasswdMgr)
+		opener = build_opener(HTTPHandler, handler)
+		install_opener(opener)
+
+		valid_list = []
+		expired_list = []
+		dlist = []
+
+		try:
+			raw = urlopen(Request(ent_url), timeout=5).read()
+			html_content = raw.decode("utf-8", errors="ignore") if isinstance(raw, bytes) else raw
+			rows = re.findall(r"<tr[^>]*>(.*?)</tr>", html_content, re.DOTALL | re.IGNORECASE)
+			today = datetime.now().date()
+
+			for row in rows:
+				cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row, re.DOTALL | re.IGNORECASE)
+				if not cells:
+					continue
+				clean = [unescape(re.sub(r"<[^>]+>", "", c)).strip() for c in cells]
+				if len(clean) >= 8:
+					col_type, caid, provid, ent_id, card_class, start_str, expire_str, name = clean[:8]
+					if col_type.lower() == "type" or expire_str == "1970-01-01":
+						continue
+					try:
+						expire_date = datetime.strptime(expire_str[:10], "%Y-%m-%d").date()
+						entry = {
+							"date_obj": expire_date,
+							"name": name,
+							"caid": caid,
+							"provid": provid,
+							"class": card_class,
+							"start": start_str,
+							"expire": expire_str
+						}
+						if expire_date >= today:
+							valid_list.append(entry)
+						else:
+							expired_list.append(entry)
+					except ValueError:
+						continue
+		except Exception as err:
+			dlist.append(("!", _("Error: ") + str(err), "", "", "", ""))
+			self["data"].setList(dlist)
+			return
+
+		valid_list.sort(key=lambda x: x["date_obj"])
+		expired_list.sort(key=lambda x: x["date_obj"], reverse=True)
+		last_two_expired = expired_list[:2]
+
+		GREEN = r"\c0000ff00"
+		GRAY = r"\c00888888"
+		WHITE = r"\c00ffffff"
+
+		if valid_list:
+			dlist.append(("", GREEN + _("[ VALID ENTITLEMENTS (%d) ]") % len(valid_list) + WHITE, "", "", "", ""))
+			for item in valid_list:
+				dlist.append((
+					GREEN + "+" + WHITE,
+					GREEN + item["name"] + WHITE,
+					GREEN + item["caid"] + ":" + item["provid"] + WHITE,
+					GREEN + item["class"] + WHITE,
+					GREEN + item["start"] + WHITE,
+					GREEN + item["expire"] + WHITE
+				))
+		else:
+			dlist.append(("", _("No valid entitlements found"), "", "", "", ""))
+
+		if last_two_expired:
+			dlist.append(("", "", "", "", "", ""))
+			dlist.append(("", GRAY + _("[ LAST 2 EXPIRED ENTITLEMENTS ]") + WHITE, "", "", "", ""))
+			for item in last_two_expired:
+				dlist.append((
+					GRAY + "-" + WHITE,
+					GRAY + item["name"] + WHITE,
+					GRAY + item["caid"] + ":" + item["provid"] + WHITE,
+					GRAY + item["class"] + WHITE,
+					GRAY + item["start"] + WHITE,
+					GRAY + item["expire"] + WHITE
+				))
+
+		self["data"].setList(dlist)
+
+
 # StatusDataScreen...
 
 
@@ -1939,10 +2125,12 @@ class StatusDataScreen(DownloadXMLScreen):
 						</convert>
 					</widget>
 					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
-					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
-					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
-					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
-					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonGreentext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="240,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellowtext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="460,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBluetext" position="460,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
 				</screen>""" % (dlg_xh(1310))
 
 		# HD without picons...
@@ -1969,10 +2157,12 @@ class StatusDataScreen(DownloadXMLScreen):
 						</convert>
 					</widget>
 					<eLabel text="" position="20,900" size="1160,2" transparent="0" backgroundColor="#ffffff" />
-					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
-					<widget name="ButtonYellowtext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
-					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="240,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
-					<widget name="ButtonBluetext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonGreentext" position="20,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="240,930" size="210,60" zPosition="4" alphatest="on"/>
+					<widget name="ButtonYellowtext" position="240,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
+					<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="460,930" size="210,60" zPosition="4" transparent="1" alphatest="on"/>
+					<widget name="ButtonBluetext" position="460,930" size="210,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;24"/>
 				</screen>""" % (dlg_xh(1200))
 
 	else:
@@ -2002,10 +2192,12 @@ class StatusDataScreen(DownloadXMLScreen):
 					</convert>
 			</widget>
 				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
-				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="160,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="300,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="300,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 		# without picons...
 		skin2 = """
@@ -2031,10 +2223,12 @@ class StatusDataScreen(DownloadXMLScreen):
 					</convert>
 				</widget>
 				<eLabel text="" position="20,450" size="680,2" transparent="0" backgroundColor="#ffffff" />
-				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
-				<widget name="ButtonYellowtext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
-				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="160,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
-				<widget name="ButtonBluetext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonGreen" pixmap="skin_default/buttons/green.png" position="20,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonGreentext" position="20,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
+				<widget name="ButtonYellow" pixmap="skin_default/buttons/yellow.png" position="160,460" size="140,40" zPosition="4" alphatest="on"/>
+				<widget name="ButtonYellowtext" position="160,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="#000000" font="Regular;16"/>
+				<widget name="ButtonBlue" pixmap="skin_default/buttons/blue.png" position="300,460" size="140,40" zPosition="4" transparent="1" alphatest="on"/>
+				<widget name="ButtonBluetext" position="300,460" size="140,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;16"/>
 			</screen>""" % (dlg_xh(720))
 
 	def __init__(self, session, type, part, oServer):
@@ -2067,6 +2261,10 @@ class StatusDataScreen(DownloadXMLScreen):
 
 			self["ButtonYellow"] = Pixmap()
 			self["ButtonYellowtext"] = Button(_("show client info"))
+			self["ButtonGreen"] = Pixmap()
+			self["ButtonGreen"].hide()
+			self["ButtonGreentext"] = Button("")
+			self["ButtonGreentext"].hide()
 			self["ButtonBlue"] = Pixmap()
 			self["ButtonBluetext"] = Button(_("hide idle clients"))
 		else:
@@ -2086,12 +2284,15 @@ class StatusDataScreen(DownloadXMLScreen):
 
 			self["ButtonYellow"] = Pixmap()
 			self["ButtonYellowtext"] = Button(_("show reader info"))
+			self["ButtonGreen"] = Pixmap()
+			self["ButtonGreentext"] = Button(_("display entitlements"))
 			self["ButtonBlue"] = Pixmap()
 			self["ButtonBluetext"] = Button(_("show readerstats"))
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
 		{
 			"yellow": self.yellowPressed,
+			"green": self.greenPressed,
 			"blue": self.bluePressed,
 			"cancel": self.Close
 		}, -1)
@@ -2232,9 +2433,17 @@ class StatusDataScreen(DownloadXMLScreen):
 			index = self["data"].getCurrent()[6]
 		else:
 			index = self["data"].getCurrent()[5]
-		if index is not None:
+		if index != None:
 			self.timer.stop()
 			self.session.openWithCallback(self.backCB, ClientDataScreen, self.type, self.oServer, self.status[index])
+
+	def greenPressed(self):
+		if self.download:
+			return
+		if self.type == "readers" and self["data"].count():
+			reader = self["data"].getCurrent()[0]
+			self.timer.stop()
+			self.session.openWithCallback(self.backCB, EntitlementsScreen, reader, self.oServer)
 
 	def bluePressed(self):
 		if self.download:
@@ -2337,23 +2546,23 @@ class OscamStatus(Screen):
 
 	def action(self):
 		returnValue = self["menu"].getCurrent()[2]
-		if returnValue is not None:
-			if returnValue is "clients":
+		if returnValue != None:
+			if returnValue == "clients":
 				self.session.open(StatusDataScreen, "clients", "status", self.oServer)
-			elif returnValue is "allClients":
+			elif returnValue == "allClients":
 				self.session.open(UserstatsScreen, "userstats", self.oServer)
-			elif returnValue is "readers":
+			elif returnValue == "readers":
 				self.session.open(StatusDataScreen, "readers", "status", self.oServer)
-			elif returnValue is "allReaders":
+			elif returnValue == "allReaders":
 				# part=readerlist erst ab 5773 ...
 				self.session.open(ReaderlistScreen, "readerlist", self.oServer)
-			elif returnValue is "log":
+			elif returnValue == "log":
 				self.session.open(LogDataScreen, "status&appendlog=1", self.oServer)
-			elif returnValue is "info":
+			elif returnValue == "info":
 				self.session.open(OscamDataScreen, "status", self.oServer)
-			elif returnValue is "setup":
+			elif returnValue == "setup":
 				self.session.openWithCallback(self.SetupCB, OscamServerEntriesListConfigScreen)
-			elif returnValue is "restart":
+			elif returnValue == "restart":
 				self.session.open(OscamRestartScreen, "status", self.oServer)
 
 	def SetupCB(self, entry):
@@ -2370,7 +2579,7 @@ class OscamStatus(Screen):
 		self.instance.move(ePoint(x, 0))
 
 	def findPicon(self, service=None):
-		if service is not None:
+		if service != None:
 			sname = ':'.join(service.split(':')[:11])
 			pos = sname.rfind(':')
 			if pos != -1:

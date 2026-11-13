@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-08 15:09+0100\n"
+"POT-Creation-Date: 2026-11-13 12:29+0100\n"
 "PO-Revision-Date: 2018-09-03 10:13+0100\n"
 "Last-Translator: Frenske <voorzitter@openpli.org>\n"
 "Language-Team: \n"
@@ -17,42 +17,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: ../plugin.py:801 ../plugin.py:908
+#: ../plugin.py:806 ../plugin.py:913
 #, python-format
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d dagen %d uren %d minuten %d seconden"
 
-#: ../plugin.py:2052 ../plugin.py:2071
+#: ../plugin.py:2250 ../plugin.py:2273
 msgid "AU"
 msgstr "AU"
 
-#: ../plugin.py:1837
+#: ../plugin.py:1841
 #, fuzzy
 msgid "All Clients"
 msgstr "Cliënt"
 
-#: ../plugin.py:1355
+#: ../plugin.py:1360
 msgid "All Readers @"
 msgstr "Alle readers @"
 
-#: ../plugin.py:2060 ../plugin.py:2062
+#: ../plugin.py:1980
+msgid "CAID:Provid"
+msgstr ""
+
+#: ../plugin.py:2258 ../plugin.py:2260
 msgid "Channel"
 msgstr "Zender"
 
-#: ../plugin.py:493 ../plugin.py:1764
+#: ../plugin.py:1981
+msgid "Class"
+msgstr ""
+
+#: ../plugin.py:498 ../plugin.py:1768
 msgid "Client"
 msgstr "Cliënt"
 
-#: ../plugin.py:2325
+#: ../plugin.py:2538
 msgid "Configuration screen"
 msgstr ""
 
-#: ../plugin.py:2156
+#: ../plugin.py:2361
 #, fuzzy
 msgid "Connected Clients"
 msgstr "Toon de verbonden cliënts"
 
-#: ../plugin.py:2198
+#: ../plugin.py:2403
 #, fuzzy
 msgid "Connected Readers"
 msgstr "Toon de verbonden readers"
@@ -61,7 +69,7 @@ msgstr "Toon de verbonden readers"
 msgid "Do you really want to delete this entry?"
 msgstr "Wilt u dit item echt verwijderen?"
 
-#: ../plugin.py:2054 ../plugin.py:2073
+#: ../plugin.py:2252 ../plugin.py:2275
 msgid "ECM Time"
 msgstr "ECM tijd"
 
@@ -69,28 +77,44 @@ msgstr "ECM tijd"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "ECM Tijd in \"connected\" Dialog"
 
-#: ../plugin.py:1765
+#: ../plugin.py:1977
+msgid "Entitlements: "
+msgstr ""
+
+#: ../plugin.py:2055
+msgid "Error: "
+msgstr ""
+
+#: ../plugin.py:1983
+msgid "Expire"
+msgstr ""
+
+#: ../plugin.py:1769
 msgid "IP"
 msgstr "IP"
 
-#: ../plugin.py:2056 ../plugin.py:2075
+#: ../plugin.py:2254 ../plugin.py:2277
 msgid "Idle Time"
 msgstr "Tijd inactief"
 
-#: ../plugin.py:1196
+#: ../plugin.py:1201
 #, fuzzy
 msgid "Logfile"
 msgstr "Toon het logfile"
 
-#: ../plugin.py:683
+#: ../plugin.py:688
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Maybe set 'chaninfo = 0' in de oscam.conf"
 
-#: ../plugin.py:2050 ../plugin.py:2069
+#: ../plugin.py:1979 ../plugin.py:2248 ../plugin.py:2271
 msgid "Name"
 msgstr "Naam"
 
-#: ../plugin.py:677
+#: ../plugin.py:2079
+msgid "No valid entitlements found"
+msgstr ""
+
+#: ../plugin.py:682
 msgid "Oscam Download Error"
 msgstr "Oscam fout met downloaden"
 
@@ -110,12 +134,12 @@ msgstr "Setup Oscamserver"
 msgid "Oscam Servers"
 msgstr "Oscamservers"
 
-#: ../plugin.py:663 ../plugin.py:914 ../plugin.py:931 ../plugin.py:2386
-#: ../plugin.py:2388
+#: ../plugin.py:668 ../plugin.py:919 ../plugin.py:936 ../plugin.py:2599
+#: ../plugin.py:2601
 msgid "Oscam Status"
 msgstr "Oscamstatus"
 
-#: ../plugin.py:2358
+#: ../plugin.py:2571
 msgid "Oscam Status "
 msgstr "Oscamstatus"
 
@@ -123,7 +147,7 @@ msgstr "Oscamstatus"
 msgid "Oscam Status globals Setup"
 msgstr "Algemene instellingen voor Oscamstatus"
 
-#: ../plugin.py:684 ../plugin.py:694
+#: ../plugin.py:689 ../plugin.py:699
 msgid "Oscam XML Error"
 msgstr "XML fout Oscamstatus"
 
@@ -131,7 +155,7 @@ msgstr "XML fout Oscamstatus"
 msgid "Password (httppwd)"
 msgstr "Wachtwoord (http ww)"
 
-#: ../plugin.py:2059 ../plugin.py:2078
+#: ../plugin.py:2257 ../plugin.py:2280
 #, fuzzy
 msgid "Picon"
 msgstr "Gebruik Picons"
@@ -140,11 +164,11 @@ msgstr "Gebruik Picons"
 msgid "Port"
 msgstr "Poort"
 
-#: ../plugin.py:1285 ../plugin.py:1767 ../plugin.py:2079 ../plugin.py:2081
+#: ../plugin.py:1290 ../plugin.py:1771 ../plugin.py:2281 ../plugin.py:2283
 msgid "Protocol"
 msgstr "Protocol"
 
-#: ../plugin.py:495 ../plugin.py:1284 ../plugin.py:2051
+#: ../plugin.py:500 ../plugin.py:1289 ../plugin.py:2249
 msgid "Reader"
 msgstr "Reader"
 
@@ -156,11 +180,15 @@ msgstr "Serveradres altijd in IP formaat"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Toon de plugin in het applicatiemenu"
 
-#: ../plugin.py:1766 ../plugin.py:2070
+#: ../plugin.py:1982
+msgid "Start"
+msgstr ""
+
+#: ../plugin.py:1770 ../plugin.py:2272
 msgid "Status"
 msgstr "Status"
 
-#: ../plugin.py:1091
+#: ../plugin.py:1096
 msgid "Use Oscam Webif to see them all."
 msgstr ""
 
@@ -176,16 +204,25 @@ msgstr "Gebruikersnaam (http gebruiker)"
 msgid "X-Offset (move left)"
 msgstr "X-Offset (ga naar links)"
 
-#: ../plugin.py:1590
+#: ../plugin.py:2083
+msgid "[ LAST 2 EXPIRED ENTITLEMENTS ]"
+msgstr ""
+
+#: ../plugin.py:2068
+#, python-format
+msgid "[ VALID ENTITLEMENTS (%d) ]"
+msgstr ""
+
+#: ../plugin.py:1595
 msgid "avgtime"
 msgstr "gemiddelde tijd"
 
-#: ../plugin.py:1587
+#: ../plugin.py:1592
 #, fuzzy
 msgid "caid:provid:srvid"
 msgstr "caid:srvid"
 
-#: ../plugin.py:1586
+#: ../plugin.py:1591
 msgid "channelname"
 msgstr "zendernaam"
 
@@ -193,36 +230,40 @@ msgstr "zendernaam"
 msgid "delete"
 msgstr "verwijder"
 
-#: ../plugin.py:1770
+#: ../plugin.py:1774
 msgid "disable client"
 msgstr "déactiveer cliënt"
 
-#: ../plugin.py:1290
+#: ../plugin.py:1295
 msgid "disable reader"
 msgstr "déactiveer reader"
+
+#: ../plugin.py:2288
+msgid "display entitlements"
+msgstr ""
 
 #: ../OscamStatusSetup.py:349
 msgid "edit"
 msgstr "wijzig"
 
-#: ../plugin.py:1772
+#: ../plugin.py:1776
 msgid "enable client"
 msgstr "activeer cliënt"
 
-#: ../plugin.py:1292
+#: ../plugin.py:1297
 msgid "enable reader"
 msgstr "activeer reader"
 
-#: ../plugin.py:2067 ../plugin.py:2244
+#: ../plugin.py:2269 ../plugin.py:2457
 msgid "hide idle clients"
 msgstr "verberg de inactieve cliënts"
 
-#: ../plugin.py:1589
+#: ../plugin.py:1594
 #, fuzzy
 msgid "lasttime"
 msgstr "laatste tijd"
 
-#: ../plugin.py:621
+#: ../plugin.py:626
 msgid "loading..."
 msgstr "laden...."
 
@@ -230,33 +271,33 @@ msgstr "laden...."
 msgid "new"
 msgstr "nieuw"
 
-#: ../plugin.py:676
+#: ../plugin.py:681
 msgid "no xml"
 msgstr "geen xml"
 
-#: ../plugin.py:534 ../plugin.py:547 ../plugin.py:555
+#: ../plugin.py:539 ../plugin.py:552 ../plugin.py:560
 msgid "not available"
 msgstr ""
 
-#: ../plugin.py:1091
+#: ../plugin.py:1096
 msgid "providers on this card max. display is:"
 msgstr ""
 
-#: ../plugin.py:921
+#: ../plugin.py:926
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "wilt u Oscam@%s werkelijk herstarten?"
 
-#: ../plugin.py:927
+#: ../plugin.py:932
 #, fuzzy, python-format
 msgid "really shutdown oscam@%s?"
 msgstr "wilt u Oscam@%s werkelijk afsluiten?"
 
-#: ../plugin.py:1585
+#: ../plugin.py:1590
 msgid "req."
 msgstr "req."
 
-#: ../plugin.py:869
+#: ../plugin.py:874
 msgid "restart oscam"
 msgstr "herstart Oscam"
 
@@ -269,67 +310,67 @@ msgstr "return"
 msgid "save"
 msgstr "opslaan"
 
-#: ../plugin.py:2312
+#: ../plugin.py:2525
 msgid "server info"
 msgstr "Serverinfo"
 
-#: ../plugin.py:2313
+#: ../plugin.py:2526
 msgid "server restart/shutdown"
 msgstr "Herstarten/afsluiten van de server"
 
-#: ../plugin.py:2314
+#: ../plugin.py:2527
 msgid "server setup"
 msgstr "Serverinstellingen"
 
-#: ../plugin.py:2308
+#: ../plugin.py:2521
 msgid "show all clients"
 msgstr "Toon alle cliënts"
 
-#: ../plugin.py:2310
+#: ../plugin.py:2523
 msgid "show all readers"
 msgstr "Toon alle readers"
 
-#: ../plugin.py:2065
+#: ../plugin.py:2263
 msgid "show client info"
 msgstr "Toon de cliëntinformatie"
 
-#: ../plugin.py:2307
+#: ../plugin.py:2520
 msgid "show connected clients"
 msgstr "Toon de verbonden cliënts"
 
-#: ../plugin.py:2309
+#: ../plugin.py:2522
 msgid "show connected readers"
 msgstr "Toon de verbonden readers"
 
-#: ../plugin.py:2246
+#: ../plugin.py:2459
 msgid "show idle clients"
 msgstr "Toon de inactieve cliënts"
 
-#: ../plugin.py:2311
+#: ../plugin.py:2524
 msgid "show logfile"
 msgstr "Toon het logfile"
 
-#: ../plugin.py:2084
+#: ../plugin.py:2286
 msgid "show reader info"
 msgstr "Toon de readerinformatie"
 
-#: ../plugin.py:2086
+#: ../plugin.py:2290
 msgid "show readerstats"
 msgstr "Toon de readerstatistieken"
 
-#: ../plugin.py:871
+#: ../plugin.py:876
 msgid "shutdown oscam"
 msgstr "sluit Oscam af"
 
-#: ../plugin.py:1588
+#: ../plugin.py:1593
 msgid "status"
 msgstr "status"
 
-#: ../plugin.py:1840
+#: ../plugin.py:1844
 msgid "time on channel"
 msgstr "tijd op kanaal"
 
-#: ../plugin.py:1286
+#: ../plugin.py:1291
 msgid "type"
 msgstr "type"
 
@@ -337,10 +378,10 @@ msgstr "type"
 msgid "use SSL"
 msgstr "gebruik SSL"
 
-#: ../plugin.py:2386 ../plugin.py:2388
+#: ../plugin.py:2599 ../plugin.py:2601
 msgid "whats going on?"
 msgstr "wat gebeurt er?"
 
-#: ../plugin.py:912
+#: ../plugin.py:917
 msgid "you can't shutdown/restart this oscam.\n"
 msgstr "U kunt deze Oscam niet herstarten/afsluiten.\n"
