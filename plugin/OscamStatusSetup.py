@@ -36,7 +36,8 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 
 import re
-import os.path
+import os
+import io
 
 config.plugins.OscamStatus = ConfigSubsection()
 config.plugins.OscamStatus.lastServer = ConfigInteger(default=0)
@@ -64,7 +65,7 @@ oscam_regex = {
 
 
 def _parse_line(line):
-	for key, rx in list(oscam_regex.items()):
+	for key, rx in oscam_regex.items():
 		match = rx.search(line)
 		if match:
 			return key, match
@@ -75,7 +76,7 @@ def _parse_line(line):
 def parse_oscam_version_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
-		with open(filepath, 'r') as file_object:
+		with io.open(filepath, 'r', encoding='utf-8', errors='ignore') as file_object:
 			line = file_object.readline()
 			while line:
 				# at each line check for a match with a regex
@@ -92,7 +93,7 @@ def parse_oscam_version_file(filepath, data):
 def parse_oscam_conf_file(filepath, data):
 	# open the file and read through it line by line
 	if os.path.isfile(filepath):
-		with open(filepath, 'r') as file_object:
+		with io.open(filepath, 'r', encoding='utf-8', errors='ignore') as file_object:
 			line = file_object.readline()
 			while line:
 				# at each line check for a match with a regex
@@ -114,7 +115,6 @@ def parse_oscam_conf_file(filepath, data):
 					data.password = match.group('httppwd')
 
 				line = file_object.readline()
-
 
 def dlg_xh(w):
 	x = getDesktop(0).size().width() - w - XOFFSET.value
@@ -202,30 +202,30 @@ CFG = resolveFilename(SCOPE_CURRENT_PLUGIN, "/etc/enigma2/oscamstatus.cfg")
 
 
 def readCFG():
-	cfg = None
 	oscamServers = []
-	try:
-		cfg = open(CFG, "r")
-	except:
-		pass
-	if cfg:
-		print("[OscamStatus] reading config file...")
-		d = cfg.read()
-		cfg.close()
-		for line in d.splitlines():
-			v = line.strip().split(' ')
-			if len(v) == 6:
-				tmp = oscamServer()
-				tmp.username = v[0]
-				tmp.password = v[1]
-				tmp.serverIP = v[2]
-				tmp.serverPort = v[3]
-				tmp.serverName = v[4]
-				tmp.useSSL = bool(int(v[5]))
-				if tmp.serverName != 'Autodetected':
-					oscamServers.append(tmp)
+	if os.path.isfile(CFG):
+		try:
+			with io.open(CFG, "r", encoding="utf-8", errors="ignore") as cfg:
+				print("[OscamStatus] reading config file...")
+				d = cfg.read()
+				for line in d.splitlines():
+					v = line.strip().split(' ')
+					if len(v) == 6:
+						tmp = oscamServer()
+						tmp.username = v[0]
+						tmp.password = v[1]
+						tmp.serverIP = v[2]
+						tmp.serverPort = v[3]
+						tmp.serverName = v[4]
+						tmp.useSSL = bool(int(v[5]))
+						if tmp.serverName != 'Autodetected':
+							oscamServers.append(tmp)
+		except Exception as err:
+			print("[OscamStatus] error reading config file:", err)
+
 	if len(oscamServers) == 0:
 		print("[OscamStatus] no config file found")
+
 	tmp = oscamServer()
 	if parse_oscam_version_file('/tmp/.oscam/oscam.version', tmp):
 		if hasattr(tmp, 'ConfigDir'):
@@ -235,22 +235,23 @@ def readCFG():
 
 
 def writeCFG(oscamServers):
-	cfg = open(CFG, "w")
 	savedconfig = 0
 	print("[OscamStatus] writing datfile...")
-	for line in oscamServers:
-		if line.serverName != 'Autodetected':
-			cfg.write(line.username + ' ')
-			cfg.write(line.password + ' ')
-			cfg.write(line.serverIP + ' ')
-			cfg.write(line.serverPort + ' ')
-			cfg.write(line.serverName + ' ')
-			cfg.write(str(int(line.useSSL)) + '\n')
-			savedconfig = 1
-	cfg.close()
-	if not savedconfig:
+	with io.open(CFG, "w", encoding="utf-8") as cfg:
+		for line in oscamServers:
+			if line.serverName != 'Autodetected':
+				row = u"%s %s %s %s %s %d\n" % (
+					line.username,
+					line.password,
+					line.serverIP,
+					line.serverPort,
+					line.serverName,
+					int(line.useSSL)
+				)
+				cfg.write(row)
+				savedconfig = 1
+	if not savedconfig and os.path.isfile(CFG):
 		os.remove(CFG)
-
 
 class OscamServerEntryList(MenuList):
 	def __init__(self, list, enableWrapAround=True):
@@ -373,7 +374,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 	def keyEdit(self):
 		try:
 			entry = self["list"].l.getCurrentSelection()[0]
-		except:
+		except Exception:
 			entry = None
 		if entry:
 			self.session.openWithCallback(self.updateEntrys, OscamServerEntryConfigScreen, entry, self["list"].getSelectionIndex())
@@ -381,7 +382,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 	def keyDelete(self):
 		try:
 			self.index = self["list"].getSelectionIndex()
-		except:
+		except Exception:
 			self.index = -1
 		if self.index > -1:
 			if self.index == config.plugins.OscamStatus.lastServer.value:
@@ -404,7 +405,7 @@ class OscamServerEntriesListConfigScreen(Screen):
 	def keyOk(self):
 		try:
 			entry = self["list"].l.getCurrentSelection()[0]
-		except:
+		except Exception:
 			entry = None
 		if entry:
 			config.plugins.OscamStatus.lastServer.value = self["list"].getSelectionIndex()
@@ -447,7 +448,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		self.session = session
 		Screen.__init__(self, session)
 
-		if entry == None:
+		if entry is None:
 			entry = oscamServer()
 		self.index = index
 
@@ -508,7 +509,7 @@ class OscamServerEntryConfigScreen(Screen, ConfigListScreen):
 		for x in theIP:
 			try:
 				serverIP.append(int(x))
-			except:
+			except Exception:
 				return False
 		return serverIP
 
