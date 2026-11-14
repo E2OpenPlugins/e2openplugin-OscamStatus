@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OscamStatus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 12:29+0100\n"
+"POT-Creation-Date: 2026-11-14 18:14+0100\n"
 "PO-Revision-Date: 2021-12-10 19:08+0300\n"
 "Last-Translator: Vladimir.F <volodya072@yahoo.com>\n"
 "Language-Team: ru_RU\n"
@@ -14,56 +14,60 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: ../plugin.py:806 ../plugin.py:913
+#: ../plugin.py:852 ../plugin.py:959
 #, python-format
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d дней %d часов %d минут %d секунд"
 
-#: ../plugin.py:2250 ../plugin.py:2273
+#: ../plugin.py:2296 ../plugin.py:2319
 msgid "AU"
 msgstr "AU"
 
-#: ../plugin.py:1841
+#: ../plugin.py:1887
 msgid "All Clients"
 msgstr "Все Клиенты"
 
-#: ../plugin.py:1360
+#: ../plugin.py:1406
 msgid "All Readers @"
 msgstr "Все Ридеры @"
 
-#: ../plugin.py:1980
+#: ../plugin.py:2026
 msgid "CAID:Provid"
 msgstr ""
 
-#: ../plugin.py:2258 ../plugin.py:2260
+#: ../plugin.py:2304 ../plugin.py:2306
 msgid "Channel"
 msgstr "Канал"
 
-#: ../plugin.py:1981
+#: ../plugin.py:2027
 msgid "Class"
 msgstr ""
 
-#: ../plugin.py:498 ../plugin.py:1768
+#: ../plugin.py:502 ../plugin.py:1814
 msgid "Client"
 msgstr "Клиент"
 
-#: ../plugin.py:2538
+#: ../plugin.py:2619
 msgid "Configuration screen"
 msgstr "Конфигурация экрана"
 
-#: ../plugin.py:2361
+#: ../plugin.py:2434
 msgid "Connected Clients"
 msgstr "Подключенные Клиенты"
 
-#: ../plugin.py:2403
+#: ../plugin.py:2483
 msgid "Connected Readers"
 msgstr "Подключенные Ридеры"
 
-#: ../OscamStatusSetup.py:390
+#: ../OscamStatusSetup.py:391
 msgid "Do you really want to delete this entry?"
 msgstr "Вы точно хотите удалить эту запись?"
 
-#: ../plugin.py:2252 ../plugin.py:2275
+#: ../plugin.py:1890 ../plugin.py:2300
+msgid "Duration"
+msgstr ""
+
+#: ../plugin.py:2298 ../plugin.py:2321
 msgid "ECM Time"
 msgstr "Время ECM"
 
@@ -71,68 +75,68 @@ msgstr "Время ECM"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "Время ECM в \"подключенном\" Диалоге"
 
-#: ../plugin.py:1977
+#: ../plugin.py:2023
 msgid "Entitlements: "
 msgstr ""
 
-#: ../plugin.py:2055
+#: ../plugin.py:2101
 msgid "Error: "
 msgstr ""
 
-#: ../plugin.py:1983
+#: ../plugin.py:2029
 msgid "Expire"
 msgstr ""
 
-#: ../plugin.py:1769
+#: ../plugin.py:1815
 msgid "IP"
 msgstr "IP"
 
-#: ../plugin.py:2254 ../plugin.py:2277
+#: ../plugin.py:2323
 msgid "Idle Time"
 msgstr "Время Простоя"
 
-#: ../plugin.py:1201
+#: ../plugin.py:1247
 msgid "Logfile"
 msgstr "Журнал"
 
-#: ../plugin.py:688
+#: ../plugin.py:734
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Может, задано 'chaninfo = 0' в oscam.conf"
 
-#: ../plugin.py:1979 ../plugin.py:2248 ../plugin.py:2271
+#: ../plugin.py:2025 ../plugin.py:2294 ../plugin.py:2317
 msgid "Name"
 msgstr "Имя"
 
-#: ../plugin.py:2079
+#: ../plugin.py:2125
 msgid "No valid entitlements found"
 msgstr ""
 
-#: ../plugin.py:682
+#: ../plugin.py:728
 msgid "Oscam Download Error"
 msgstr "Oscam Ошибка Загрузки"
 
-#: ../OscamStatusSetup.py:496
+#: ../OscamStatusSetup.py:497
 msgid "Oscam Server Address"
 msgstr "Oscam Сервер Адрес"
 
-#: ../OscamStatusSetup.py:495
+#: ../OscamStatusSetup.py:496
 msgid "Oscam Server Name"
 msgstr "Oscam Сервер Имя"
 
-#: ../OscamStatusSetup.py:477
+#: ../OscamStatusSetup.py:478
 msgid "Oscam Server Setup"
 msgstr "Oscam Сервер Настройки"
 
-#: ../OscamStatusSetup.py:347
+#: ../OscamStatusSetup.py:348
 msgid "Oscam Servers"
 msgstr "Oscam Серверы"
 
-#: ../plugin.py:668 ../plugin.py:919 ../plugin.py:936 ../plugin.py:2599
-#: ../plugin.py:2601
+#: ../plugin.py:714 ../plugin.py:965 ../plugin.py:982 ../plugin.py:2680
+#: ../plugin.py:2682
 msgid "Oscam Status"
 msgstr "Oscam Статус"
 
-#: ../plugin.py:2571
+#: ../plugin.py:2652
 msgid "Oscam Status "
 msgstr "Oscam Статус "
 
@@ -140,27 +144,27 @@ msgstr "Oscam Статус "
 msgid "Oscam Status globals Setup"
 msgstr "Oscam Статус общие Настройки"
 
-#: ../plugin.py:689 ../plugin.py:699
+#: ../plugin.py:735 ../plugin.py:745
 msgid "Oscam XML Error"
 msgstr "Oscam XML Ошибка"
 
-#: ../OscamStatusSetup.py:499
+#: ../OscamStatusSetup.py:500
 msgid "Password (httppwd)"
 msgstr "Пароль (httppwd)"
 
-#: ../plugin.py:2257 ../plugin.py:2280
+#: ../plugin.py:2303 ../plugin.py:2326
 msgid "Picon"
 msgstr "Пикон"
 
-#: ../OscamStatusSetup.py:497
+#: ../OscamStatusSetup.py:498
 msgid "Port"
 msgstr "Порт"
 
-#: ../plugin.py:1290 ../plugin.py:1771 ../plugin.py:2281 ../plugin.py:2283
+#: ../plugin.py:1336 ../plugin.py:1817 ../plugin.py:2327 ../plugin.py:2329
 msgid "Protocol"
 msgstr "Протокол"
 
-#: ../plugin.py:500 ../plugin.py:1289 ../plugin.py:2249
+#: ../plugin.py:504 ../plugin.py:1335 ../plugin.py:2295
 msgid "Reader"
 msgstr "Ридер"
 
@@ -172,15 +176,15 @@ msgstr "Адрес сервера всегда в формате IP"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Показать Плагин в Меню Дополнения"
 
-#: ../plugin.py:1982
+#: ../plugin.py:2028
 msgid "Start"
 msgstr ""
 
-#: ../plugin.py:1770 ../plugin.py:2272
+#: ../plugin.py:1816 ../plugin.py:2318
 msgid "Status"
 msgstr "Статус"
 
-#: ../plugin.py:1096
+#: ../plugin.py:1142
 msgid "Use Oscam Webif to see them all."
 msgstr "Исп. Oscam Webif, чтобы их видеть."
 
@@ -188,7 +192,7 @@ msgstr "Исп. Oscam Webif, чтобы их видеть."
 msgid "Use Picons"
 msgstr "Использовать Пиконы"
 
-#: ../OscamStatusSetup.py:498
+#: ../OscamStatusSetup.py:499
 msgid "Username (httpuser)"
 msgstr "Имя пользователя (httpuser)"
 
@@ -196,181 +200,177 @@ msgstr "Имя пользователя (httpuser)"
 msgid "X-Offset (move left)"
 msgstr "X-Смещение (сдвиг влево)"
 
-#: ../plugin.py:2083
+#: ../plugin.py:2129
 msgid "[ LAST 2 EXPIRED ENTITLEMENTS ]"
 msgstr ""
 
-#: ../plugin.py:2068
+#: ../plugin.py:2114
 #, python-format
 msgid "[ VALID ENTITLEMENTS (%d) ]"
 msgstr ""
 
-#: ../plugin.py:1595
+#: ../plugin.py:1641
 msgid "avgtime"
 msgstr "среднее время"
 
-#: ../plugin.py:1592
+#: ../plugin.py:1638
 msgid "caid:provid:srvid"
 msgstr "caid:provid:srvid"
 
-#: ../plugin.py:1591
+#: ../plugin.py:1637
 msgid "channelname"
 msgstr "имя канала"
 
-#: ../OscamStatusSetup.py:350
+#: ../OscamStatusSetup.py:351
 msgid "delete"
 msgstr "удалить"
 
-#: ../plugin.py:1774
+#: ../plugin.py:1820
 msgid "disable client"
 msgstr "откл клиента"
 
-#: ../plugin.py:1295
+#: ../plugin.py:1341
 msgid "disable reader"
 msgstr "откл ридер"
 
-#: ../plugin.py:2288
+#: ../plugin.py:2334
 msgid "display entitlements"
 msgstr ""
 
-#: ../OscamStatusSetup.py:349
+#: ../OscamStatusSetup.py:350
 msgid "edit"
 msgstr "изменить"
 
-#: ../plugin.py:1776
+#: ../plugin.py:1822
 msgid "enable client"
 msgstr "вкл клиента"
 
-#: ../plugin.py:1297
+#: ../plugin.py:1343
 msgid "enable reader"
 msgstr "вкл ридер"
 
-#: ../plugin.py:2269 ../plugin.py:2457
+#: ../plugin.py:2315 ../plugin.py:2537
 msgid "hide idle clients"
 msgstr "скрыть неактивных клиентов"
 
-#: ../plugin.py:1594
+#: ../plugin.py:1640
 msgid "lasttime"
 msgstr "прошлый раз"
 
-#: ../plugin.py:626
+#: ../plugin.py:672
 msgid "loading..."
 msgstr "загрузка..."
 
-#: ../OscamStatusSetup.py:348
+#: ../OscamStatusSetup.py:349
 msgid "new"
 msgstr "новый"
 
-#: ../plugin.py:681
+#: ../plugin.py:727
 msgid "no xml"
 msgstr "нет xml"
 
-#: ../plugin.py:539 ../plugin.py:552 ../plugin.py:560
+#: ../plugin.py:546 ../plugin.py:559 ../plugin.py:567
 msgid "not available"
 msgstr "недоступен"
 
-#: ../plugin.py:1096
+#: ../plugin.py:1142
 msgid "providers on this card max. display is:"
 msgstr "операторов на этой карте макс. это:"
 
-#: ../plugin.py:926
+#: ../plugin.py:972
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "точно перезапустить oscam@%s?"
 
-#: ../plugin.py:932
+#: ../plugin.py:978
 #, python-format
 msgid "really shutdown oscam@%s?"
 msgstr "точно отключить oscam@%s?"
 
-#: ../plugin.py:1590
+#: ../plugin.py:1636
 msgid "req."
 msgstr "запрос."
 
-#: ../plugin.py:874
+#: ../plugin.py:920
 msgid "restart oscam"
 msgstr "перезапуск oscam"
 
-#: ../OscamStatusSetup.py:167 ../OscamStatusSetup.py:478
+#: ../OscamStatusSetup.py:167 ../OscamStatusSetup.py:479
 msgid "return"
 msgstr "вернуться"
 
-#: ../OscamStatusSetup.py:168 ../OscamStatusSetup.py:479
+#: ../OscamStatusSetup.py:168 ../OscamStatusSetup.py:480
 msgid "save"
 msgstr "сохранить"
 
-#: ../plugin.py:2525
+#: ../plugin.py:2606
 msgid "server info"
 msgstr "инфо сервера"
 
-#: ../plugin.py:2526
+#: ../plugin.py:2607
 msgid "server restart/shutdown"
 msgstr "перезапуск/остановка сервера"
 
-#: ../plugin.py:2527
+#: ../plugin.py:2608
 msgid "server setup"
 msgstr "настройки сервера"
 
-#: ../plugin.py:2521
+#: ../plugin.py:2602
 msgid "show all clients"
 msgstr "показать все клиенты"
 
-#: ../plugin.py:2523
+#: ../plugin.py:2604
 msgid "show all readers"
 msgstr "показать все ридеры"
 
-#: ../plugin.py:2263
+#: ../plugin.py:2309
 msgid "show client info"
 msgstr "показать инфо клиента"
 
-#: ../plugin.py:2520
+#: ../plugin.py:2601
 msgid "show connected clients"
 msgstr "показать подключенные клиенты"
 
-#: ../plugin.py:2522
+#: ../plugin.py:2603
 msgid "show connected readers"
 msgstr "показать подключенные ридеры"
 
-#: ../plugin.py:2459
+#: ../plugin.py:2539
 msgid "show idle clients"
 msgstr "показать незанятые клиенты"
 
-#: ../plugin.py:2524
+#: ../plugin.py:2605
 msgid "show logfile"
 msgstr "показать журнал"
 
-#: ../plugin.py:2286
+#: ../plugin.py:2332
 msgid "show reader info"
 msgstr "показать ридер инфо"
 
-#: ../plugin.py:2290
+#: ../plugin.py:2336
 msgid "show readerstats"
 msgstr "показать ридер статистику"
 
-#: ../plugin.py:876
+#: ../plugin.py:922
 msgid "shutdown oscam"
 msgstr "отключение oscam"
 
-#: ../plugin.py:1593
+#: ../plugin.py:1639
 msgid "status"
 msgstr "статус"
 
-#: ../plugin.py:1844
-msgid "time on channel"
-msgstr "время на канале"
-
-#: ../plugin.py:1291
+#: ../plugin.py:1337
 msgid "type"
 msgstr "тип"
 
-#: ../OscamStatusSetup.py:500
+#: ../OscamStatusSetup.py:501
 msgid "use SSL"
 msgstr "использовать SSL"
 
-#: ../plugin.py:2599 ../plugin.py:2601
+#: ../plugin.py:2680 ../plugin.py:2682
 msgid "whats going on?"
 msgstr "а что с ним?"
 
-#: ../plugin.py:917
+#: ../plugin.py:963
 msgid "you can't shutdown/restart this oscam.\n"
 msgstr "вы не можете выключить/перезапустить этот oscam.\n"

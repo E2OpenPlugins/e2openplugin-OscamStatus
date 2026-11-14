@@ -38,5 +38,10 @@ Version 1.3.2
 Version 1.3.3
 * SSL Fix (Thanks Token for it)
 
-Version 1.3.4
-* Add a green "Display Entitlements" button to the locally connected readers screen.
+Version 1.4.0
+* Add a green "Display Entitlements" button to the locally connected readers screen. Will display the active entitlements and limit the expired ones to the last 2 more recent (some cards keep a full list of all expired entitlements, it's useless to display them all).
+* Fix the connected client screen that remains empty due to OScam layout changes. Also fix the information displayed on the yellow button.
+* Fix crash with connected readers yellow - yellow - yellow key press.
+* Some Python 2 to Python 3 improvements.
+* Strenghten the configuration file creation and reading.
+

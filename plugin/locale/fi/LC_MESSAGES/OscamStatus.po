@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plugins 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 12:29+0100\n"
+"POT-Creation-Date: 2026-11-14 18:14+0100\n"
 "PO-Revision-Date: 2021-12-08 15:15+0100\n"
 "Last-Translator: Tomppaa <http://www.huoltovalikko.com/>\n"
 "Language-Team: none\n"
@@ -13,58 +13,62 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0\n"
 
-#: ../plugin.py:806 ../plugin.py:913
+#: ../plugin.py:852 ../plugin.py:959
 #, python-format
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d päivät %d tunnit %d minuutit %d sekunnit"
 
-#: ../plugin.py:2250 ../plugin.py:2273
+#: ../plugin.py:2296 ../plugin.py:2319
 msgid "AU"
 msgstr "AU"
 
-#: ../plugin.py:1841
+#: ../plugin.py:1887
 #, fuzzy
 msgid "All Clients"
 msgstr "Asiakas"
 
-#: ../plugin.py:1360
+#: ../plugin.py:1406
 #, fuzzy
 msgid "All Readers @"
 msgstr "Lukija"
 
-#: ../plugin.py:1980
+#: ../plugin.py:2026
 msgid "CAID:Provid"
 msgstr ""
 
-#: ../plugin.py:2258 ../plugin.py:2260
+#: ../plugin.py:2304 ../plugin.py:2306
 msgid "Channel"
 msgstr "Kanava"
 
-#: ../plugin.py:1981
+#: ../plugin.py:2027
 msgid "Class"
 msgstr ""
 
-#: ../plugin.py:498 ../plugin.py:1768
+#: ../plugin.py:502 ../plugin.py:1814
 msgid "Client"
 msgstr "Asiakas"
 
-#: ../plugin.py:2538
+#: ../plugin.py:2619
 msgid "Configuration screen"
 msgstr "Määritykset näyttö"
 
-#: ../plugin.py:2361
+#: ../plugin.py:2434
 msgid "Connected Clients"
 msgstr "Näytä yhdistetyt Asiakkaat"
 
-#: ../plugin.py:2403
+#: ../plugin.py:2483
 msgid "Connected Readers"
 msgstr "Näytä yhdistetyt Lukijat"
 
-#: ../OscamStatusSetup.py:390
+#: ../OscamStatusSetup.py:391
 msgid "Do you really want to delete this entry?"
 msgstr "Haluatko todella poistaa tämän merkinnän?"
 
-#: ../plugin.py:2252 ../plugin.py:2275
+#: ../plugin.py:1890 ../plugin.py:2300
+msgid "Duration"
+msgstr ""
+
+#: ../plugin.py:2298 ../plugin.py:2321
 msgid "ECM Time"
 msgstr "ECM Aika"
 
@@ -72,70 +76,70 @@ msgstr "ECM Aika"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "ECM aika \"yhdistetty\"-valintaikkunassa"
 
-#: ../plugin.py:1977
+#: ../plugin.py:2023
 msgid "Entitlements: "
 msgstr ""
 
-#: ../plugin.py:2055
+#: ../plugin.py:2101
 msgid "Error: "
 msgstr ""
 
-#: ../plugin.py:1983
+#: ../plugin.py:2029
 msgid "Expire"
 msgstr ""
 
-#: ../plugin.py:1769
+#: ../plugin.py:1815
 msgid "IP"
 msgstr "IP"
 
-#: ../plugin.py:2254 ../plugin.py:2277
+#: ../plugin.py:2323
 msgid "Idle Time"
 msgstr "Epäaktiivinen"
 
-#: ../plugin.py:1201
+#: ../plugin.py:1247
 #, fuzzy
 msgid "Logfile"
 msgstr "Näytä Lokitiedosto"
 
-#: ../plugin.py:688
+#: ../plugin.py:734
 #, fuzzy
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Ehkä asettaa 'Kanalinfo = 0' oscam.conf"
 
-#: ../plugin.py:1979 ../plugin.py:2248 ../plugin.py:2271
+#: ../plugin.py:2025 ../plugin.py:2294 ../plugin.py:2317
 msgid "Name"
 msgstr "Name"
 
-#: ../plugin.py:2079
+#: ../plugin.py:2125
 msgid "No valid entitlements found"
 msgstr ""
 
-#: ../plugin.py:682
+#: ../plugin.py:728
 msgid "Oscam Download Error"
 msgstr "Oscam latausvirhe"
 
-#: ../OscamStatusSetup.py:496
+#: ../OscamStatusSetup.py:497
 msgid "Oscam Server Address"
 msgstr "Oscam Palvelin Osoite"
 
-#: ../OscamStatusSetup.py:495
+#: ../OscamStatusSetup.py:496
 msgid "Oscam Server Name"
 msgstr "Oscam Palvelin Nimi"
 
-#: ../OscamStatusSetup.py:477
+#: ../OscamStatusSetup.py:478
 msgid "Oscam Server Setup"
 msgstr "Oscam Palvelin Asetukset"
 
-#: ../OscamStatusSetup.py:347
+#: ../OscamStatusSetup.py:348
 msgid "Oscam Servers"
 msgstr "Oscam Palvelin"
 
-#: ../plugin.py:668 ../plugin.py:919 ../plugin.py:936 ../plugin.py:2599
-#: ../plugin.py:2601
+#: ../plugin.py:714 ../plugin.py:965 ../plugin.py:982 ../plugin.py:2680
+#: ../plugin.py:2682
 msgid "Oscam Status"
 msgstr "Tila"
 
-#: ../plugin.py:2571
+#: ../plugin.py:2652
 #, fuzzy
 msgid "Oscam Status "
 msgstr "Tila "
@@ -144,28 +148,28 @@ msgstr "Tila "
 msgid "Oscam Status globals Setup"
 msgstr "Oscam tila globaalit asetukset"
 
-#: ../plugin.py:689 ../plugin.py:699
+#: ../plugin.py:735 ../plugin.py:745
 msgid "Oscam XML Error"
 msgstr "Oscam XML Virhe"
 
-#: ../OscamStatusSetup.py:499
+#: ../OscamStatusSetup.py:500
 msgid "Password (httppwd)"
 msgstr "Salanan (httppwd)"
 
-#: ../plugin.py:2257 ../plugin.py:2280
+#: ../plugin.py:2303 ../plugin.py:2326
 #, fuzzy
 msgid "Picon"
 msgstr "Käytä Kuvakkeita"
 
-#: ../OscamStatusSetup.py:497
+#: ../OscamStatusSetup.py:498
 msgid "Port"
 msgstr "Portti"
 
-#: ../plugin.py:1290 ../plugin.py:1771 ../plugin.py:2281 ../plugin.py:2283
+#: ../plugin.py:1336 ../plugin.py:1817 ../plugin.py:2327 ../plugin.py:2329
 msgid "Protocol"
 msgstr "Protokolla"
 
-#: ../plugin.py:500 ../plugin.py:1289 ../plugin.py:2249
+#: ../plugin.py:504 ../plugin.py:1335 ../plugin.py:2295
 msgid "Reader"
 msgstr "Lukija"
 
@@ -177,15 +181,15 @@ msgstr "Palvelimen osoite aina IP Muodossa"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Näytä laajennus laajennusvalikossa"
 
-#: ../plugin.py:1982
+#: ../plugin.py:2028
 msgid "Start"
 msgstr ""
 
-#: ../plugin.py:1770 ../plugin.py:2272
+#: ../plugin.py:1816 ../plugin.py:2318
 msgid "Status"
 msgstr "Tila"
 
-#: ../plugin.py:1096
+#: ../plugin.py:1142
 msgid "Use Oscam Webif to see them all."
 msgstr "Käytä Oscam Webif nähdäksesi ne kaikki."
 
@@ -193,7 +197,7 @@ msgstr "Käytä Oscam Webif nähdäksesi ne kaikki."
 msgid "Use Picons"
 msgstr "Käytä kuvakkeita"
 
-#: ../OscamStatusSetup.py:498
+#: ../OscamStatusSetup.py:499
 msgid "Username (httpuser)"
 msgstr "Nimi (httpuser)"
 
@@ -201,186 +205,181 @@ msgstr "Nimi (httpuser)"
 msgid "X-Offset (move left)"
 msgstr "X-Siirtymä (siirrä vasemmalle)"
 
-#: ../plugin.py:2083
+#: ../plugin.py:2129
 msgid "[ LAST 2 EXPIRED ENTITLEMENTS ]"
 msgstr ""
 
-#: ../plugin.py:2068
+#: ../plugin.py:2114
 #, python-format
 msgid "[ VALID ENTITLEMENTS (%d) ]"
 msgstr ""
 
-#: ../plugin.py:1595
+#: ../plugin.py:1641
 msgid "avgtime"
 msgstr "kesk.aika"
 
-#: ../plugin.py:1592
+#: ../plugin.py:1638
 #, fuzzy
 msgid "caid:provid:srvid"
 msgstr "caid:srvid"
 
-#: ../plugin.py:1591
+#: ../plugin.py:1637
 msgid "channelname"
 msgstr "Kanava"
 
-#: ../OscamStatusSetup.py:350
+#: ../OscamStatusSetup.py:351
 msgid "delete"
 msgstr "poista"
 
-#: ../plugin.py:1774
+#: ../plugin.py:1820
 msgid "disable client"
 msgstr "Pysäytä asiakas"
 
-#: ../plugin.py:1295
+#: ../plugin.py:1341
 msgid "disable reader"
 msgstr "Pysäytä lukija"
 
-#: ../plugin.py:2288
+#: ../plugin.py:2334
 msgid "display entitlements"
 msgstr ""
 
-#: ../OscamStatusSetup.py:349
+#: ../OscamStatusSetup.py:350
 msgid "edit"
 msgstr "muokata"
 
-#: ../plugin.py:1776
+#: ../plugin.py:1822
 msgid "enable client"
 msgstr "Käynnistä asiakas"
 
-#: ../plugin.py:1297
+#: ../plugin.py:1343
 msgid "enable reader"
 msgstr "Käynnistä lukija"
 
-#: ../plugin.py:2269 ../plugin.py:2457
+#: ../plugin.py:2315 ../plugin.py:2537
 msgid "hide idle clients"
 msgstr "vain aktiiviset Asiakkaat "
 
-#: ../plugin.py:1594
+#: ../plugin.py:1640
 msgid "lasttime"
 msgstr "akt.aika"
 
-#: ../plugin.py:626
+#: ../plugin.py:672
 #, fuzzy
 msgid "loading..."
 msgstr "Ladataan..."
 
-#: ../OscamStatusSetup.py:348
+#: ../OscamStatusSetup.py:349
 msgid "new"
 msgstr "uusi"
 
-#: ../plugin.py:681
+#: ../plugin.py:727
 msgid "no xml"
 msgstr "ei xml"
 
-#: ../plugin.py:539 ../plugin.py:552 ../plugin.py:560
+#: ../plugin.py:546 ../plugin.py:559 ../plugin.py:567
 msgid "not available"
 msgstr ""
 
-#: ../plugin.py:1096
+#: ../plugin.py:1142
 #, fuzzy
 msgid "providers on this card max. display is:"
 msgstr "tämän kortin tarjoajat enintään vastaanotinta:"
 
-#: ../plugin.py:926
+#: ../plugin.py:972
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "Käynnistetäänkö Oscam @%s uudelleen?"
 
-#: ../plugin.py:932
+#: ../plugin.py:978
 #, fuzzy, python-format
 msgid "really shutdown oscam@%s?"
 msgstr "Lopetitko todella Oscamin @%s?"
 
-#: ../plugin.py:1590
+#: ../plugin.py:1636
 msgid "req."
 msgstr "Pyyntö."
 
-#: ../plugin.py:874
+#: ../plugin.py:920
 msgid "restart oscam"
 msgstr "Käynnistä Oscam uudelleen"
 
-#: ../OscamStatusSetup.py:167 ../OscamStatusSetup.py:478
+#: ../OscamStatusSetup.py:167 ../OscamStatusSetup.py:479
 msgid "return"
 msgstr "takaisin"
 
-#: ../OscamStatusSetup.py:168 ../OscamStatusSetup.py:479
+#: ../OscamStatusSetup.py:168 ../OscamStatusSetup.py:480
 msgid "save"
 msgstr "Tallenna"
 
-#: ../plugin.py:2525
+#: ../plugin.py:2606
 msgid "server info"
 msgstr "Palvelin tiedot"
 
-#: ../plugin.py:2526
+#: ../plugin.py:2607
 msgid "server restart/shutdown"
 msgstr "käynnistä/pysäytä palvelin"
 
-#: ../plugin.py:2527
+#: ../plugin.py:2608
 msgid "server setup"
 msgstr "Palvelin asetukset"
 
-#: ../plugin.py:2521
+#: ../plugin.py:2602
 msgid "show all clients"
 msgstr "Näytä kaikki Asiakkaat"
 
-#: ../plugin.py:2523
+#: ../plugin.py:2604
 msgid "show all readers"
 msgstr "Näytä kaikki Lukijat"
 
-#: ../plugin.py:2263
+#: ../plugin.py:2309
 msgid "show client info"
 msgstr "näytä Asiakas tiedot"
 
-#: ../plugin.py:2520
+#: ../plugin.py:2601
 msgid "show connected clients"
 msgstr "Näytä yhdistetyt asiakkaat"
 
-#: ../plugin.py:2522
+#: ../plugin.py:2603
 msgid "show connected readers"
 msgstr "Näytä yhdistetyt Lukijat"
 
-#: ../plugin.py:2459
+#: ../plugin.py:2539
 msgid "show idle clients"
 msgstr "Näytä kaikki Asiakkaat"
 
-#: ../plugin.py:2524
+#: ../plugin.py:2605
 msgid "show logfile"
 msgstr "Näytä Loki tiedosto"
 
-#: ../plugin.py:2286
+#: ../plugin.py:2332
 msgid "show reader info"
 msgstr "Lukijan tiedot"
 
-#: ../plugin.py:2290
+#: ../plugin.py:2336
 msgid "show readerstats"
 msgstr "Lukijantilastot"
 
-#: ../plugin.py:876
+#: ../plugin.py:922
 msgid "shutdown oscam"
 msgstr "Lopeta Oscam"
 
-#: ../plugin.py:1593
+#: ../plugin.py:1639
 msgid "status"
 msgstr "tila"
 
-#: ../plugin.py:1844
-#, fuzzy
-msgid "time on channel"
-msgstr "aika kanavalla"
-
-#: ../plugin.py:1291
+#: ../plugin.py:1337
 msgid "type"
 msgstr "tyyppi"
 
-#: ../OscamStatusSetup.py:500
+#: ../OscamStatusSetup.py:501
 msgid "use SSL"
 msgstr "käytä SSL"
 
-#: ../plugin.py:2599 ../plugin.py:2601
+#: ../plugin.py:2680 ../plugin.py:2682
 msgid "whats going on?"
 msgstr "mitä tapahtuu?"
 
-#: ../plugin.py:917
+#: ../plugin.py:963
 #, fuzzy
 msgid "you can't shutdown/restart this oscam.\n"
 msgstr "Oscamia ei voida pysäyttää / käynnistää uudelleen: \n"

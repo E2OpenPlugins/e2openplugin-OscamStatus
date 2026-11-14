@@ -61,11 +61,17 @@ except ImportError: # python 2 fallback
 from os import path, listdir
 import re
 
+try:
+	from html import unescape
+except ImportError: # python 2 fallback
+	from HTMLParser import HTMLParser
+	unescape = HTMLParser().unescape
+
 from .OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfigScreen, \
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
-VERSION = "1.3.4"
+VERSION = "1.4.0"
 TIMERTICK = 10000
 
 FULLHD = False
@@ -353,9 +359,6 @@ class ReaderServiceDataScreen(Screen):
 			</screen>""" % (dlg_xh(720))
 
 	def __init__(self, session, r):
-		def compare(a, b):
-			return cmp(a[0], b[0]) or cmp(a[1], b[1])
-
 		self.skin = ReaderServiceDataScreen.skin
 		self.session = session
 		Screen.__init__(self, session)
@@ -367,7 +370,7 @@ class ReaderServiceDataScreen(Screen):
 
 		self["title"] = StaticText(str(len(tmp)) + ' Services@' + r[0].label + '(' + r[0].hostaddress + ')')
 
-		self["data"] = List(sorted(tmp, compare))
+		self["data"] = List(sorted(tmp, key=lambda x: (x[0], x[1])))
 		self["actions"] = ActionMap(["OkCancelActions"],
 		{
 			"cancel": self.close
@@ -495,6 +498,7 @@ class ClientDataScreen(Screen):
 		self["KeyYellow"].hide()
 
 		if type == "clients":
+			self.fetchLiveClientDetails(oServer, data)
 			self["title"].setText(_("Client") + " " + data.name + "@" + oServer.serverName)
 		else:
 			self["title"].setText(_("Reader") + " " + data.name + "@" + oServer.serverName)
@@ -512,7 +516,10 @@ class ClientDataScreen(Screen):
 		maxh = 0.0
 		for i in range(20):
 			self["progress%d" % i] = ProgressBar()
-			self.ecmhistory[i] = float(self.ecmhistory[i])
+			try:
+				self.ecmhistory[i] = float(self.ecmhistory[i])
+			except ValueError:
+				self.ecmhistory[i] = 0.0
 			if self.ecmhistory[i] > maxh:
 				maxh = self.ecmhistory[i]
 		if maxh < 1000.0:
@@ -581,6 +588,47 @@ class ClientDataScreen(Screen):
 		self.onExecBegin.append(self.setProgress)
 
 		self.onLayoutFinish.append(self.LayoutFinished)
+        
+	def fetchLiveClientDetails(self, oServer, data):
+		protocol = "https://" if oServer.useSSL else "http://"
+		url = protocol + oServer.serverIP + ":" + oServer.serverPort + "/oscamapi.html?part=status"
+
+		PasswdMgr = HTTPPasswordMgrWithDefaultRealm()
+		PasswdMgr.add_password(None, url, oServer.username, oServer.password)
+		handler = HTTPDigestAuthHandler(PasswdMgr)
+		opener = build_opener(HTTPHandler, handler)
+		install_opener(opener)
+
+		try:
+			raw = urlopen(Request(url), timeout=3).read()
+			dom = xml.dom.minidom.parseString(raw)
+			for node in dom.getElementsByTagName("client"):
+				if str(node.getAttribute("name")) == data.name and str(node.getAttribute("type")) == "c":
+					data.au = str(node.getAttribute("au"))
+					data.protocolext = str(node.getAttribute("protocolext"))
+					for snode in node.childNodes:
+						if snode.nodeName == "request":
+							data.caid = str(snode.getAttribute("caid")) or "n/a"
+							data.provid = str(snode.getAttribute("provid")) or "n/a"
+							data.srvid = str(snode.getAttribute("srvid")) or "n/a"
+							data.ecmtime = str(snode.getAttribute("ecmtime"))
+							data.ecmhistory = str(snode.getAttribute("ecmhistory"))
+							data.answered = str(snode.getAttribute("answered"))
+							if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
+								data.service = str(snode.firstChild.nodeValue.strip())
+						elif snode.nodeName == "times":
+							data.login = str(snode.getAttribute("login"))
+							data.online = str(snode.getAttribute("online"))
+							data.idle = str(snode.getAttribute("idle"))
+						elif snode.nodeName == "connection":
+							data.port = str(snode.getAttribute("port"))
+							if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
+								conn_val = str(snode.firstChild.nodeValue.strip())
+								if "online" not in data.connection.lower():
+									data.connection = conn_val
+					break
+		except Exception:
+			pass
 
 	def LayoutFinished(self):
 		x, h = dlg_xh(self.instance.size().width())
@@ -651,11 +699,15 @@ class DownloadXMLScreen(Screen):
 		self.downloadXML()
 
 	def gotThreadMsg(self, msg):
-#		try:
 		msg = getPage2.Message.pop()
-#		except IndexError:
-#			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
-#			return
+
+		# If the screen is already close while downloading, we ignore the return
+		if getattr(self, "session", None) is None:
+			if self.gotThreadMsg in getPage2.MessagePump.recv_msg.get():
+				getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
+			self.download = False
+			return
+
 
 		if msg[0] == THREAD_ERROR:
 			getPage2.MessagePump.recv_msg.get().remove(self.gotThreadMsg)
@@ -683,11 +735,16 @@ class DownloadXMLScreen(Screen):
 				self.close(1)
 				return
 			try:
-				dom = xml.dom.minidom.parseString(self.data)
-			except:
-				info = self.session.open(MessageBox, _("Maybe set 'chaninfo = 0' at oscam.conf"), MessageBox.TYPE_ERROR)
-				info.setTitle(_("Oscam XML Error"))
-				self.close(1)
+				# Nettoyage des caractères invalides et des '&' non échappés dans les noms de chaînes
+				clean_xml = self.data.decode("utf-8", errors="ignore") if isinstance(self.data, bytes) else self.data
+				clean_xml = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", clean_xml)
+				clean_xml = re.sub(r"&(?!amp;|lt;|gt;|quot;|apos;|#)", "&amp;", clean_xml)
+				dom = xml.dom.minidom.parseString(clean_xml.encode("utf-8"))
+			except Exception:
+				if getattr(self, "session", None) is not None:
+					info = self.session.open(MessageBox, _("Maybe set 'chaninfo = 0' at oscam.conf"), MessageBox.TYPE_ERROR)
+					info.setTitle(_("Oscam XML Error"))
+					self.close(1)
 				return
 			node = dom.getElementsByTagName("error")
 			if node:
@@ -1067,7 +1124,7 @@ class ReaderDataScreen(DownloadXMLScreen):
 										p.provid = str(snode3.getAttribute("provid"))
 										if snode3.firstChild and snode3.firstChild.nodeType == snode3.firstChild.TEXT_NODE:
 											# HACK! on different platforms 'ü' is encoded differently?
-											p.service = str(snode3.firstChild.nodeValue.strip()).replace("&#195;&#188;", "ü").replace("&#451;&#444;", "ü").replace("&amp;", "&")
+											p.service = unescape(str(snode3.firstChild.nodeValue.strip())).replace("&#195;&#188;", "ü").replace("&#451;&#444;", "ü").replace("&amp;", "&")
 											#p.service = unescape(str(snode3.firstChild.nodeValue.strip())).replace("&#451;&#444;", "ü")
 										c.providers.append(p)
 							if snode2.nodeName == "nodes":
@@ -1191,7 +1248,7 @@ class LogDataScreen(DownloadXMLScreen):
 			d = str(node.firstChild.nodeValue.strip())
 			# in the OScam is still a small bug, in the log is a "'",
 			# Here the XML parser exits and is replaced by a "'" ...
-		d = d.replace("\xb4", "\x27")
+		d = d.replace("\u00b4", "'")
 		return d
 
 	def dlAction(self):
@@ -1290,7 +1347,7 @@ class ReaderlistScreen(DownloadXMLScreen):
 		self["label1"] = StaticText(_("Protocol"))
 		self["label2"] = StaticText(_("type"))
 
-		self["data"] = List(list)
+		self["data"] = List([])
 		self["ButtonRed"] = Pixmap()
 		self["ButtonRedtext"] = Button(_("disable reader"))
 		self["ButtonGreen"] = Pixmap()
@@ -1602,7 +1659,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["EMMskipped"] = Label("")
 		self["EMMblocked"] = Label("")
 
-		self["data"] = List(list)
+		self["data"] = List([])
 
 		self["actions"] = ActionMap(["OkCancelActions"],
 		{
@@ -1841,7 +1898,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self.setTitle(_("All Clients") + "@" + self.oServer.serverName)
 		for index, u in enumerate(self.users):
 			if u.timeonchannel != "n/a":
-				self["label1"].setText(_("time on channel"))
+				self["label1"].setText(_("Duration"))
 				u.ip = elapsedTime(u.timeonchannel, "%02d:%02d:%02d")
 			if "disabled" in u.status:
 				list.append((self.icondis, u.name, u.ip, u.status, u.protocol, index))
@@ -2251,7 +2308,7 @@ class StatusDataScreen(DownloadXMLScreen):
 			if USEECM.value:
 				self["label3"] = StaticText(_("ECM Time"))
 			else:
-				self["label3"] = StaticText(_("Idle Time"))
+				self["label3"] = StaticText(_("Duration"))
 
 			if USEPICONS.value:
 				self["label4"] = StaticText(_("Picon"))
@@ -2316,38 +2373,65 @@ class StatusDataScreen(DownloadXMLScreen):
 
 	def parseXML(self, dom):
 		d = []
-		for elem in dom.getElementsByTagName("status"):
-			for node in elem.getElementsByTagName("client"):
-				c = client()
-				c.type = str(node.getAttribute("type"))
-				c.name = str(node.getAttribute("name"))
-				c.protocol = str(node.getAttribute("protocol"))
-				c.protocolext = str(node.getAttribute("protocolext"))
-				c.au = str(node.getAttribute("au"))
+		for node in dom.getElementsByTagName("client"):
+			c = client()
+			c.type = str(node.getAttribute("type"))
+			c.name = str(node.getAttribute("name"))
+			c.protocol = str(node.getAttribute("protocol"))
+			c.protocolext = str(node.getAttribute("protocolext"))
+			c.au = str(node.getAttribute("au"))
 
-				for snode in node.childNodes:
-					if snode.nodeName == "request":
-						c.caid = str(snode.getAttribute("caid"))
-						c.provid = str(snode.getAttribute("provid"))
-						c.srvid = str(snode.getAttribute("srvid"))
-						c.ecmtime = str(snode.getAttribute("ecmtime"))
-						c.ecmhistory = str(snode.getAttribute("ecmhistory"))
-						c.answered = str(snode.getAttribute("answered"))
-						if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
-							c.service = str(snode.firstChild.nodeValue.strip())
+			for snode in node.childNodes:
+				if snode.nodeName == "request":
+					c.caid = str(snode.getAttribute("caid"))
+					c.provid = str(snode.getAttribute("provid"))
+					c.srvid = str(snode.getAttribute("srvid"))
+					c.ecmtime = str(snode.getAttribute("ecmtime"))
+					c.ecmhistory = str(snode.getAttribute("ecmhistory"))
+					c.answered = str(snode.getAttribute("answered"))
+					if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
+						c.service = str(snode.firstChild.nodeValue.strip())
 
-					if snode.nodeName == "times":
-						c.login = str(snode.getAttribute("login"))
-						c.online = str(snode.getAttribute("online"))
-						c.idle = str(snode.getAttribute("idle"))
+				if snode.nodeName == "times":
+					c.login = str(snode.getAttribute("login"))
+					c.online = str(snode.getAttribute("online"))
+					c.idle = str(snode.getAttribute("idle"))
 
-					if snode.nodeName == "connection":
-						c.ip = str(snode.getAttribute("ip"))
-						c.port = str(snode.getAttribute("port"))
-						if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
-							c.connection = str(snode.firstChild.nodeValue.strip())
-				d.append(c)
+				if snode.nodeName == "connection":
+					c.ip = str(snode.getAttribute("ip"))
+					c.port = str(snode.getAttribute("port"))
+					if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
+						c.connection = str(snode.firstChild.nodeValue.strip())
+			d.append(c)
+
+		# Fallback : if OScam returns <users> instead of <client type="c">
+		has_clients = any(x.type == "c" for x in d)
+		if not has_clients:
+			for node in dom.getElementsByTagName("user"):
+				status = str(node.getAttribute("status"))
+				if "connected" in status.lower() or "online" in status.lower():
+					c = client()
+					c.type = "c"
+					c.name = str(node.getAttribute("name"))
+					c.protocol = str(node.getAttribute("protocol"))
+					c.protocolext = ""
+					c.ip = str(node.getAttribute("ip"))
+					c.port = ""
+					c.connection = status
+					c.au = "0"
+					c.idle = "0"
+					c.ecmtime = ""
+					c.ecmhistory = ""
+					c.answered = ""
+					for stats_node in node.getElementsByTagName("stats"):
+						for snode in stats_node.childNodes:
+							if snode.nodeName == "cwlastresptime" and snode.firstChild:
+								c.ecmtime = str(snode.firstChild.nodeValue.strip())
+							if snode.nodeName == "timeonchannel" and snode.firstChild:
+								c.idle = str(snode.firstChild.nodeValue.strip())
+					d.append(c)
 		return d
+
 
 	def dlAction(self):
 		dom = xml.dom.minidom.parseString(self.data)
@@ -2359,45 +2443,52 @@ class StatusDataScreen(DownloadXMLScreen):
 		self.picon = ePicLoad()
 		if self.type == "clients":
 			self.setTitle(_("Connected Clients") + "@" + self.oServer.serverName)
+			GREEN = r"\c0000ff00"
+			WHITE = r"\c00ffffff"
+
 			for index, c in enumerate(self.status):
 				if c.type == "c":
 					if USEECM.value:
 						idle = c.ecmtime
 					else:
-						idle = elapsedTime(c.idle, "%02d:%02d:%02d")
+						idle = elapsedTime(c.idle, "%02d:%02d:%02d") if c.idle and c.idle != "0" else ""
+
+					# Displays the player used, or the IP address if it is not available in userstats
+					col1 = c.answered if c.answered != "n/a" and c.answered != "" else c.ip
+					# Displays the chain or the protocol if the chain is not in userstats
+					col_last = c.service if c.service != "n/a" and c.service != "" else c.protocol
+					au_icon = self.auEntrys.get(c.au, self.auEntrys["0"])
+
+					# If the client is actively watching a channel (status="online"), it is colored green.
+					is_active = "online" in c.connection.lower()
+					if is_active:
+						name_txt = GREEN + c.name + WHITE
+						col1_txt = GREEN + col1 + WHITE
+						idle_txt = GREEN + str(idle) + WHITE
+						last_txt = GREEN + col_last + WHITE
+					else:
+						name_txt = c.name
+						col1_txt = col1
+						idle_txt = idle
+						last_txt = col_last
+
 					if USEPICONS.value:
 						picon = getPicon(c.service)
+						png = None
 						if picon != "":
-							psw = 50
-							psh = 30
-							if FULLHD:
-								psw = 110
-								psh = 55
+							psw = 110 if FULLHD else 50
+							psh = 55 if FULLHD else 30
 							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
 							self.picon.startDecode(picon, 0, 0, False)
 							png = self.picon.getData()
 
-					if self.hideIdle:
-						if c.answered != "":
-							if USEPICONS.value:
-								dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, png, c.service, index))
-							else:
-								dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index))
+					if self.hideIdle and not is_active and (c.ecmtime == "" or c.ecmtime == "0"):
+						continue
+
+					if USEPICONS.value:
+						dlist.append((name_txt, col1_txt, au_icon, idle_txt, png, last_txt, index))
 					else:
-						if USEPICONS.value:
-							picon = getPicon(c.service)
-							if picon != "":
-								psw = 50
-								psh = 30
-								if FULLHD:
-									psw = 110
-									psh = 55
-								self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
-								self.picon.startDecode(picon, 0, 0, False)
-								png = self.picon.getData()
-							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, png, c.service, index))
-						else:
-							dlist.append((c.name, c.answered, self.auEntrys[c.au], idle, c.service, index))
+						dlist.append((name_txt, col1_txt, au_icon, idle_txt, last_txt, index))
 
 		elif self.type == "readers":
 			self.setTitle(_("Connected Readers") + "@" + self.oServer.serverName)
@@ -2458,9 +2549,11 @@ class StatusDataScreen(DownloadXMLScreen):
 		else:
 			self["ButtonBluetext"].setText(_("show idle clients"))
 		self.hideIdle = not self.hideIdle
+		self.oldIndex = 0
 		self.setList()
 
 	def backCB(self, retval):
+		self.downloadXML()
 		self.timer.start(TIMERTICK)
 
 # mainScreen...
@@ -2548,7 +2641,7 @@ class OscamStatus(Screen):
 		returnValue = self["menu"].getCurrent()[2]
 		if returnValue != None:
 			if returnValue == "clients":
-				self.session.open(StatusDataScreen, "clients", "status", self.oServer)
+				self.session.open(StatusDataScreen, "clients", "userstats", self.oServer)
 			elif returnValue == "allClients":
 				self.session.open(UserstatsScreen, "userstats", self.oServer)
 			elif returnValue == "readers":
