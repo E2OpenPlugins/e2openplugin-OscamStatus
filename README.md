@@ -45,3 +45,18 @@ Version 1.4.0
 * Some Python 2 to Python 3 improvements.
 * Strenghten the configuration file creation and reading.
 
+Version 1.4.1
+Improve picon & FullHD layouts, and fix Python 3 issues
+
+Features & UI improvements:
+* Overhaul FullHD ReaderstatsScreen picon skin (1480px width, larger fonts, 110x55 scaled picons, and wider caid:provid:srvid column for Nagra).
+* Improve Connected Clients view by falling back to userstats when <client> nodes are absent, enriching online clients with live channel/reader data from part=status, highlighting active clients in green, and displaying channel duration.
+* Fetch live client details (CAID, ProvID, SrvID, service, ECM history) from part=status when opening ClientDataScreen.
+
+Picon & Python 3 bugfixes:
+* Add UTF-8 Service Name Picon (UTF-8 SNP via sanitizeFilename) support alongside classic ASCII SNP, strip CAID@PROVID and provider prefixes, search additional mount points, and add multi-step picon fallback for Connected Readers.
+* Replace async ePicLoad with synchronous cached LoadPixmap and add BT_SCALE|BT_KEEP_ASPECT_RATIO flags for reliable picon rendering under Python 3.
+* Improve SNP picon resolution (strip CAID@PROVID and provider prefixes, search additional mount points) and add multi-step picon fallback for Connected Readers.
+* Replace deprecated Python 2 cmp() sorting in ReaderServiceDataScreen with key=lambda sorting.
+* Replace string identity comparisons (is / is not) with equality operators (== / !=) and None checks with is / is not None.
+* Sanitize invalid XML tokens and unescaped ampersands before minidom parsing, and guard against closed screen sessions in DownloadXMLScreen.gotThreadMsg.

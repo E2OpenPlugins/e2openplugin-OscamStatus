@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 18:14+0100\n"
+"POT-Creation-Date: 2026-11-15 14:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,48 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugin.py:852 ../plugin.py:959
+#: ../plugin.py:863 ../plugin.py:970
 #, python-format
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr ""
 
-#: ../plugin.py:2296 ../plugin.py:2319
+#: ../plugin.py:2302 ../plugin.py:2325
 msgid "AU"
 msgstr ""
 
-#: ../plugin.py:1887
+#: ../plugin.py:1898
 msgid "All Clients"
 msgstr ""
 
-#: ../plugin.py:1406
+#: ../plugin.py:1417
 msgid "All Readers @"
 msgstr ""
 
-#: ../plugin.py:2026
+#: ../plugin.py:2037
 msgid "CAID:Provid"
 msgstr ""
 
-#: ../plugin.py:2304 ../plugin.py:2306
+#: ../plugin.py:2310 ../plugin.py:2312
 msgid "Channel"
 msgstr ""
 
-#: ../plugin.py:2027
+#: ../plugin.py:2038
 msgid "Class"
 msgstr ""
 
-#: ../plugin.py:502 ../plugin.py:1814
+#: ../plugin.py:502 ../plugin.py:1825
 msgid "Client"
 msgstr ""
 
-#: ../plugin.py:2619
+#: ../plugin.py:2626
 msgid "Configuration screen"
 msgstr ""
 
-#: ../plugin.py:2434
+#: ../plugin.py:2440
 msgid "Connected Clients"
 msgstr ""
 
-#: ../plugin.py:2483
+#: ../plugin.py:2489
 msgid "Connected Readers"
 msgstr ""
 
@@ -66,11 +66,11 @@ msgstr ""
 msgid "Do you really want to delete this entry?"
 msgstr ""
 
-#: ../plugin.py:1890 ../plugin.py:2300
+#: ../plugin.py:1901 ../plugin.py:2306
 msgid "Duration"
 msgstr ""
 
-#: ../plugin.py:2298 ../plugin.py:2321
+#: ../plugin.py:2304 ../plugin.py:2327
 msgid "ECM Time"
 msgstr ""
 
@@ -78,43 +78,43 @@ msgstr ""
 msgid "ECM Time in \"connected\" Dialog"
 msgstr ""
 
-#: ../plugin.py:2023
+#: ../plugin.py:2034
 msgid "Entitlements: "
 msgstr ""
 
-#: ../plugin.py:2101
+#: ../plugin.py:2107
 msgid "Error: "
 msgstr ""
 
-#: ../plugin.py:2029
+#: ../plugin.py:2040
 msgid "Expire"
 msgstr ""
 
-#: ../plugin.py:1815
+#: ../plugin.py:1826
 msgid "IP"
 msgstr ""
 
-#: ../plugin.py:2323
+#: ../plugin.py:2329
 msgid "Idle Time"
 msgstr ""
 
-#: ../plugin.py:1247
+#: ../plugin.py:1258
 msgid "Logfile"
 msgstr ""
 
-#: ../plugin.py:734
+#: ../plugin.py:745
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr ""
 
-#: ../plugin.py:2025 ../plugin.py:2294 ../plugin.py:2317
+#: ../plugin.py:2036 ../plugin.py:2300 ../plugin.py:2323
 msgid "Name"
 msgstr ""
 
-#: ../plugin.py:2125
+#: ../plugin.py:2131
 msgid "No valid entitlements found"
 msgstr ""
 
-#: ../plugin.py:728
+#: ../plugin.py:734
 msgid "Oscam Download Error"
 msgstr ""
 
@@ -134,12 +134,12 @@ msgstr ""
 msgid "Oscam Servers"
 msgstr ""
 
-#: ../plugin.py:714 ../plugin.py:965 ../plugin.py:982 ../plugin.py:2680
-#: ../plugin.py:2682
+#: ../plugin.py:720 ../plugin.py:976 ../plugin.py:993 ../plugin.py:2687
+#: ../plugin.py:2689
 msgid "Oscam Status"
 msgstr ""
 
-#: ../plugin.py:2652
+#: ../plugin.py:2659
 msgid "Oscam Status "
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Oscam Status globals Setup"
 msgstr ""
 
-#: ../plugin.py:735 ../plugin.py:745
+#: ../plugin.py:746 ../plugin.py:756
 msgid "Oscam XML Error"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr ""
 msgid "Password (httppwd)"
 msgstr ""
 
-#: ../plugin.py:2303 ../plugin.py:2326
+#: ../plugin.py:2309 ../plugin.py:2332
 msgid "Picon"
 msgstr ""
 
@@ -163,11 +163,11 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
-#: ../plugin.py:1336 ../plugin.py:1817 ../plugin.py:2327 ../plugin.py:2329
+#: ../plugin.py:1347 ../plugin.py:1828 ../plugin.py:2333 ../plugin.py:2335
 msgid "Protocol"
 msgstr ""
 
-#: ../plugin.py:504 ../plugin.py:1335 ../plugin.py:2295
+#: ../plugin.py:504 ../plugin.py:1346 ../plugin.py:2301
 msgid "Reader"
 msgstr ""
 
@@ -179,15 +179,15 @@ msgstr ""
 msgid "Show Plugin in Extensions Menu"
 msgstr ""
 
-#: ../plugin.py:2028
+#: ../plugin.py:2039
 msgid "Start"
 msgstr ""
 
-#: ../plugin.py:1816 ../plugin.py:2318
+#: ../plugin.py:1827 ../plugin.py:2324
 msgid "Status"
 msgstr ""
 
-#: ../plugin.py:1142
+#: ../plugin.py:1153
 msgid "Use Oscam Webif to see them all."
 msgstr ""
 
@@ -203,24 +203,24 @@ msgstr ""
 msgid "X-Offset (move left)"
 msgstr ""
 
-#: ../plugin.py:2129
+#: ../plugin.py:2135
 msgid "[ LAST 2 EXPIRED ENTITLEMENTS ]"
 msgstr ""
 
-#: ../plugin.py:2114
+#: ../plugin.py:2120
 #, python-format
 msgid "[ VALID ENTITLEMENTS (%d) ]"
 msgstr ""
 
-#: ../plugin.py:1641
+#: ../plugin.py:1652
 msgid "avgtime"
 msgstr ""
 
-#: ../plugin.py:1638
+#: ../plugin.py:1649
 msgid "caid:provid:srvid"
 msgstr ""
 
-#: ../plugin.py:1637
+#: ../plugin.py:1648
 msgid "channelname"
 msgstr ""
 
@@ -228,15 +228,15 @@ msgstr ""
 msgid "delete"
 msgstr ""
 
-#: ../plugin.py:1820
+#: ../plugin.py:1831
 msgid "disable client"
 msgstr ""
 
-#: ../plugin.py:1341
+#: ../plugin.py:1352
 msgid "disable reader"
 msgstr ""
 
-#: ../plugin.py:2334
+#: ../plugin.py:2340
 msgid "display entitlements"
 msgstr ""
 
@@ -244,23 +244,23 @@ msgstr ""
 msgid "edit"
 msgstr ""
 
-#: ../plugin.py:1822
+#: ../plugin.py:1833
 msgid "enable client"
 msgstr ""
 
-#: ../plugin.py:1343
+#: ../plugin.py:1354
 msgid "enable reader"
 msgstr ""
 
-#: ../plugin.py:2315 ../plugin.py:2537
+#: ../plugin.py:2321 ../plugin.py:2543
 msgid "hide idle clients"
 msgstr ""
 
-#: ../plugin.py:1640
+#: ../plugin.py:1651
 msgid "lasttime"
 msgstr ""
 
-#: ../plugin.py:672
+#: ../plugin.py:674
 msgid "loading..."
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "new"
 msgstr ""
 
-#: ../plugin.py:727
+#: ../plugin.py:733
 msgid "no xml"
 msgstr ""
 
@@ -276,25 +276,25 @@ msgstr ""
 msgid "not available"
 msgstr ""
 
-#: ../plugin.py:1142
+#: ../plugin.py:1153
 msgid "providers on this card max. display is:"
 msgstr ""
 
-#: ../plugin.py:972
+#: ../plugin.py:983
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr ""
 
-#: ../plugin.py:978
+#: ../plugin.py:989
 #, python-format
 msgid "really shutdown oscam@%s?"
 msgstr ""
 
-#: ../plugin.py:1636
+#: ../plugin.py:1647
 msgid "req."
 msgstr ""
 
-#: ../plugin.py:920
+#: ../plugin.py:931
 msgid "restart oscam"
 msgstr ""
 
@@ -306,63 +306,63 @@ msgstr ""
 msgid "save"
 msgstr ""
 
-#: ../plugin.py:2606
+#: ../plugin.py:2613
 msgid "server info"
 msgstr ""
 
-#: ../plugin.py:2607
+#: ../plugin.py:2614
 msgid "server restart/shutdown"
 msgstr ""
 
-#: ../plugin.py:2608
+#: ../plugin.py:2615
 msgid "server setup"
 msgstr ""
 
-#: ../plugin.py:2602
+#: ../plugin.py:2609
 msgid "show all clients"
 msgstr ""
 
-#: ../plugin.py:2604
+#: ../plugin.py:2611
 msgid "show all readers"
 msgstr ""
 
-#: ../plugin.py:2309
+#: ../plugin.py:2315
 msgid "show client info"
 msgstr ""
 
-#: ../plugin.py:2601
+#: ../plugin.py:2608
 msgid "show connected clients"
 msgstr ""
 
-#: ../plugin.py:2603
+#: ../plugin.py:2610
 msgid "show connected readers"
 msgstr ""
 
-#: ../plugin.py:2539
+#: ../plugin.py:2545
 msgid "show idle clients"
 msgstr ""
 
-#: ../plugin.py:2605
+#: ../plugin.py:2612
 msgid "show logfile"
 msgstr ""
 
-#: ../plugin.py:2332
+#: ../plugin.py:2338
 msgid "show reader info"
 msgstr ""
 
-#: ../plugin.py:2336
+#: ../plugin.py:2342
 msgid "show readerstats"
 msgstr ""
 
-#: ../plugin.py:922
+#: ../plugin.py:933
 msgid "shutdown oscam"
 msgstr ""
 
-#: ../plugin.py:1639
+#: ../plugin.py:1650
 msgid "status"
 msgstr ""
 
-#: ../plugin.py:1337
+#: ../plugin.py:1348
 msgid "type"
 msgstr ""
 
@@ -370,10 +370,10 @@ msgstr ""
 msgid "use SSL"
 msgstr ""
 
-#: ../plugin.py:2680 ../plugin.py:2682
+#: ../plugin.py:2687 ../plugin.py:2689
 msgid "whats going on?"
 msgstr ""
 
-#: ../plugin.py:963
+#: ../plugin.py:974
 msgid "you can't shutdown/restart this oscam.\n"
 msgstr ""

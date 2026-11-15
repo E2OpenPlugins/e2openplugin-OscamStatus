@@ -28,6 +28,11 @@ from Components.Sources.StaticText import StaticText
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend, MultiContentEntryPixmapAlphaTest
 
 from Tools.Directories import fileExists, resolveFilename, SCOPE_CURRENT_PLUGIN
+try:
+	from Tools.Directories import sanitizeFilename
+except ImportError:
+	def sanitizeFilename(filename):
+		return re.sub(r'[<>:"/\\|?*]', '', filename).rstrip('.')
 
 from enigma import ePicLoad, eTimer, getDesktop, eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, BT_SCALE, BT_KEEP_ASPECT_RATIO, ePythonMessagePump, ePoint
 from Tools.LoadPixmap import LoadPixmap
@@ -71,29 +76,64 @@ from .OscamStatusSetup import oscamServer, readCFG, OscamServerEntriesListConfig
                              globalsConfigScreen, LASTSERVER, XOFFSET, EXTMENU, USEECM,\
                              dlg_xh, USEPICONS
 
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 TIMERTICK = 10000
 
 FULLHD = False
 if getDesktop(0).size().width() >= 1920:
 	FULLHD = True
 
-
 def getPicon(channelname):
-	searchPiconPaths = ['/usr/share/enigma2/picon/', '/media/usb/picon/', '/media/cf/picon/', '/picon/', '/media/hdd/picon/']
-	channelname = re.sub(r'\[.*?\]', '', channelname)
-	channelname = re.sub('[^a-z0-9]', '', channelname.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
-	for path in searchPiconPaths:
-		pngname = path + channelname + ".png"
-		if fileExists(pngname):
+	# Use native Enigma2 picon resolver if a full service reference is passed
+	if getPiconsName and channelname and channelname.count(":") >= 3:
+		pngname = getPiconName(channelname)
+		if pngname and fileExists(pngname):
 			return pngname
-		elif len(channelname) > 2 and channelname.endswith('hd'):
-			pngname = path + channelname[:-2] + ".png"
-			if fileExists(pngname):
-				return pngname
-	pngname = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
-	return pngname
 
+	# Search by Service Name Picon (UTF-8 SNP and classic ASCII SNP) across standard Enigma2 directories
+	searchPiconPaths = [
+		'/usr/share/enigma2/picon/',
+		'/media/hdd/picon/',
+		'/media/usb/picon/',
+		'/media/mmc/picon/',
+		'/media/sd/picon/',
+		'/media/sdcard/picon/',
+		'/media/cf/picon/',
+		'/picon/'
+	]
+	if channelname and channelname != "n/a":
+		# Strip OScam CAID@PROVID: prefix if present (e.g. "0500@060200:RTS Un HD" -> "RTS Un HD")
+		if ":" in channelname:
+			channelname = channelname.split(":", 1)[1]
+		# Strip bracketed tags like [V6] or [Viaccess]
+		clean_name = re.sub(r'\[.*?\]', '', channelname).strip()
+
+		# Build candidate names (full name, and name after "Provider - " if present)
+		candidates = [clean_name]
+		if " - " in clean_name:
+			candidates.append(clean_name.split(" - ", 1)[1].strip())
+
+		for candidate in candidates:
+			# 1. OpenPLi UTF-8 SNP format (preserves spaces, accents, and valid symbols in lowercase)
+			utf8_snp = sanitizeFilename(candidate.lower()).strip().rstrip('.')
+			# 2. Classic ASCII SNP format (alphanumeric only)
+			ascii_snp = re.sub('[^a-z0-9]', '', candidate.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
+
+			for name_variant in (utf8_snp, ascii_snp):
+				if name_variant:
+					for picon_dir in searchPiconPaths:
+						pngname = picon_dir + name_variant + ".png"
+						if fileExists(pngname):
+							return pngname
+						elif len(name_variant) > 2 and name_variant.endswith('hd'):
+							pngname = picon_dir + name_variant[:-2].strip() + ".png"
+							if fileExists(pngname):
+								return pngname
+
+	pngname = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
+	if fileExists(pngname):
+		return pngname
+	return ""
 
 # Converts past seconds into days, hours, minutes and seconds ...
 def elapsedTime(s, fmt, hasDays=False):
@@ -1491,39 +1531,40 @@ class ReaderstatsScreen(DownloadXMLScreen):
 	if w >= 1920:
 		# HD picon skin...
 		skin1 = """
-			<screen flags="wfNoBorder" position="%d,0" size="720,%d" name="ReaderstatsScreen" >
-				<widget render="Label" source="title" position="20,80" size="680,26" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;22"/>
-				<widget render="Label" source="lEMMerror"   position="  0,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="lEMMwritten" position="175,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="lEMMskipped" position="350,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="lEMMblocked" position="525,130" size="175,40" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget name="EMMerror"   position="  0,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget name="EMMwritten" position="175,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget name="EMMskipped" position="350,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget name="EMMblocked" position="525,170" size="175,20" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label0" position=" 20,203" size=" 60,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label1" position=" 80,203" size="225,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label2" position="305,203" size="110,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label3" position="415,203" size="100,20" halign="center" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label4" position="515,203" size=" 95,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget render="Label" source="label5" position="610,203" size=" 90,20" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;18"/>
-				<widget source="data" render="Listbox" position="20,225" size="680,300" scrollbarMode="showOnDemand">
+			<screen flags="wfNoBorder" position="%d,0" size="1480,%d" name="ReaderstatsScreen" >
+				<widget render="Label" source="title" position="20,60" size="1440,39" valign="center" zPosition="5" transparent="0" foregroundColor="#fcc000" font="Regular;33"/>
+				<widget render="Label" source="lEMMerror"   position="  0,100" size="370,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMwritten" position="370,100" size="370,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMskipped" position="740,100" size="370,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="lEMMblocked" position="1110,100" size="370,60" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMerror"   position="  0,165" size="370,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMwritten" position="370,165" size="370,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMskipped" position="740,165" size="370,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget name="EMMblocked" position="1110,165" size="370,30" valign="center" halign="center" zPosition="5" transparent="1" foregroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label0" position=" 20,200" size=" 95,32" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label1" position="120,200" size="585,32" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label2" position="710,200" size="280,32" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label3" position="995,200" size="160,32" halign="center" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label4" position="1160,200" size="145,32" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget render="Label" source="label5" position="1310,200" size="150,32" valign="center" zPosition="5" transparent="0" foregroundColor="black" backgroundColor="white" font="Regular;27"/>
+				<widget source="data" render="Listbox" position="20,238" size="1440,660" scrollbarMode="showOnDemand">
 					<convert type="TemplatedMultiContent">
 						{"template": [
-							MultiContentEntryText(pos = (  5, 2), size = ( 50, 24), font=0, flags = RT_HALIGN_RIGHT, text = 0),
-							MultiContentEntryText(pos = (115, 2), size = (165, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
-							MultiContentEntryText(pos = (285, 2), size = (105, 24), font=0, flags = RT_HALIGN_LEFT, text = 2),
-							MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_CENTER, text = 3),
-							MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
-							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
-							MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6),
+							MultiContentEntryText(pos = (  5, 3), size = ( 90, 54), font=0, flags = RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text = 0),
+							MultiContentEntryPixmapAlphaTest(pos = (105, 2), size = (110, 55), png = 6, flags = BT_SCALE|BT_KEEP_ASPECT_RATIO),
+							MultiContentEntryText(pos = (225, 3), size = (460, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
+							MultiContentEntryText(pos = (690, 3), size = (280, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 2),
+							MultiContentEntryText(pos = (975, 3), size = (160, 54), font=0, flags = RT_HALIGN_CENTER|RT_VALIGN_CENTER, text = 3),
+							MultiContentEntryText(pos = (1140, 3), size = (145, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 4),
+							MultiContentEntryText(pos = (1290, 3), size = (150, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 5),
 						],
-						"fonts": [gFont("Regular", 20)],
-						"itemHeight": 30
+						"fonts": [gFont("Regular", 28)],
+						"itemHeight": 60
 						}
 					</convert>
 				</widget>
-			</screen>""" % (dlg_xh(1390))
+			</screen>""" % (dlg_xh(1480))
+
 
 		# HD without picons...
 		skin2 = """
@@ -1588,7 +1629,7 @@ class ReaderstatsScreen(DownloadXMLScreen):
 							MultiContentEntryText(pos = (400, 2), size = ( 95, 24), font=0, flags = RT_HALIGN_LEFT, text = 3),
 							MultiContentEntryText(pos = (500, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 4),
 							MultiContentEntryText(pos = (590, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_LEFT, text = 5),
-							MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6),
+							MultiContentEntryPixmapAlphaTest(pos = (65, 0), size = (50, 30), png = 6, flags = BT_SCALE|BT_KEEP_ASPECT_RATIO),
 						],
 						"fonts": [gFont("Regular", 20)],
 						"itemHeight": 30
@@ -1726,22 +1767,12 @@ class ReaderstatsScreen(DownloadXMLScreen):
 		self["EMMblocked"].setText(EMMblocked[:-3])
 
 		list = []
-		self.picon = ePicLoad()
 		self.setTitle("Status Reader " + self.reader + " @" + self.oServer.serverName)
 		for e in self.ecms:
 			if USEPICONS.value:
+				# Load picon synchronously using cached LoadPixmap (avoids Python 3 async ePicLoad issues)
 				picon = getPicon(e.channelname)
-				if picon != "":
-					psw = 50
-					psh = 30
-					if FULLHD:
-						psw = 110
-						psh = 55
-					self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
-					self.picon.startDecode(picon, 0, 0, False)
-					png = self.picon.getData()
-				else:
-					png = None
+				png = LoadPixmap(cached=True, path=picon) if picon else None
 				list.append((e.val, e.channelname, e.caid + ":" + e.provid + ":" + e.srvid, e.rcs, e.lasttime, e.avgtime, png))
 			else:
 				list.append((e.val, e.channelname, e.caid + ":" + e.provid + ":" + e.srvid, e.rcs, e.lasttime, e.avgtime))
@@ -1826,7 +1857,7 @@ class UserstatsScreen(DownloadXMLScreen):
 		self["label1"] = StaticText(_("IP"))
 		self["label2"] = StaticText(_("Status"))
 		self["label3"] = StaticText(_("Protocol"))
-		self["data"] = List(list, enableWrapAround=True)
+		self["data"] = List([], enableWrapAround=True)
 		self["ButtonRed"] = Pixmap()
 		self["ButtonRedtext"] = Button(_("disable client"))
 		self["ButtonGreen"] = Pixmap()
@@ -2056,11 +2087,6 @@ class EntitlementsScreen(Screen):
 		self.close(0)
 
 	def loadEntitlements(self):
-		try:
-			from html import unescape
-		except ImportError:
-			from HTMLParser import HTMLParser
-			unescape = HTMLParser().unescape
 		from datetime import datetime
 
 		protocol = "https://" if self.oServer.useSSL else "http://"
@@ -2173,7 +2199,7 @@ class StatusDataScreen(DownloadXMLScreen):
 								MultiContentEntryText(pos = (332, 2), size = (250, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 1),
 								MultiContentEntryPixmapAlphaTest(pos = (605, 23), size = (50, 58), png = 2),
 								MultiContentEntryText(pos = (652, 2), size = (110, 66), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 3),
-								MultiContentEntryPixmapAlphaTest(pos = (775, 0), size = (110, 55), png = 4),
+								MultiContentEntryPixmapAlphaTest(pos = (775, 0), size = (110, 55), png = 4, flags = BT_SCALE|BT_KEEP_ASPECT_RATIO),
 								MultiContentEntryText(pos = (890, 2), size = (370, 58), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 5),
 							],
 							"fonts": [gFont("Regular", 26)],
@@ -2240,7 +2266,7 @@ class StatusDataScreen(DownloadXMLScreen):
 							MultiContentEntryText(pos = (145, 2), size = (140, 24), font=0, flags = RT_HALIGN_LEFT, text = 1),
 							MultiContentEntryPixmapAlphaTest(pos = (290, 4), size = (16, 16), png = 2),
 							MultiContentEntryText(pos = (310, 2), size = ( 90, 24), font=0, flags = RT_HALIGN_CENTER, text = 3),
-							MultiContentEntryPixmapAlphaTest(pos = (405, 0), size = (50, 30), png = 6),
+							MultiContentEntryPixmapAlphaTest(pos = (405, 0), size = (50, 30), png = 6, flags = BT_SCALE|BT_KEEP_ASPECT_RATIO),
 							MultiContentEntryText(pos = (460, 2), size = (220, 24), font=1, flags = RT_HALIGN_LEFT, text = 4),
 						],
 						"fonts": [gFont("Regular", 20), gFont("Regular", 18)],
@@ -2374,6 +2400,7 @@ class StatusDataScreen(DownloadXMLScreen):
 	def parseXML(self, dom):
 		d = []
 		for node in dom.getElementsByTagName("client"):
+
 			c = client()
 			c.type = str(node.getAttribute("type"))
 			c.name = str(node.getAttribute("name"))
@@ -2403,7 +2430,6 @@ class StatusDataScreen(DownloadXMLScreen):
 					if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
 						c.connection = str(snode.firstChild.nodeValue.strip())
 			d.append(c)
-
 		# Fallback : if OScam returns <users> instead of <client type="c">
 		has_clients = any(x.type == "c" for x in d)
 		if not has_clients:
@@ -2430,7 +2456,35 @@ class StatusDataScreen(DownloadXMLScreen):
 							if snode.nodeName == "timeonchannel" and snode.firstChild:
 								c.idle = str(snode.firstChild.nodeValue.strip())
 					d.append(c)
+
+		# Enrich online clients with live channel name, reader, and AU status from part=status
+		online_users = {c.name: c for c in d if c.type == "c" and "online" in c.connection.lower()}
+		if online_users:
+			try:
+				protocol = "https://" if self.oServer.useSSL else "http://"
+				status_url = protocol + self.oServer.serverIP + ":" + self.oServer.serverPort + "/oscamapi.html?part=status"
+				PasswdMgr = HTTPPasswordMgrWithDefaultRealm()
+				PasswdMgr.add_password(None, status_url, self.oServer.username, self.oServer.password)
+				handler = HTTPDigestAuthHandler(PasswdMgr)
+				opener = build_opener(HTTPHandler, handler)
+				install_opener(opener)
+
+				raw_status = urlopen(Request(status_url), timeout=3).read()
+				dom_status = xml.dom.minidom.parseString(raw_status)
+				for node in dom_status.getElementsByTagName("client"):
+					cname = str(node.getAttribute("name"))
+					if cname in online_users and str(node.getAttribute("type")) == "c":
+						online_users[cname].au = str(node.getAttribute("au"))
+						for snode in node.childNodes:
+							if snode.nodeName == "request":
+								online_users[cname].answered = str(snode.getAttribute("answered"))
+								online_users[cname].ecmtime = str(snode.getAttribute("ecmtime")) or online_users[cname].ecmtime
+								if snode.firstChild and snode.firstChild.nodeType == snode.firstChild.TEXT_NODE:
+									online_users[cname].service = str(snode.firstChild.nodeValue.strip())
+			except Exception:
+				pass
 		return d
+
 
 
 	def dlAction(self):
@@ -2440,7 +2494,6 @@ class StatusDataScreen(DownloadXMLScreen):
 
 	def setList(self):
 		dlist = []
-		self.picon = ePicLoad()
 		if self.type == "clients":
 			self.setTitle(_("Connected Clients") + "@" + self.oServer.serverName)
 			GREEN = r"\c0000ff00"
@@ -2453,10 +2506,10 @@ class StatusDataScreen(DownloadXMLScreen):
 					else:
 						idle = elapsedTime(c.idle, "%02d:%02d:%02d") if c.idle and c.idle != "0" else ""
 
-					# Displays the player used, or the IP address if it is not available in userstats
+					# Display the reader answering ECMs, or the client IP if idle
 					col1 = c.answered if c.answered != "n/a" and c.answered != "" else c.ip
-					# Displays the chain or the protocol if the chain is not in userstats
-					col_last = c.service if c.service != "n/a" and c.service != "" else c.protocol
+					# Display the channel name when active, or empty string when idle
+					col_last = c.service if c.service != "n/a" else ""
 					au_icon = self.auEntrys.get(c.au, self.auEntrys["0"])
 
 					# If the client is actively watching a channel (status="online"), it is colored green.
@@ -2473,14 +2526,9 @@ class StatusDataScreen(DownloadXMLScreen):
 						last_txt = col_last
 
 					if USEPICONS.value:
+						# Load channel picon synchronously from SNP/SRP path
 						picon = getPicon(c.service)
-						png = None
-						if picon != "":
-							psw = 110 if FULLHD else 50
-							psh = 55 if FULLHD else 30
-							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
-							self.picon.startDecode(picon, 0, 0, False)
-							png = self.picon.getData()
+						png = LoadPixmap(cached=True, path=picon) if picon else None
 
 					if self.hideIdle and not is_active and (c.ecmtime == "" or c.ecmtime == "0"):
 						continue
@@ -2492,6 +2540,7 @@ class StatusDataScreen(DownloadXMLScreen):
 
 		elif self.type == "readers":
 			self.setTitle(_("Connected Readers") + "@" + self.oServer.serverName)
+			unknown_icon = resolveFilename(SCOPE_CURRENT_PLUGIN, "Extensions/OscamStatus/icons/unknown.png")
 			for index, c in enumerate(self.status):
 				if USEECM.value:
 					idle = c.ecmtime
@@ -2500,16 +2549,17 @@ class StatusDataScreen(DownloadXMLScreen):
 
 				if c.type == "r" or c.type == "p":
 					if USEPICONS.value:
-						picon = getPicon(c.protocol)
-						if picon != "":
-							psw = 50
-							psh = 30
-							if FULLHD:
-								psw = 110
-								psh = 55
-							self.picon.setPara((psw, psh, 1, 1, False, 1, '#000f0f0f'))
-							self.picon.startDecode(picon, 0, 0, False)
-							png = self.picon.getData()
+						# Try active channel first, then reader label, then clean protocol name
+						picon = ""
+						for candidate in (c.service, c.name, c.protocol.split("(")[0].strip()):
+							if candidate and candidate != "n/a":
+								res = getPicon(candidate)
+								if res and res != unknown_icon:
+									picon = res
+									break
+						if not picon and fileExists(unknown_icon):
+							picon = unknown_icon
+						png = LoadPixmap(cached=True, path=picon) if picon else None
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, png, c.protocol, index))
 					else:
 						dlist.append((c.name, c.connection, self.auEntrys[c.au], idle, c.protocol, index))
@@ -2524,7 +2574,7 @@ class StatusDataScreen(DownloadXMLScreen):
 			index = self["data"].getCurrent()[6]
 		else:
 			index = self["data"].getCurrent()[5]
-		if index != None:
+		if index is not None:
 			self.timer.stop()
 			self.session.openWithCallback(self.backCB, ClientDataScreen, self.type, self.oServer, self.status[index])
 
@@ -2639,7 +2689,7 @@ class OscamStatus(Screen):
 
 	def action(self):
 		returnValue = self["menu"].getCurrent()[2]
-		if returnValue != None:
+		if returnValue is not None:
 			if returnValue == "clients":
 				self.session.open(StatusDataScreen, "clients", "userstats", self.oServer)
 			elif returnValue == "allClients":
@@ -2672,7 +2722,7 @@ class OscamStatus(Screen):
 		self.instance.move(ePoint(x, 0))
 
 	def findPicon(self, service=None):
-		if service != None:
+		if service is not None:
 			sname = ':'.join(service.split(':')[:11])
 			pos = sname.rfind(':')
 			if pos != -1:

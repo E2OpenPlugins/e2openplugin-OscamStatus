@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 18:14+0100\n"
+"POT-Creation-Date: 2026-11-15 14:56+0100\n"
 "PO-Revision-Date: 2026-11-14 18:12+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,48 +17,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: ../plugin.py:852 ../plugin.py:959
+#: ../plugin.py:863 ../plugin.py:970
 #, python-format
 msgid "%d days %d hours %d minutes %d seconds"
 msgstr "%d jours %d heures %d minutes %d secondes"
 
-#: ../plugin.py:2296 ../plugin.py:2319
+#: ../plugin.py:2302 ../plugin.py:2325
 msgid "AU"
 msgstr "AU"
 
-#: ../plugin.py:1887
+#: ../plugin.py:1898
 msgid "All Clients"
 msgstr "Tous les clients"
 
-#: ../plugin.py:1406
+#: ../plugin.py:1417
 msgid "All Readers @"
 msgstr "Tous les lecteurs @"
 
-#: ../plugin.py:2026
+#: ../plugin.py:2037
 msgid "CAID:Provid"
 msgstr "CAID:Provid"
 
-#: ../plugin.py:2304 ../plugin.py:2306
+#: ../plugin.py:2310 ../plugin.py:2312
 msgid "Channel"
 msgstr "Chaîne"
 
-#: ../plugin.py:2027
+#: ../plugin.py:2038
 msgid "Class"
 msgstr "Class"
 
-#: ../plugin.py:502 ../plugin.py:1814
+#: ../plugin.py:502 ../plugin.py:1825
 msgid "Client"
 msgstr "Client"
 
-#: ../plugin.py:2619
+#: ../plugin.py:2626
 msgid "Configuration screen"
 msgstr "Ecran de configuration"
 
-#: ../plugin.py:2434
+#: ../plugin.py:2440
 msgid "Connected Clients"
 msgstr "Clients connectés"
 
-#: ../plugin.py:2483
+#: ../plugin.py:2489
 msgid "Connected Readers"
 msgstr "Lecteurs connectés"
 
@@ -66,11 +66,11 @@ msgstr "Lecteurs connectés"
 msgid "Do you really want to delete this entry?"
 msgstr "Voulez-vous vraiment effacer cette entrée?"
 
-#: ../plugin.py:1890 ../plugin.py:2300
+#: ../plugin.py:1901 ../plugin.py:2306
 msgid "Duration"
 msgstr "Durée"
 
-#: ../plugin.py:2298 ../plugin.py:2321
+#: ../plugin.py:2304 ../plugin.py:2327
 msgid "ECM Time"
 msgstr "Tps ECM"
 
@@ -78,43 +78,43 @@ msgstr "Tps ECM"
 msgid "ECM Time in \"connected\" Dialog"
 msgstr "Temps ECM dans le dialogue \"connecté\""
 
-#: ../plugin.py:2023
+#: ../plugin.py:2034
 msgid "Entitlements: "
 msgstr "Droits: "
 
-#: ../plugin.py:2101
+#: ../plugin.py:2107
 msgid "Error: "
 msgstr "Erreur:"
 
-#: ../plugin.py:2029
+#: ../plugin.py:2040
 msgid "Expire"
 msgstr "Expiré"
 
-#: ../plugin.py:1815
+#: ../plugin.py:1826
 msgid "IP"
 msgstr "IP"
 
-#: ../plugin.py:2323
+#: ../plugin.py:2329
 msgid "Idle Time"
 msgstr "Tps inactif"
 
-#: ../plugin.py:1247
+#: ../plugin.py:1258
 msgid "Logfile"
 msgstr "Fichier journal"
 
-#: ../plugin.py:734
+#: ../plugin.py:745
 msgid "Maybe set 'chaninfo = 0' at oscam.conf"
 msgstr "Peut-être définir 'chaninfo = 0' dans oscam.conf"
 
-#: ../plugin.py:2025 ../plugin.py:2294 ../plugin.py:2317
+#: ../plugin.py:2036 ../plugin.py:2300 ../plugin.py:2323
 msgid "Name"
 msgstr "Nom"
 
-#: ../plugin.py:2125
+#: ../plugin.py:2131
 msgid "No valid entitlements found"
 msgstr "Aucun droit valide trouvé"
 
-#: ../plugin.py:728
+#: ../plugin.py:734
 msgid "Oscam Download Error"
 msgstr "Erreur de téléchargement Oscam"
 
@@ -134,12 +134,12 @@ msgstr "Configuration du serveur Oscam"
 msgid "Oscam Servers"
 msgstr "Serveurs Oscam"
 
-#: ../plugin.py:714 ../plugin.py:965 ../plugin.py:982 ../plugin.py:2680
-#: ../plugin.py:2682
+#: ../plugin.py:720 ../plugin.py:976 ../plugin.py:993 ../plugin.py:2687
+#: ../plugin.py:2689
 msgid "Oscam Status"
 msgstr "Statut Oscam"
 
-#: ../plugin.py:2652
+#: ../plugin.py:2659
 msgid "Oscam Status "
 msgstr "Statut Oscam "
 
@@ -147,7 +147,7 @@ msgstr "Statut Oscam "
 msgid "Oscam Status globals Setup"
 msgstr "Configuration globale de Oscam Statut"
 
-#: ../plugin.py:735 ../plugin.py:745
+#: ../plugin.py:746 ../plugin.py:756
 msgid "Oscam XML Error"
 msgstr "Erreur XML Oscam"
 
@@ -155,7 +155,7 @@ msgstr "Erreur XML Oscam"
 msgid "Password (httppwd)"
 msgstr "Mot de passe (httppwd)"
 
-#: ../plugin.py:2303 ../plugin.py:2326
+#: ../plugin.py:2309 ../plugin.py:2332
 msgid "Picon"
 msgstr "Picon"
 
@@ -163,11 +163,11 @@ msgstr "Picon"
 msgid "Port"
 msgstr "Port"
 
-#: ../plugin.py:1336 ../plugin.py:1817 ../plugin.py:2327 ../plugin.py:2329
+#: ../plugin.py:1347 ../plugin.py:1828 ../plugin.py:2333 ../plugin.py:2335
 msgid "Protocol"
 msgstr "Protocole"
 
-#: ../plugin.py:504 ../plugin.py:1335 ../plugin.py:2295
+#: ../plugin.py:504 ../plugin.py:1346 ../plugin.py:2301
 msgid "Reader"
 msgstr "Lecteur"
 
@@ -179,15 +179,15 @@ msgstr "Adresse du serveur toujours au format IP"
 msgid "Show Plugin in Extensions Menu"
 msgstr "Afficher le plugin dans le menu extensions"
 
-#: ../plugin.py:2028
+#: ../plugin.py:2039
 msgid "Start"
 msgstr "Démarrage"
 
-#: ../plugin.py:1816 ../plugin.py:2318
+#: ../plugin.py:1827 ../plugin.py:2324
 msgid "Status"
 msgstr "Statut"
 
-#: ../plugin.py:1142
+#: ../plugin.py:1153
 msgid "Use Oscam Webif to see them all."
 msgstr "Utiliser Oscam Webif pour les voir."
 
@@ -203,24 +203,24 @@ msgstr "Nom d’utilisateur (httpuser)"
 msgid "X-Offset (move left)"
 msgstr "X-offset (déplacer vers la gauche)"
 
-#: ../plugin.py:2129
+#: ../plugin.py:2135
 msgid "[ LAST 2 EXPIRED ENTITLEMENTS ]"
 msgstr "[ 2 DERNIERS DROITS EXPIRÉS ]"
 
-#: ../plugin.py:2114
+#: ../plugin.py:2120
 #, python-format
 msgid "[ VALID ENTITLEMENTS (%d) ]"
 msgstr "[ (%d) DROITS VALIDES ]"
 
-#: ../plugin.py:1641
+#: ../plugin.py:1652
 msgid "avgtime"
 msgstr "TempsMoy"
 
-#: ../plugin.py:1638
+#: ../plugin.py:1649
 msgid "caid:provid:srvid"
 msgstr "caid:provid:srvid"
 
-#: ../plugin.py:1637
+#: ../plugin.py:1648
 msgid "channelname"
 msgstr "NomChaîne"
 
@@ -228,15 +228,15 @@ msgstr "NomChaîne"
 msgid "delete"
 msgstr "Effacer"
 
-#: ../plugin.py:1820
+#: ../plugin.py:1831
 msgid "disable client"
 msgstr "Désactiver le client"
 
-#: ../plugin.py:1341
+#: ../plugin.py:1352
 msgid "disable reader"
 msgstr "Désactiver le lecteur"
 
-#: ../plugin.py:2334
+#: ../plugin.py:2340
 msgid "display entitlements"
 msgstr "Afficher les droits"
 
@@ -244,23 +244,23 @@ msgstr "Afficher les droits"
 msgid "edit"
 msgstr "Modifier"
 
-#: ../plugin.py:1822
+#: ../plugin.py:1833
 msgid "enable client"
 msgstr "Activer le client"
 
-#: ../plugin.py:1343
+#: ../plugin.py:1354
 msgid "enable reader"
 msgstr "Activer le lecteur"
 
-#: ../plugin.py:2315 ../plugin.py:2537
+#: ../plugin.py:2321 ../plugin.py:2543
 msgid "hide idle clients"
 msgstr "Masquer les clients inactifs"
 
-#: ../plugin.py:1640
+#: ../plugin.py:1651
 msgid "lasttime"
 msgstr "DernierTemps"
 
-#: ../plugin.py:672
+#: ../plugin.py:674
 msgid "loading..."
 msgstr "Chargement..."
 
@@ -268,7 +268,7 @@ msgstr "Chargement..."
 msgid "new"
 msgstr "Nouveau"
 
-#: ../plugin.py:727
+#: ../plugin.py:733
 msgid "no xml"
 msgstr "aucun XML"
 
@@ -276,25 +276,25 @@ msgstr "aucun XML"
 msgid "not available"
 msgstr "pas disponible"
 
-#: ../plugin.py:1142
+#: ../plugin.py:1153
 msgid "providers on this card max. display is:"
 msgstr "providers sur cette carte le max. affiché est:"
 
-#: ../plugin.py:972
+#: ../plugin.py:983
 #, python-format
 msgid "really restart oscam@%s?"
 msgstr "Vraiment redémarrer oscam @%s?"
 
-#: ../plugin.py:978
+#: ../plugin.py:989
 #, python-format
 msgid "really shutdown oscam@%s?"
 msgstr "Vraiment éteindre oscam @%s?"
 
-#: ../plugin.py:1636
+#: ../plugin.py:1647
 msgid "req."
 msgstr "req."
 
-#: ../plugin.py:920
+#: ../plugin.py:931
 msgid "restart oscam"
 msgstr "Redémarrer Oscam"
 
@@ -306,63 +306,63 @@ msgstr "Retour"
 msgid "save"
 msgstr "Sauvegarder"
 
-#: ../plugin.py:2606
+#: ../plugin.py:2613
 msgid "server info"
 msgstr "Info serveur"
 
-#: ../plugin.py:2607
+#: ../plugin.py:2614
 msgid "server restart/shutdown"
 msgstr "Redémarrer/Arrêter le serveur"
 
-#: ../plugin.py:2608
+#: ../plugin.py:2615
 msgid "server setup"
 msgstr "Configuration du serveur"
 
-#: ../plugin.py:2602
+#: ../plugin.py:2609
 msgid "show all clients"
 msgstr "Afficher tous les clients"
 
-#: ../plugin.py:2604
+#: ../plugin.py:2611
 msgid "show all readers"
 msgstr "Afficher tous les lecteurs"
 
-#: ../plugin.py:2309
+#: ../plugin.py:2315
 msgid "show client info"
 msgstr "Afficher les infos du client"
 
-#: ../plugin.py:2601
+#: ../plugin.py:2608
 msgid "show connected clients"
 msgstr "Afficher les clients connectés"
 
-#: ../plugin.py:2603
+#: ../plugin.py:2610
 msgid "show connected readers"
 msgstr "Afficher les lecteurs connectés"
 
-#: ../plugin.py:2539
+#: ../plugin.py:2545
 msgid "show idle clients"
 msgstr "Afficher les clients inactifs"
 
-#: ../plugin.py:2605
+#: ../plugin.py:2612
 msgid "show logfile"
 msgstr "Afficher le fichier journal"
 
-#: ../plugin.py:2332
+#: ../plugin.py:2338
 msgid "show reader info"
 msgstr "Afficher infos sur le lecteur"
 
-#: ../plugin.py:2336
+#: ../plugin.py:2342
 msgid "show readerstats"
 msgstr "Afficher les stats du lecteur"
 
-#: ../plugin.py:922
+#: ../plugin.py:933
 msgid "shutdown oscam"
 msgstr "Arrêter Oscam"
 
-#: ../plugin.py:1639
+#: ../plugin.py:1650
 msgid "status"
 msgstr "Statut"
 
-#: ../plugin.py:1337
+#: ../plugin.py:1348
 msgid "type"
 msgstr "Type"
 
@@ -370,10 +370,10 @@ msgstr "Type"
 msgid "use SSL"
 msgstr "Utiliser SSL"
 
-#: ../plugin.py:2680 ../plugin.py:2682
+#: ../plugin.py:2687 ../plugin.py:2689
 msgid "whats going on?"
 msgstr "Qu'est-ce qui se passe?"
 
-#: ../plugin.py:963
+#: ../plugin.py:974
 msgid "you can't shutdown/restart this oscam.\n"
 msgstr "Vous ne pouvez pas arrêter/redémarrer cet oscam.\n"
